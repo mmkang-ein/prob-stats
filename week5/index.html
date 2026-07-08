@@ -1,70 +1,223 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>5주차 — 확률 및 통계 시뮬레이터</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f7ff;color:#1A1A2E}
-header{background:#1E2761;color:#fff;padding:.9rem 1.2rem;display:flex;align-items:center;gap:.8rem;position:sticky;top:0;z-index:10}
-header a{color:#CADCFC;text-decoration:none;font-size:.85rem;white-space:nowrap}
-.hw{flex:1}
-header h1{font-size:1rem;font-weight:600}
-header p{font-size:.78rem;color:#90CAF9;margin-top:2px}
+header{background:#1E2761;color:#fff;padding:.9rem 1.2rem;display:flex;align-items:center;gap:.8rem}
+header a{color:#CADCFC;text-decoration:none;font-size:.85rem}.hw{flex:1}
+header h1{font-size:1rem;font-weight:600}header p{font-size:.78rem;color:#90CAF9;margin-top:2px}
 .wrap{max-width:740px;margin:0 auto;padding:.9rem 1rem 3rem}
 .tabs{display:flex;gap:3px;border-bottom:2px solid #C5CAE9;margin-bottom:1.2rem;flex-wrap:wrap}
 .tab{padding:6px 12px;font-size:12.5px;font-weight:500;color:#5C6BC0;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap}
 .tab.active{color:#1565C0;border-bottom-color:#1565C0}
 .panel{display:none}.panel.active{display:block}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:11px}
 .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:7px;margin-bottom:11px}
 .card{background:#fff;border:1px solid #C5CAE9;border-radius:10px;padding:.8rem .9rem}
-.lbl{font-size:11px;color:#5C6BC0;margin-bottom:2px}
-.val{font-size:17px;font-weight:600;color:#1565C0}
-.ctrl{margin-bottom:9px}
-.ctrl label{display:flex;justify-content:space-between;font-size:12.5px;color:#5C6BC0;margin-bottom:2px}
-.ctrl label span{font-weight:600;color:#1A1A2E}
-input[type=range]{width:100%}
+.lbl{font-size:11px;color:#5C6BC0;margin-bottom:2px}.val{font-size:17px;font-weight:600;color:#1565C0}
+.ctrl{margin-bottom:9px}.ctrl label{display:flex;justify-content:space-between;font-size:12.5px;color:#5C6BC0;margin-bottom:2px}
+.ctrl label span{font-weight:600;color:#1A1A2E}input[type=range]{width:100%}
 canvas{display:block;width:100%!important;border-radius:8px;background:#fff;border:1px solid #EEF2FF;margin-bottom:4px}
 .formula{background:#EEF2FF;border-radius:8px;padding:8px 12px;font-size:12px;font-family:monospace;color:#1E2761;margin-bottom:9px}
 .info{background:#E3F2FD;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#1565C0;margin-bottom:9px}
 .ok{background:#E8F5E9;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#2E7D32;margin-bottom:9px}
-.warn{background:#FFF3E0;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#BF6F00;margin-bottom:9px}
-.danger{background:#FFEBEE;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#B71C1C;margin-bottom:9px}
 .sec{font-size:13px;font-weight:600;color:#1E2761;margin-bottom:8px}
 .tog-row{display:flex;gap:5px;margin-bottom:9px;flex-wrap:wrap}
 .tog{padding:3px 10px;font-size:12px;border:1px solid #C5CAE9;border-radius:20px;background:#fff;cursor:pointer;color:#5C6BC0}
 .tog.on{background:#1565C0;color:#fff;border-color:#1565C0;font-weight:500}
 .tbl{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:10px}
 .tbl th{background:#EEF2FF;padding:5px 8px;text-align:center;border-bottom:1px solid #C5CAE9;font-weight:500;color:#1E2761}
-.tbl td{padding:5px 8px;text-align:center;border-bottom:1px solid #EEF2FF}
+.tbl td{padding:5px 8px;text-align:center;border-bottom:1px solid #EEF2FF}.tbl .hl{color:#1565C0;font-weight:600}
 </style>
 </head>
 <body>
 <header>
   <a href="../index.html">← 목록</a>
-  <div class="hw">
-    <h1>5주차 — 확률변수 · PMF · PDF · CDF</h1>
-    <p>PMF 막대 · CDF 계단 · PDF 곡선 · 기댓값·분산</p>
-  </div>
+  <div class="hw"><h1>5주차 — 확률변수 · PMF · PDF · CDF</h1><p>PMF 막대 · CDF 계단 · PDF 곡선 · 기댓값·분산</p></div>
 </header>
 <div class="wrap">
 <div class="tabs">
-  <button class="tab active" onclick="sw(0)">① PMF 막대</button>
-  <button class="tab" onclick="sw(1)">② CDF 계단</button>
-  <button class="tab" onclick="sw(2)">③ PDF 곡선</button>
-  <button class="tab" onclick="sw(3)">④ 기댓값</button>
+  <button class="tab active" onclick="sw(0)">① PMF (이산)</button>
+  <button class="tab" onclick="sw(1)">② CDF 누적</button>
+  <button class="tab" onclick="sw(2)">③ PDF (연속)</button>
+  <button class="tab" onclick="sw(3)">④ 기댓값·분산</button>
 </div>
-<div class="panel active" id="p0"><div style="padding:2rem;text-align:center;color:#5C6BC0"><p style="font-size:1rem;color:#1E2761;font-weight:600">PMF 막대 시뮬레이터</p><p style="margin-top:.5rem">슬라이더를 조작해 결과를 확인하세요</p></div></div>
-<div class="panel" id="p1"></div>
-<div class="panel" id="p2"></div>
-<div class="panel" id="p3"></div>
+
+<div class="panel active" id="p0">
+  <div class="sec">확률질량함수 (PMF) — 이산확률변수</div>
+  <div class="tog-row">
+    <button class="tog on" id="tg0a" onclick="setPMF('dice')">주사위</button>
+    <button class="tog" id="tg0b" onclick="setPMF('coin')">동전 3회</button>
+    <button class="tog" id="tg0c" onclick="setPMF('custom')">직접 입력</button>
+  </div>
+  <div id="customCtrl" style="display:none">
+    <div class="ctrl"><label>최솟값 a <span id="cv_a">0</span></label><input type="range" min="0" max="5" value="0" id="sc_a" oninput="u0()"></div>
+    <div class="ctrl"><label>최댓값 b <span id="cv_b">4</span></label><input type="range" min="1" max="8" value="4" id="sc_b" oninput="u0()"></div>
+  </div>
+  <canvas id="c0" height="185"></canvas>
+  <table class="tbl" id="pmfTable"></table>
+  <div class="formula" id="f0">P(X=x) >= 0  /  합계 P(X=x) = 1</div>
+  <div class="ok" id="m0">PMF 합계 = 1.000</div>
+</div>
+
+<div class="panel" id="p1">
+  <div class="sec">누적분포함수 (CDF) — F(x) = P(X ≤ x)</div>
+  <div class="tog-row">
+    <button class="tog on" id="tg1a" onclick="setCDF('dice')">주사위</button>
+    <button class="tog" id="tg1b" onclick="setCDF('coin')">동전 3회</button>
+  </div>
+  <div class="ctrl"><label>관심 값 x₀ <span id="cv_x0">3</span></label><input type="range" min="0" max="8" value="3" id="sc_x0" oninput="u1()"></div>
+  <canvas id="c1" height="200"></canvas>
+  <div class="g3">
+    <div class="card"><div class="lbl">F(x₀) = P(X ≤ x₀)</div><div class="val" id="t1Fx">-</div></div>
+    <div class="card"><div class="lbl">P(X = x₀)</div><div class="val" id="t1px">-</div></div>
+    <div class="card"><div class="lbl">P(X > x₀)</div><div class="val" id="t1gt">-</div></div>
+  </div>
+  <div class="formula" id="f1">F(x) = sum P(X=k) for k<=x</div>
+</div>
+
+<div class="panel" id="p2">
+  <div class="sec">확률밀도함수 (PDF) — 연속확률변수</div>
+  <div class="tog-row">
+    <button class="tog on" id="tg2a" onclick="setPDF('uniform')">균등분포</button>
+    <button class="tog" id="tg2b" onclick="setPDF('triangle')">삼각분포</button>
+    <button class="tog" id="tg2c" onclick="setPDF('normal')">정규분포</button>
+  </div>
+  <div id="uCtrl">
+    <div class="ctrl"><label>a <span id="ua">0.0</span></label><input type="range" min="0" max="40" value="0" id="sua" oninput="u2()"></div>
+    <div class="ctrl"><label>b <span id="ub">1.0</span></label><input type="range" min="10" max="50" value="10" id="sub_" oninput="u2()"></div>
+    <div class="ctrl"><label>구간 c <span id="uc">0.3</span></label><input type="range" min="0" max="49" value="3" id="suc" oninput="u2()"></div>
+    <div class="ctrl"><label>구간 d <span id="ud">0.7</span></label><input type="range" min="1" max="50" value="7" id="sud" oninput="u2()"></div>
+  </div>
+  <canvas id="c2" height="185"></canvas>
+  <div class="g3">
+    <div class="card"><div class="lbl">f(x) 최댓값</div><div class="val" id="t2fmax">-</div></div>
+    <div class="card"><div class="lbl">P(c ≤ X ≤ d)</div><div class="val" style="color:#2E7D32" id="t2area">-</div></div>
+    <div class="card"><div class="lbl">E[X]</div><div class="val" id="t2ex">-</div></div>
+  </div>
+  <div class="formula" id="f2">P(c≤X≤d) = 적분 f(x)dx / 적분 f(x)dx = 1</div>
+  <div class="info">연속형: P(X=x)=0 이지만 구간 확률은 계산 가능</div>
+</div>
+
+<div class="panel" id="p3">
+  <div class="sec">기댓값 E[X] & 분산 Var(X)</div>
+  <div class="tog-row">
+    <button class="tog on" id="tg3a" onclick="setEV('dice')">주사위</button>
+    <button class="tog" id="tg3b" onclick="setEV('skew')">비대칭</button>
+    <button class="tog" id="tg3c" onclick="setEV('custom3')">직접 입력</button>
+  </div>
+  <div id="c3Ctrl" style="display:none"><div class="info" style="font-size:12px">X={1,2,3,4,5} 확률 조정 (합=1 자동 정규화)</div><div id="c3sliders"></div></div>
+  <canvas id="c3" height="180"></canvas>
+  <div class="g4">
+    <div class="card"><div class="lbl">E[X]</div><div class="val" id="t3ex">3.50</div></div>
+    <div class="card"><div class="lbl">E[X²]</div><div class="val" id="t3ex2">15.17</div></div>
+    <div class="card"><div class="lbl">Var(X)</div><div class="val" style="color:#BF6F00" id="t3var">2.92</div></div>
+    <div class="card"><div class="lbl">σ</div><div class="val" style="color:#2E7D32" id="t3std">1.71</div></div>
+  </div>
+  <div class="formula" id="f3">E[X]=sum x·P(X=x)  /  Var(X)=E[X²]-(E[X])²</div>
+</div>
+</div>
+
 <script>
+const $=id=>document.getElementById(id)
+const f3=v=>v.toFixed(3),f2=v=>v.toFixed(2)
 const tabs=document.querySelectorAll('.tab'),panels=document.querySelectorAll('.panel')
-function sw(i){tabs.forEach((t,j)=>t.classList.toggle('active',i===j));panels.forEach((p,j)=>p.classList.toggle('active',i===j))}
+function sw(i){tabs.forEach((t,j)=>t.classList.toggle('active',i===j));panels.forEach((p,j)=>p.classList.toggle('active',i===j));setTimeout(()=>[u0,u1,u2,u3][i](),30)}
+function sc(id,h){const c=$(id),w=c.parentElement.offsetWidth-2||360;c.width=w;c.height=h;return{ctx:c.getContext('2d'),w,h}}
+
+function getDiceDist(){return [1,2,3,4,5,6].map(x=>({x,p:1/6}))}
+function getCoinDist(){return [0,1,2,3].map((k,i)=>({x:k,p:[1,3,3,1][i]/8}))}
+function getCustomDist(){const a=+$('sc_a').value,b=+$('sc_b').value,n=Math.max(2,b-a+1);return Array.from({length:n},(_,i)=>({x:a+i,p:1/n}))}
+
+let pmfMode='dice'
+function setPMF(m){pmfMode=m;['tg0a','tg0b','tg0c'].forEach((id,i)=>$(id).classList.toggle('on',['dice','coin','custom'][i]===m));$('customCtrl').style.display=m==='custom'?'block':'none';u0()}
+function u0(){
+  if(pmfMode==='custom'){$('cv_a').textContent=$('sc_a').value;$('cv_b').textContent=$('sc_b').value}
+  const dist=pmfMode==='dice'?getDiceDist():pmfMode==='coin'?getCoinDist():getCustomDist()
+  const sum=dist.reduce((s,d)=>s+d.p,0)
+  const tbl=$('pmfTable')
+  tbl.innerHTML=`<tr><th>x</th>${dist.map(d=>`<th>${d.x}</th>`).join('')}<th>합계</th></tr><tr><td>P(X=x)</td>${dist.map(d=>`<td class="hl">${f3(d.p)}</td>`).join('')}<td class="hl">${f3(sum)}</td></tr>`
+  $('f0').textContent='PMF 합계 = '+f3(sum);$('m0').textContent='합계 = '+f3(sum)+' '+( Math.abs(sum-1)<.001?'✓':'확인 필요')
+  const{ctx,w,h}=sc('c0',185);ctx.clearRect(0,0,w,h)
+  const n=dist.length,bw=Math.min(48,(w-60)/n-5),ox=50,oy=h-32,maxP=Math.max(...dist.map(d=>d.p))*1.2
+  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.6;ctx.beginPath();ctx.moveTo(ox,10);ctx.lineTo(ox,oy+1);ctx.lineTo(w-8,oy+1);ctx.stroke()
+  ctx.fillStyle='#5C6BC0';ctx.font='10px Arial';ctx.fillText('P(X=x)',2,14)
+  dist.forEach((d,i)=>{
+    const x=ox+i*((w-ox-10)/n)+5,bh=(d.p/maxP)*(oy-15)
+    ctx.fillStyle='rgba(21,101,192,.65)';ctx.fillRect(x,oy-bh,bw,bh)
+    ctx.fillStyle='#1E2761';ctx.font='11px Arial';ctx.textAlign='center'
+    ctx.fillText(d.x,x+bw/2,oy+14);ctx.fillStyle='#1565C0';ctx.font='bold 10px Arial';ctx.fillText(f3(d.p),x+bw/2,oy-bh-4)
+  });ctx.textAlign='left'
+}
+
+let cdfMode='dice'
+function setCDF(m){cdfMode=m;['tg1a','tg1b'].forEach((id,i)=>$(id).classList.toggle('on',['dice','coin'][i]===m));$('sc_x0').max=m==='dice'?8:5;u1()}
+function u1(){
+  const dist=cdfMode==='dice'?getDiceDist():getCoinDist()
+  const x0=+$('sc_x0').value;$('cv_x0').textContent=x0
+  const Fx0=dist.filter(d=>d.x<=x0).reduce((s,d)=>s+d.p,0),px0=dist.find(d=>d.x===x0)?.p||0
+  $('t1Fx').textContent=f3(Fx0);$('t1px').textContent=f3(px0);$('t1gt').textContent=f3(1-Fx0)
+  $('f1').textContent='F('+x0+')=P(X<='+x0+')='+f3(Fx0)+'  P(X>'+x0+')='+f3(1-Fx0)
+  const{ctx,w,h}=sc('c1',200);ctx.clearRect(0,0,w,h)
+  const xMin=dist[0].x-1,xMax=dist[dist.length-1].x+1,ox=50,oy=h-32,pw=w-ox-15,ph=oy-20
+  const tx=v=>ox+(v-xMin)/(xMax-xMin)*pw,ty=v=>oy-v*ph
+  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.6;ctx.beginPath();ctx.moveTo(ox,20);ctx.lineTo(ox,oy+1);ctx.lineTo(w-10,oy+1);ctx.stroke()
+  let cum=0;ctx.beginPath();ctx.strokeStyle='rgba(21,101,192,.85)';ctx.lineWidth=2;ctx.moveTo(ox,ty(0));ctx.lineTo(tx(dist[0].x),ty(0))
+  dist.forEach(d=>{cum+=d.p;const cx=tx(d.x);ctx.lineTo(cx,ty(cum-d.p));ctx.lineTo(cx,ty(cum))});ctx.lineTo(w-10,ty(cum));ctx.stroke()
+  const cx0=Math.min(tx(x0),w-10)
+  ctx.strokeStyle='rgba(183,28,28,.7)';ctx.lineWidth=1.5;ctx.setLineDash([4,3])
+  ctx.beginPath();ctx.moveTo(cx0,oy);ctx.lineTo(cx0,ty(Fx0));ctx.stroke()
+  ctx.beginPath();ctx.moveTo(ox,ty(Fx0));ctx.lineTo(cx0,ty(Fx0));ctx.stroke();ctx.setLineDash([])
+  ctx.fillStyle='#B71C1C';ctx.font='500 11px Arial';ctx.fillText('F('+x0+')='+f3(Fx0),cx0+4,ty(Fx0)-4)
+  for(let x=dist[0].x;x<=dist[dist.length-1].x;x++){ctx.fillStyle='#5C6BC0';ctx.font='11px Arial';ctx.textAlign='center';ctx.fillText(x,tx(x),oy+14)};ctx.textAlign='left'
+}
+
+let pdfMode='uniform'
+function setPDF(m){pdfMode=m;['tg2a','tg2b','tg2c'].forEach((id,i)=>$(id).classList.toggle('on',['uniform','triangle','normal'][i]===m));$('uCtrl').style.display=m==='normal'?'none':'block';u2()}
+function normPDF(x){return Math.exp(-.5*x*x)/Math.sqrt(2*Math.PI)}
+function u2(){
+  const a=+$('sua').value/10,b=+$('sub_').value/10,c=+$('suc').value/10,d=+$('sud').value/10
+  $('ua').textContent=a.toFixed(1);$('ub').textContent=b.toFixed(1);$('uc').textContent=c.toFixed(1);$('ud').textContent=d.toFixed(1)
+  const N=500,xs=pdfMode==='normal'?Array.from({length:N+1},(_,i)=>-4+8*i/N):Array.from({length:N+1},(_,i)=>a+(b-a)*i/N+(Math.max(b-a,.1))*.1*(i/N-.5))
+  function f(x){if(pdfMode==='uniform')return(x>=a&&x<=b)&&b>a?1/(b-a):0;if(pdfMode==='triangle'){const m=(a+b)/2;if(x<a||x>b)return 0;return x<=m?2*(x-a)/((b-a)*(m-a)||1):2*(b-x)/((b-a)*(b-m)||1)}return normPDF(x)}
+  const fs=Array.from({length:N+1},(_,i)=>f(xs[i])),maxF=Math.max(...fs)*1.15||1,dx=(xs[N]-xs[0])/N
+  let area=0,ex=0;xs.forEach((x,i)=>{if(i<N){if(x>=c&&x<=d)area+=f(x)*dx;ex+=x*f(x)*dx}})
+  $('t2fmax').textContent=f3(pdfMode==='uniform'&&b>a?1/(b-a):maxF);$('t2area').textContent=f3(area);$('t2ex').textContent=f2(ex)
+  $('f2').textContent='P('+c.toFixed(1)+'<=X<='+d.toFixed(1)+')='+f3(area)
+  const{ctx,w,h}=sc('c2',185);ctx.clearRect(0,0,w,h)
+  const xMin=xs[0],xMax=xs[N],ox=45,oy=h-32,pw=w-ox-10,ph=oy-15
+  const tx=v=>ox+(v-xMin)/(xMax-xMin)*pw,ty=v=>oy-v/maxF*ph
+  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(ox,15);ctx.lineTo(ox,oy+1);ctx.lineTo(w-8,oy+1);ctx.stroke()
+  ctx.beginPath();let s=false;xs.forEach((x,i)=>{if(x>=c&&x<=d){if(!s){ctx.moveTo(tx(x),oy);s=true}ctx.lineTo(tx(x),ty(f(x)))}});if(s){ctx.lineTo(tx(Math.min(d,xMax)),oy);ctx.closePath();ctx.fillStyle='rgba(29,158,117,.3)';ctx.fill()}
+  ctx.beginPath();ctx.strokeStyle='rgba(21,101,192,.85)';ctx.lineWidth=2;xs.forEach((x,i)=>i===0?ctx.moveTo(tx(x),ty(f(x))):ctx.lineTo(tx(x),ty(f(x))));ctx.stroke()
+  if(pdfMode!=='normal'){ctx.strokeStyle='rgba(183,28,28,.7)';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(tx(ex),oy);ctx.lineTo(tx(ex),15);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#B71C1C';ctx.font='11px Arial';ctx.fillText('E='+f2(ex),tx(ex)+3,28)}
+  ctx.fillStyle='#2E7D32';ctx.font='11px Arial';ctx.fillText('P='+f3(area),ox+4,oy-5)
+}
+
+let evMode='dice',c3probs=[20,20,20,20,20]
+function setEV(m){evMode=m;['tg3a','tg3b','tg3c'].forEach((id,i)=>$(id).classList.toggle('on',['dice','skew','custom3'][i]===m));$('c3Ctrl').style.display=m==='custom3'?'block':'none';if(m==='custom3')buildC3();u3()}
+function buildC3(){let h='';for(let i=0;i<5;i++)h+=`<div class="ctrl"><label>P(X=${i+1}) <span id="ev_p${i}">${c3probs[i]}</span></label><input type="range" min="0" max="50" value="${c3probs[i]}" id="se_p${i}" oninput="updateC3(${i})"></div>`;$('c3sliders').innerHTML=h}
+function updateC3(i){c3probs[i]=+$('se_p'+i).value;u3()}
+function getEVDist(){if(evMode==='dice')return getDiceDist();if(evMode==='skew')return [{x:1,p:.5},{x:2,p:.25},{x:3,p:.125},{x:4,p:.0625},{x:5,p:.0625}];const s=c3probs.reduce((a,b)=>a+b,0)||1;return c3probs.map((p,i)=>({x:i+1,p:p/s}))}
+function u3(){
+  if(evMode==='custom3'){c3probs.forEach((p,i)=>{if($('ev_p'+i))$('ev_p'+i).textContent=p})}
+  const dist=getEVDist(),EX=dist.reduce((s,d)=>s+d.x*d.p,0),EX2=dist.reduce((s,d)=>s+d.x*d.x*d.p,0),VarX=EX2-EX*EX
+  $('t3ex').textContent=f2(EX);$('t3ex2').textContent=f2(EX2);$('t3var').textContent=f2(VarX);$('t3std').textContent=f2(Math.sqrt(Math.max(0,VarX)))
+  $('f3').textContent='E[X]='+f2(EX)+'  E[X²]='+f2(EX2)+'  Var='+f2(EX2)+'-'+f2(EX*EX)+'='+f2(VarX)
+  const{ctx,w,h}=sc('c3',180);ctx.clearRect(0,0,w,h)
+  const n=dist.length,bw=Math.min(52,(w-60)/n-7),ox=50,oy=h-32,maxP=Math.max(...dist.map(d=>d.p))*1.2
+  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(ox,10);ctx.lineTo(ox,oy);ctx.lineTo(w-10,oy);ctx.stroke()
+  dist.forEach((d,i)=>{const x=ox+i*((w-ox-10)/n)+5,bh=(d.p/maxP)*(oy-15);ctx.fillStyle='rgba(21,101,192,.6)';ctx.fillRect(x,oy-bh,bw,bh);ctx.fillStyle='#1E2761';ctx.font='11px Arial';ctx.textAlign='center';ctx.fillText(d.x,x+bw/2,oy+14);ctx.font='bold 10px Arial';ctx.fillText(f2(d.p),x+bw/2,oy-bh-4)})
+  const totalW=n*((w-ox-10)/n),exX=ox+(EX-dist[0].x)/(dist[dist.length-1].x-dist[0].x||1)*totalW+5
+  ctx.strokeStyle='rgba(183,28,28,.8)';ctx.lineWidth=2;ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(exX,oy);ctx.lineTo(exX,15);ctx.stroke();ctx.setLineDash([])
+  ctx.fillStyle='#B71C1C';ctx.font='500 11px Arial';ctx.textAlign='center';ctx.fillText('E[X]='+f2(EX),exX,26);ctx.textAlign='left'
+}
+
+setTimeout(()=>{u0();setCDF('dice');setPDF('uniform');u3()},60)
+window.addEventListener('resize',()=>{const ai=[...panels].findIndex(p=>p.classList.contains('active'));[u0,u1,u2,u3][ai]?.()})
 </script>
-</div>
 </body>
 </html>

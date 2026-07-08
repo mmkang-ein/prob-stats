@@ -1,70 +1,204 @@
 <!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>11·12주차 — 확률 및 통계 시뮬레이터</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f7ff;color:#1A1A2E}
-header{background:#1E2761;color:#fff;padding:.9rem 1.2rem;display:flex;align-items:center;gap:.8rem;position:sticky;top:0;z-index:10}
-header a{color:#CADCFC;text-decoration:none;font-size:.85rem;white-space:nowrap}
-.hw{flex:1}
-header h1{font-size:1rem;font-weight:600}
-header p{font-size:.78rem;color:#90CAF9;margin-top:2px}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f7ff;color:#1A1A2E}
+header{background:#1E2761;color:#fff;padding:.9rem 1.2rem;display:flex;align-items:center;gap:.8rem}
+header a{color:#CADCFC;text-decoration:none;font-size:.85rem}.hw{flex:1}header h1{font-size:1rem;font-weight:600}header p{font-size:.78rem;color:#90CAF9;margin-top:2px}
 .wrap{max-width:740px;margin:0 auto;padding:.9rem 1rem 3rem}
 .tabs{display:flex;gap:3px;border-bottom:2px solid #C5CAE9;margin-bottom:1.2rem;flex-wrap:wrap}
 .tab{padding:6px 12px;font-size:12.5px;font-weight:500;color:#5C6BC0;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap}
-.tab.active{color:#1565C0;border-bottom-color:#1565C0}
-.panel{display:none}.panel.active{display:block}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px}
+.tab.active{color:#1565C0;border-bottom-color:#1565C0}.panel{display:none}.panel.active{display:block}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:11px}
 .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:7px;margin-bottom:11px}
 .card{background:#fff;border:1px solid #C5CAE9;border-radius:10px;padding:.8rem .9rem}
-.lbl{font-size:11px;color:#5C6BC0;margin-bottom:2px}
-.val{font-size:17px;font-weight:600;color:#1565C0}
-.ctrl{margin-bottom:9px}
-.ctrl label{display:flex;justify-content:space-between;font-size:12.5px;color:#5C6BC0;margin-bottom:2px}
-.ctrl label span{font-weight:600;color:#1A1A2E}
-input[type=range]{width:100%}
+.lbl{font-size:11px;color:#5C6BC0;margin-bottom:2px}.val{font-size:17px;font-weight:600;color:#1565C0}
+.ctrl{margin-bottom:9px}.ctrl label{display:flex;justify-content:space-between;font-size:12.5px;color:#5C6BC0;margin-bottom:2px}
+.ctrl label span{font-weight:600;color:#1A1A2E}input[type=range]{width:100%}
 canvas{display:block;width:100%!important;border-radius:8px;background:#fff;border:1px solid #EEF2FF;margin-bottom:4px}
 .formula{background:#EEF2FF;border-radius:8px;padding:8px 12px;font-size:12px;font-family:monospace;color:#1E2761;margin-bottom:9px}
 .info{background:#E3F2FD;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#1565C0;margin-bottom:9px}
 .ok{background:#E8F5E9;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#2E7D32;margin-bottom:9px}
 .warn{background:#FFF3E0;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#BF6F00;margin-bottom:9px}
-.danger{background:#FFEBEE;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#B71C1C;margin-bottom:9px}
 .sec{font-size:13px;font-weight:600;color:#1E2761;margin-bottom:8px}
 .tog-row{display:flex;gap:5px;margin-bottom:9px;flex-wrap:wrap}
 .tog{padding:3px 10px;font-size:12px;border:1px solid #C5CAE9;border-radius:20px;background:#fff;cursor:pointer;color:#5C6BC0}
 .tog.on{background:#1565C0;color:#fff;border-color:#1565C0;font-weight:500}
-.tbl{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:10px}
-.tbl th{background:#EEF2FF;padding:5px 8px;text-align:center;border-bottom:1px solid #C5CAE9;font-weight:500;color:#1E2761}
-.tbl td{padding:5px 8px;text-align:center;border-bottom:1px solid #EEF2FF}
-</style>
-</head>
-<body>
-<header>
-  <a href="../index.html">← 목록</a>
-  <div class="hw">
-    <h1>11·12주차 — 표본분포 · 추정 · 가설검정</h1>
-    <p>표본분포 · 신뢰구간 · Z검정 · 검정력 α·β</p>
-  </div>
-</header>
+</style></head><body>
+<header><a href="../index.html">← 목록</a><div class="hw"><h1>11·12주차 — 표본분포 · 추정 · 가설검정</h1><p>표본분포 · 신뢰구간 · Z검정 · 검정력 α·β</p></div></header>
 <div class="wrap">
 <div class="tabs">
   <button class="tab active" onclick="sw(0)">① 표본분포</button>
   <button class="tab" onclick="sw(1)">② 신뢰구간</button>
-  <button class="tab" onclick="sw(2)">③ Z검정</button>
-  <button class="tab" onclick="sw(3)">④ 검정력 α</button>
+  <button class="tab" onclick="sw(2)">③ 가설검정</button>
+  <button class="tab" onclick="sw(3)">④ 검정력</button>
 </div>
-<div class="panel active" id="p0"><div style="padding:2rem;text-align:center;color:#5C6BC0"><p style="font-size:1rem;color:#1E2761;font-weight:600">표본분포 시뮬레이터</p><p style="margin-top:.5rem">슬라이더를 조작해 결과를 확인하세요</p></div></div>
-<div class="panel" id="p1"></div>
-<div class="panel" id="p2"></div>
-<div class="panel" id="p3"></div>
+
+<div class="panel active" id="p0">
+  <div class="sec">표본분포 — X̄의 분포 (CLT 적용)</div>
+  <div class="ctrl"><label>모집단 μ <span id="t0mu">50.0</span></label><input type="range" min="0" max="100" value="50" id="s0mu" oninput="u0()"></div>
+  <div class="ctrl"><label>모집단 σ <span id="t0sig">10.0</span></label><input type="range" min="1" max="30" value="10" id="s0sig" oninput="u0()"></div>
+  <div class="ctrl"><label>표본 크기 n <span id="t0n">30</span></label><input type="range" min="2" max="100" value="30" id="s0n" oninput="u0()"></div>
+  <canvas id="c0" height="165"></canvas>
+  <div class="g4">
+    <div class="card"><div class="lbl">E[X̄]=μ</div><div class="val" id="r0mu">50.0</div></div>
+    <div class="card"><div class="lbl">SE=σ/√n</div><div class="val" id="r0se">1.83</div></div>
+    <div class="card"><div class="lbl">P(μ±1SE)</div><div class="val" style="color:#2E7D32" id="r0p1">68.3%</div></div>
+    <div class="card"><div class="lbl">P(μ±2SE)</div><div class="val" style="color:#2E7D32" id="r0p2">95.4%</div></div>
+  </div>
+  <div class="formula" id="f0">X̄~N(μ,σ²/n)  SE=σ/√n</div>
+</div>
+
+<div class="panel" id="p1">
+  <div class="sec">신뢰구간 (CI) — 구간추정</div>
+  <div class="ctrl"><label>표본평균 X̄ <span id="t1xb">52.0</span></label><input type="range" min="30" max="70" value="52" id="s1xb" oninput="u1()"></div>
+  <div class="ctrl"><label>σ <span id="t1sg">10.0</span></label><input type="range" min="2" max="30" value="10" id="s1sg" oninput="u1()"></div>
+  <div class="ctrl"><label>n <span id="t1nn">30</span></label><input type="range" min="5" max="200" value="30" id="s1nn" oninput="u1()"></div>
+  <div class="tog-row">
+    <button class="tog on" id="ci0" onclick="setCI(.9)">90%</button>
+    <button class="tog" id="ci1" onclick="setCI(.95)">95%</button>
+    <button class="tog" id="ci2" onclick="setCI(.99)">99%</button>
+  </div>
+  <canvas id="c1" height="155"></canvas>
+  <div class="g3">
+    <div class="card"><div class="lbl">하한 LB</div><div class="val" id="r1lb">-</div></div>
+    <div class="card"><div class="lbl">상한 UB</div><div class="val" id="r1ub">-</div></div>
+    <div class="card"><div class="lbl">오차한계 E</div><div class="val" id="r1e">-</div></div>
+  </div>
+  <div class="formula" id="f1">CI: X̄ ± z_(α/2)·σ/√n</div>
+  <div class="info" id="m1"></div>
+</div>
+
+<div class="panel" id="p2">
+  <div class="sec">가설검정 — H₀:μ=μ₀ vs H₁:μ≠μ₀</div>
+  <div class="ctrl"><label>귀무가설 μ₀ <span id="t2m0">50.0</span></label><input type="range" min="30" max="70" value="50" id="s2m0" oninput="u2()"></div>
+  <div class="ctrl"><label>표본평균 X̄ <span id="t2xb">54.0</span></label><input type="range" min="30" max="70" value="54" id="s2xb" oninput="u2()"></div>
+  <div class="ctrl"><label>σ <span id="t2sg">10.0</span></label><input type="range" min="2" max="30" value="10" id="s2sg" oninput="u2()"></div>
+  <div class="ctrl"><label>n <span id="t2nn">25</span></label><input type="range" min="5" max="200" value="25" id="s2nn" oninput="u2()"></div>
+  <div class="tog-row">
+    <button class="tog on" id="al0" onclick="setAlpha(.05)">α=0.05</button>
+    <button class="tog" id="al1" onclick="setAlpha(.01)">α=0.01</button>
+    <button class="tog" id="al2" onclick="setAlpha(.10)">α=0.10</button>
+  </div>
+  <canvas id="c2" height="155"></canvas>
+  <div class="g4">
+    <div class="card"><div class="lbl">Z 검정통계량</div><div class="val" id="r2z">-</div></div>
+    <div class="card"><div class="lbl">기각역 ±z</div><div class="val" id="r2zc">±1.96</div></div>
+    <div class="card"><div class="lbl">p-값</div><div class="val" style="color:#B71C1C" id="r2pv">-</div></div>
+    <div class="card"><div class="lbl">결론</div><div class="val" style="font-size:13px" id="r2conc">-</div></div>
+  </div>
+  <div id="m2" class="ok"></div>
+</div>
+
+<div class="panel" id="p3">
+  <div class="sec">검정력 — 1종·2종 오류 시각화</div>
+  <div class="ctrl"><label>H₀ 하의 μ₀ <span id="t3m0">50.0</span></label><input type="range" min="30" max="60" value="50" id="s3m0" oninput="u3()"></div>
+  <div class="ctrl"><label>실제 μ (H₁) <span id="t3m1">54.0</span></label><input type="range" min="40" max="70" value="54" id="s3m1" oninput="u3()"></div>
+  <div class="ctrl"><label>표준오차 SE <span id="t3se">2.0</span></label><input type="range" min="5" max="50" value="20" id="s3se" oninput="u3()"></div>
+  <div class="ctrl"><label>유의수준 α <span id="t3al">0.05</span></label><input type="range" min="1" max="20" value="5" id="s3al" oninput="u3()"></div>
+  <canvas id="c3" height="175"></canvas>
+  <div class="g4">
+    <div class="card"><div class="lbl">α (1종오류)</div><div class="val" style="color:#B71C1C" id="r3a">0.05</div></div>
+    <div class="card"><div class="lbl">β (2종오류)</div><div class="val" style="color:#BF6F00" id="r3b">-</div></div>
+    <div class="card"><div class="lbl">검정력 1-β</div><div class="val" style="color:#2E7D32" id="r3pw">-</div></div>
+    <div class="card"><div class="lbl">효과크기 d</div><div class="val" id="r3d">-</div></div>
+  </div>
+  <div class="formula" id="f3">검정력 = P(기각|H₁참) = 1-β</div>
+</div>
+</div>
+
 <script>
+const $=id=>document.getElementById(id)
+const f2=v=>v.toFixed(2),f3=v=>v.toFixed(3),f4=v=>v.toFixed(4)
 const tabs=document.querySelectorAll('.tab'),panels=document.querySelectorAll('.panel')
-function sw(i){tabs.forEach((t,j)=>t.classList.toggle('active',i===j));panels.forEach((p,j)=>p.classList.toggle('active',i===j))}
+function sw(i){tabs.forEach((t,j)=>t.classList.toggle('active',i===j));panels.forEach((p,j)=>p.classList.toggle('active',i===j));setTimeout(()=>[u0,u1,u2,u3][i](),30)}
+function sc(id,h){const c=$(id),w=c.parentElement.offsetWidth-2||360;c.width=w;c.height=h;return{ctx:c.getContext('2d'),w,h}}
+function normPDF(x,mu=0,sig=1){return Math.exp(-.5*((x-mu)/sig)**2)/(sig*Math.sqrt(2*Math.PI))}
+function normCDF(z){const t=1/(1+.2316419*Math.abs(z)),p=t*(.31938153+t*(-.356563782+t*(1.781477937+t*(-1.821255978+t*1.330274429))))*Math.exp(-.5*z*z)/Math.sqrt(2*Math.PI);return z>=0?1-p:p}
+function normINV(p){const a=[2.515517,.802853,.010328],b=[1.432788,.189269,.001308];const t=p<.5?Math.sqrt(-2*Math.log(p)):Math.sqrt(-2*Math.log(1-p));const num=a[0]+t*(a[1]+t*a[2]),den=1+t*(b[0]+t*(b[1]+t*b[2]));return p<.5?-(t-num/den):t-num/den}
+function drawNorm(ctx,w,h,mu,sig,fills){
+  const ox=45,oy=h-28,pw=w-ox-10,ph=oy-15,N=300
+  const xs=Array.from({length:N+1},(_,i)=>mu-4*sig+8*sig*i/N),fs=xs.map(x=>normPDF(x,mu,sig)),maxF=Math.max(...fs)*1.2
+  const tx=v=>ox+(v-(mu-4*sig))/(8*sig)*pw,ty=v=>oy-v/maxF*ph
+  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(ox,15);ctx.lineTo(ox,oy+1);ctx.lineTo(w-8,oy+1);ctx.stroke()
+  fills.forEach(({lo,hi,color})=>{ctx.beginPath();let s=false;xs.forEach((x,i)=>{if(x>=lo&&x<=hi){if(!s){ctx.moveTo(tx(x),oy);s=true}ctx.lineTo(tx(x),ty(fs[i]))}});if(s){ctx.lineTo(tx(Math.min(hi,mu+4*sig)),oy);ctx.closePath();ctx.fillStyle=color;ctx.fill()}})
+  ctx.beginPath();ctx.strokeStyle='rgba(21,101,192,.85)';ctx.lineWidth=2;xs.forEach((x,i)=>i===0?ctx.moveTo(tx(x),ty(fs[i])):ctx.lineTo(tx(x),ty(fs[i])));ctx.stroke()
+  return{tx,ty,oy}
+}
+
+function u0(){
+  const mu=+$('s0mu').value,sig=+$('s0sig').value,n=+$('s0n').value
+  $('t0mu').textContent=mu.toFixed(1);$('t0sig').textContent=sig.toFixed(1);$('t0n').textContent=n
+  const se=sig/Math.sqrt(n)
+  $('r0mu').textContent=mu.toFixed(1);$('r0se').textContent=se.toFixed(2);$('r0p1').textContent='68.3%';$('r0p2').textContent='95.4%'
+  $('f0').textContent='X̄~N('+mu+','+sig+'²/'+n+')  SE='+sig+'/√'+n+'='+se.toFixed(3)
+  const{ctx,w,h}=sc('c0',165);ctx.clearRect(0,0,w,h)
+  drawNorm(ctx,w,h,mu,se,[{lo:mu-se,hi:mu+se,color:'rgba(29,158,117,.3)'},{lo:mu-2*se,hi:mu-se,color:'rgba(21,101,192,.2)'},{lo:mu+se,hi:mu+2*se,color:'rgba(21,101,192,.2)'}])
+  const{tx,oy}=drawNorm(ctx,w,h,mu,se,[])
+  ctx.strokeStyle='rgba(183,28,28,.7)';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(tx(mu),oy);ctx.lineTo(tx(mu),15);ctx.stroke();ctx.setLineDash([])
+  ctx.fillStyle='#B71C1C';ctx.font='11px Arial';ctx.fillText('μ='+mu,tx(mu)+3,26)
+}
+
+let ciLevel=.95
+function setCI(l){ciLevel=l;['ci0','ci1','ci2'].forEach((id,i)=>$(id).classList.toggle('on',[.9,.95,.99][i]===l));u1()}
+function u1(){
+  const xb=+$('s1xb').value,sig=+$('s1sg').value,n=+$('s1nn').value
+  $('t1xb').textContent=xb.toFixed(1);$('t1sg').textContent=sig.toFixed(1);$('t1nn').textContent=n
+  const se=sig/Math.sqrt(n),z=normINV(1-(1-ciLevel)/2),E=z*se,lb=xb-E,ub=xb+E
+  $('r1lb').textContent=lb.toFixed(2);$('r1ub').textContent=ub.toFixed(2);$('r1e').textContent=E.toFixed(2)
+  $('f1').textContent='CI: '+xb.toFixed(1)+'±'+z.toFixed(2)+'×'+se.toFixed(2)+'=['+lb.toFixed(2)+','+ub.toFixed(2)+']'
+  $('m1').textContent=Math.round(ciLevel*100)+'% CI — 반복 표집 시 '+Math.round(ciLevel*100)+'%가 μ 포함'
+  const{ctx,w,h}=sc('c1',155);ctx.clearRect(0,0,w,h)
+  const r=drawNorm(ctx,w,h,xb,se,[{lo:lb,hi:ub,color:'rgba(29,158,117,.25)'}])
+  const{tx,oy}=r
+  ctx.strokeStyle='rgba(183,28,28,.8)';ctx.lineWidth=2
+  ;[lb,ub].forEach(v=>{ctx.beginPath();ctx.moveTo(tx(v),oy-28);ctx.lineTo(tx(v),oy);ctx.stroke()})
+  ctx.fillStyle='#2E7D32';ctx.font='11px Arial';ctx.textAlign='center';ctx.fillText('['+lb.toFixed(1)+', '+ub.toFixed(1)+']',tx(xb),oy-10);ctx.textAlign='left'
+}
+
+let alpha=.05
+function setAlpha(a){alpha=a;['al0','al1','al2'].forEach((id,i)=>$(id).classList.toggle('on',[.05,.01,.10][i]===a));u2()}
+function u2(){
+  const mu0=+$('s2m0').value,xb=+$('s2xb').value,sig=+$('s2sg').value,n=+$('s2nn').value
+  $('t2m0').textContent=mu0.toFixed(1);$('t2xb').textContent=xb.toFixed(1);$('t2sg').textContent=sig.toFixed(1);$('t2nn').textContent=n
+  const se=sig/Math.sqrt(n),z=(xb-mu0)/se,zcrit=normINV(1-alpha/2),pval=2*(1-normCDF(Math.abs(z))),reject=Math.abs(z)>zcrit
+  $('r2z').textContent=z.toFixed(3);$('r2zc').textContent='±'+zcrit.toFixed(2);$('r2pv').textContent=pval.toFixed(4)
+  $('r2conc').textContent=reject?'기각':'채택';$('r2conc').style.color=reject?'#B71C1C':'#2E7D32'
+  const m2=$('m2');m2.className=reject?'ok':'warn';m2.textContent=reject?'H₀ 기각 (Z='+z.toFixed(2)+' > '+zcrit.toFixed(2)+') — p='+pval.toFixed(4)+' < α='+alpha:'H₀ 채택 (|Z|='+Math.abs(z).toFixed(2)+' < '+zcrit.toFixed(2)+') — p='+pval.toFixed(4)+' > α='+alpha
+  const{ctx,w,h}=sc('c2',155);ctx.clearRect(0,0,w,h)
+  const{tx,oy}=drawNorm(ctx,w,h,mu0,se,[{lo:-999,hi:mu0-zcrit*se,color:'rgba(183,28,28,.25)'},{lo:mu0+zcrit*se,hi:999,color:'rgba(183,28,28,.25)'}])
+  ctx.strokeStyle='rgba(183,28,28,.8)';ctx.lineWidth=1.5
+  ;[mu0-zcrit*se,mu0+zcrit*se].forEach(v=>{ctx.beginPath();ctx.moveTo(tx(v),oy-28);ctx.lineTo(tx(v),oy);ctx.stroke()})
+  ctx.strokeStyle='rgba(83,74,183,.9)';ctx.lineWidth=2;ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(tx(xb),oy);ctx.lineTo(tx(xb),15);ctx.stroke();ctx.setLineDash([])
+  ctx.fillStyle='rgba(83,74,183,.9)';ctx.font='500 11px Arial';ctx.fillText('X̄='+xb.toFixed(1),tx(xb)+3,26)
+}
+
+function u3(){
+  const mu0=+$('s3m0').value,mu1=+$('s3m1').value,se=+$('s3se').value/10,al=+$('s3al').value/100
+  $('t3m0').textContent=mu0.toFixed(1);$('t3m1').textContent=mu1.toFixed(1);$('t3se').textContent=se.toFixed(1);$('t3al').textContent=al.toFixed(2)
+  const zcrit=normINV(1-al/2),critU=mu0+zcrit*se,critL=mu0-zcrit*se
+  const beta=normCDF((critU-mu1)/se)-normCDF((critL-mu1)/se),power=1-beta,d=Math.abs(mu1-mu0)/se
+  $('r3a').textContent=al.toFixed(2);$('r3b').textContent=beta.toFixed(3);$('r3pw').textContent=power.toFixed(3);$('r3d').textContent=d.toFixed(2)
+  $('f3').textContent='검정력='+power.toFixed(3)+'  β='+beta.toFixed(3)+'  d='+d.toFixed(2)
+  const{ctx,w,h}=sc('c3',175);ctx.clearRect(0,0,w,h)
+  const xlo=Math.min(mu0,mu1)-4*se,xhi=Math.max(mu0,mu1)+4*se
+  const ox=40,oy=h-28,pw=w-ox-10,ph=oy-15,N=300
+  const xs=Array.from({length:N+1},(_,i)=>xlo+(xhi-xlo)*i/N)
+  const f0s=xs.map(x=>normPDF(x,mu0,se)),f1s=xs.map(x=>normPDF(x,mu1,se)),maxF=Math.max(...f0s,...f1s)*1.2
+  const tx=v=>ox+(v-xlo)/(xhi-xlo)*pw,ty=(v,mx)=>oy-v/mx*ph
+  const fillR=(lo,hi,fs,color)=>{ctx.beginPath();let s=false;xs.forEach((x,i)=>{if(x>=lo&&x<=hi){if(!s){ctx.moveTo(tx(x),oy);s=true}ctx.lineTo(tx(x),ty(fs[i],maxF))}});if(s){ctx.lineTo(tx(Math.min(hi,xhi)),oy);ctx.closePath();ctx.fillStyle=color;ctx.fill()}}
+  fillR(-999,critL,f0s,'rgba(183,28,28,.3)');fillR(critU,999,f0s,'rgba(183,28,28,.3)')
+  fillR(critL,critU,f1s,'rgba(191,111,0,.25)')
+  fillR(-999,critL,f1s,'rgba(29,158,117,.35)');fillR(critU,999,f1s,'rgba(29,158,117,.35)')
+  [[f0s,'rgba(21,101,192,.85)'],[f1s,'rgba(29,158,117,.85)']].forEach(([fs,c])=>{ctx.beginPath();ctx.strokeStyle=c;ctx.lineWidth=2;xs.forEach((x,i)=>i===0?ctx.moveTo(tx(x),ty(fs[i],maxF)):ctx.lineTo(tx(x),ty(fs[i],maxF)));ctx.stroke()})
+  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.5
+  ;[critL,critU].forEach(v=>{ctx.beginPath();ctx.moveTo(tx(v),oy);ctx.lineTo(tx(v),15);ctx.stroke()})
+  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(ox,15);ctx.lineTo(ox,oy+1);ctx.lineTo(w-8,oy+1);ctx.stroke()
+  ctx.fillStyle='rgba(21,101,192,.9)';ctx.font='11px Arial';ctx.fillText('H₀(μ='+mu0+')',tx(mu0)-15,26)
+  ctx.fillStyle='rgba(29,158,117,.9)';ctx.fillText('H₁(μ='+mu1+')',tx(mu1)-15,38)
+}
+
+setTimeout(()=>{u0();u1();u2();u3()},60)
+window.addEventListener('resize',()=>{const ai=[...panels].findIndex(p=>p.classList.contains('active'));[u0,u1,u2,u3][ai]?.()})
 </script>
-</div>
-</body>
-</html>
+</body></html>

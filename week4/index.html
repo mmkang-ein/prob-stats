@@ -1,54 +1,41 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>4주차 — 확률 및 통계 시뮬레이터</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f7ff;color:#1A1A2E}
-header{background:#1E2761;color:#fff;padding:.9rem 1.2rem;display:flex;align-items:center;gap:.8rem;position:sticky;top:0;z-index:10}
-header a{color:#CADCFC;text-decoration:none;font-size:.85rem;white-space:nowrap}
-.hw{flex:1}
-header h1{font-size:1rem;font-weight:600}
-header p{font-size:.78rem;color:#90CAF9;margin-top:2px}
+header{background:#1E2761;color:#fff;padding:.9rem 1.2rem;display:flex;align-items:center;gap:.8rem}
+header a{color:#CADCFC;text-decoration:none;font-size:.85rem}.hw{flex:1}
+header h1{font-size:1rem;font-weight:600}header p{font-size:.78rem;color:#90CAF9;margin-top:2px}
 .wrap{max-width:740px;margin:0 auto;padding:.9rem 1rem 3rem}
 .tabs{display:flex;gap:3px;border-bottom:2px solid #C5CAE9;margin-bottom:1.2rem;flex-wrap:wrap}
 .tab{padding:6px 12px;font-size:12.5px;font-weight:500;color:#5C6BC0;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap}
 .tab.active{color:#1565C0;border-bottom-color:#1565C0}
 .panel{display:none}.panel.active{display:block}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:11px}
 .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:7px;margin-bottom:11px}
 .card{background:#fff;border:1px solid #C5CAE9;border-radius:10px;padding:.8rem .9rem}
-.lbl{font-size:11px;color:#5C6BC0;margin-bottom:2px}
-.val{font-size:17px;font-weight:600;color:#1565C0}
+.lbl{font-size:11px;color:#5C6BC0;margin-bottom:2px}.val{font-size:17px;font-weight:600;color:#1565C0}
 .ctrl{margin-bottom:9px}
 .ctrl label{display:flex;justify-content:space-between;font-size:12.5px;color:#5C6BC0;margin-bottom:2px}
-.ctrl label span{font-weight:600;color:#1A1A2E}
-input[type=range]{width:100%}
+.ctrl label span{font-weight:600;color:#1A1A2E}input[type=range]{width:100%}
 canvas{display:block;width:100%!important;border-radius:8px;background:#fff;border:1px solid #EEF2FF;margin-bottom:4px}
 .formula{background:#EEF2FF;border-radius:8px;padding:8px 12px;font-size:12px;font-family:monospace;color:#1E2761;margin-bottom:9px}
 .info{background:#E3F2FD;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#1565C0;margin-bottom:9px}
 .ok{background:#E8F5E9;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#2E7D32;margin-bottom:9px}
 .warn{background:#FFF3E0;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#BF6F00;margin-bottom:9px}
-.danger{background:#FFEBEE;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#B71C1C;margin-bottom:9px}
 .sec{font-size:13px;font-weight:600;color:#1E2761;margin-bottom:8px}
 .tog-row{display:flex;gap:5px;margin-bottom:9px;flex-wrap:wrap}
 .tog{padding:3px 10px;font-size:12px;border:1px solid #C5CAE9;border-radius:20px;background:#fff;cursor:pointer;color:#5C6BC0}
 .tog.on{background:#1565C0;color:#fff;border-color:#1565C0;font-weight:500}
-.tbl{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:10px}
-.tbl th{background:#EEF2FF;padding:5px 8px;text-align:center;border-bottom:1px solid #C5CAE9;font-weight:500;color:#1E2761}
-.tbl td{padding:5px 8px;text-align:center;border-bottom:1px solid #EEF2FF}
 </style>
 </head>
 <body>
 <header>
   <a href="../index.html">← 목록</a>
-  <div class="hw">
-    <h1>4주차 — 조건부확률 · 베이즈 정리</h1>
-    <p>조건부확률 · 독립성 판별 · 전체확률법칙 · 베이즈 정리</p>
-  </div>
+  <div class="hw"><h1>4주차 — 조건부확률 · 베이즈 정리</h1><p>조건부확률 · 독립성 판별 · 전체확률법칙 · 베이즈 정리</p></div>
 </header>
 <div class="wrap">
 <div class="tabs">
@@ -57,14 +44,172 @@ canvas{display:block;width:100%!important;border-radius:8px;background:#fff;bord
   <button class="tab" onclick="sw(2)">③ 전체확률법칙</button>
   <button class="tab" onclick="sw(3)">④ 베이즈 정리</button>
 </div>
-<div class="panel active" id="p0"><div style="padding:2rem;text-align:center;color:#5C6BC0"><p style="font-size:1rem;color:#1E2761;font-weight:600">조건부확률 시뮬레이터</p><p style="margin-top:.5rem">슬라이더를 조작해 결과를 확인하세요</p></div></div>
-<div class="panel" id="p1"></div>
-<div class="panel" id="p2"></div>
-<div class="panel" id="p3"></div>
-<script>
-const tabs=document.querySelectorAll('.tab'),panels=document.querySelectorAll('.panel')
-function sw(i){tabs.forEach((t,j)=>t.classList.toggle('active',i===j));panels.forEach((p,j)=>p.classList.toggle('active',i===j))}
-</script>
+
+<!-- TAB 0: 조건부확률 -->
+<div class="panel active" id="p0">
+  <div class="sec">조건부확률 — P(A|B) = P(A∩B) / P(B)</div>
+  <div class="ctrl"><label>전체 학생 수 N <span id="t0N">200</span>명</label><input type="range" min="50" max="500" value="200" step="10" id="s0N" oninput="u0()"></div>
+  <div class="ctrl"><label>이공계 비율 <span id="t0E">60</span>%</label><input type="range" min="10" max="90" value="60" step="5" id="s0E" oninput="u0()"></div>
+  <div class="ctrl"><label>이공계 중 통계 수강률 <span id="t0Es">70</span>%</label><input type="range" min="0" max="100" value="70" step="5" id="s0Es" oninput="u0()"></div>
+  <div class="ctrl"><label>문과 중 통계 수강률 <span id="t0Hs">20</span>%</label><input type="range" min="0" max="100" value="20" step="5" id="s0Hs" oninput="u0()"></div>
+  <canvas id="c0" height="120"></canvas>
+  <div class="g3">
+    <div class="card"><div class="lbl">P(통계 수강)</div><div class="val" id="r0pS">-</div></div>
+    <div class="card"><div class="lbl">P(이공계|통계)</div><div class="val" style="color:#2E7D32" id="r0pEgS">-</div></div>
+    <div class="card"><div class="lbl">P(통계|이공계)</div><div class="val" style="color:#BF6F00" id="r0pSgE">-</div></div>
+  </div>
+  <div class="formula" id="f0">P(A|B) = P(A∩B) / P(B)</div>
+  <div class="info">B 발생 시 표본공간이 B로 축소됩니다</div>
 </div>
+
+<!-- TAB 1: 독립성 판별 -->
+<div class="panel" id="p1">
+  <div class="sec">독립성 수치 판별 — P(A∩B) = P(A)·P(B)</div>
+  <div class="ctrl"><label>P(A) <span id="t1A">0.40</span></label><input type="range" min="1" max="99" value="40" id="s1A" oninput="u1()"></div>
+  <div class="ctrl"><label>P(B) <span id="t1B">0.30</span></label><input type="range" min="1" max="99" value="30" id="s1B" oninput="u1()"></div>
+  <div class="ctrl"><label>실제 P(A∩B) <span id="t1AB">0.12</span></label><input type="range" min="0" max="99" value="12" id="s1AB" oninput="u1()"></div>
+  <canvas id="c1" height="140"></canvas>
+  <div class="g3">
+    <div class="card"><div class="lbl">P(A)·P(B) — 독립 가정</div><div class="val" id="r1prod">0.120</div></div>
+    <div class="card"><div class="lbl">실제 P(A∩B)</div><div class="val" id="r1actual">0.120</div></div>
+    <div class="card"><div class="lbl">판별</div><div class="val" style="font-size:13px" id="r1ind">독립</div></div>
+  </div>
+  <div class="formula" id="f1">P(A)·P(B)=0.12 vs P(A∩B)=0.12 → 독립</div>
+  <div class="ok" id="m1">독립 — P(A∩B) = P(A)·P(B) 성립</div>
+</div>
+
+<!-- TAB 2: 전체확률법칙 -->
+<div class="panel" id="p2">
+  <div class="sec">전체확률법칙 — P(A) = Σ P(A|Bᵢ)·P(Bᵢ)</div>
+  <div class="tog-row">
+    <button class="tog on" id="tc0" onclick="setN2(2)">2분할</button>
+    <button class="tog" id="tc1" onclick="setN2(3)">3분할</button>
+    <button class="tog" id="tc2" onclick="setN2(4)">4분할</button>
+  </div>
+  <div id="ctrls2"></div>
+  <canvas id="c2" height="130"></canvas>
+  <div class="g3">
+    <div class="card"><div class="lbl">P(A) — 전체확률법칙</div><div class="val" id="r2pA">-</div></div>
+    <div class="card"><div class="lbl">ΣP(Bᵢ) = 1 검증</div><div class="val" style="color:#2E7D32" id="r2sum">-</div></div>
+    <div class="card"><div class="lbl">분할 수</div><div class="val" id="r2n">2</div></div>
+  </div>
+  <div class="formula" id="f2">P(A) = Σ P(A|Bᵢ)·P(Bᵢ)</div>
+</div>
+
+<!-- TAB 3: 베이즈 -->
+<div class="panel" id="p3">
+  <div class="sec">베이즈 정리 — 사전확률 → 사후확률</div>
+  <div class="tog-row">
+    <button class="tog on" id="tb0" onclick="setScene(0)">진단 검사</button>
+    <button class="tog" id="tb1" onclick="setScene(1)">공장 불량</button>
+    <button class="tog" id="tb2" onclick="setScene(2)">직접 입력</button>
+  </div>
+  <div id="bdesc" class="info"></div>
+  <div class="ctrl"><label><span id="bl0">유병률</span> <span id="tv0">1.0</span>%</label><input type="range" min="0.1" max="99" value="1" step="0.1" id="sb0" oninput="u3()"></div>
+  <div class="ctrl"><label><span id="bl1">민감도 P(양성|환자)</span> <span id="tv1">99</span>%</label><input type="range" min="1" max="100" value="99" id="sb1" oninput="u3()"></div>
+  <div class="ctrl"><label><span id="bl2">위양성률 P(양성|건강)</span> <span id="tv2">5</span>%</label><input type="range" min="1" max="99" value="5" id="sb2" oninput="u3()"></div>
+  <canvas id="c3" height="150"></canvas>
+  <div class="g4">
+    <div class="card"><div class="lbl">사전 P(H₁)</div><div class="val" id="r3prior">1.0%</div></div>
+    <div class="card"><div class="lbl">P(증거)</div><div class="val" id="r3pE">-</div></div>
+    <div class="card"><div class="lbl">사후 P(H₁|E)</div><div class="val" style="color:#2E7D32" id="r3post">-</div></div>
+    <div class="card"><div class="lbl">우도비 LR</div><div class="val" style="color:#BF6F00" id="r3lr">-</div></div>
+  </div>
+  <div class="formula" id="f3">P(H₁|E) = P(E|H₁)·P(H₁) / P(E)</div>
+  <div id="m3" class="warn"></div>
+</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id)
+const f3=v=>v.toFixed(3),f2=v=>v.toFixed(2)
+const tabs=document.querySelectorAll('.tab'),panels=document.querySelectorAll('.panel')
+function sw(i){tabs.forEach((t,j)=>t.classList.toggle('active',i===j));panels.forEach((p,j)=>p.classList.toggle('active',i===j));setTimeout(()=>[u0,u1,u2,u3][i](),30)}
+function sc(id,h){const c=$(id),w=c.parentElement.offsetWidth-2||360;c.width=w;c.height=h;return{ctx:c.getContext('2d'),w,h}}
+
+function bar(ctx,label,val,max,color,y,w,h=18){
+  const bw=w-130,fw=Math.max(2,(val/max)*bw)
+  ctx.fillStyle='#5C6BC0';ctx.font='11px Arial';ctx.fillText(label,0,y+13)
+  ctx.fillStyle='#EEF2FF';ctx.fillRect(120,y,bw,h)
+  ctx.fillStyle=color;ctx.fillRect(120,y,fw,h)
+  ctx.fillStyle='#1E2761';ctx.font='11px Arial';ctx.fillText(f3(val),120+fw+4,y+13)
+}
+
+function u0(){
+  const N=+$('s0N').value,er=+$('s0E').value/100,esR=+$('s0Es').value/100,hsR=+$('s0Hs').value/100
+  $('t0N').textContent=N;$('t0E').textContent=Math.round(er*100);$('t0Es').textContent=Math.round(esR*100);$('t0Hs').textContent=Math.round(hsR*100)
+  const nE=Math.round(N*er),nH=N-nE,nES=Math.round(nE*esR),nHS=Math.round(nH*hsR),nS=nES+nHS
+  const pS=nS/N,pEgS=nS>0?nES/nS:0,pSgE=nE>0?nES/nE:0
+  $('r0pS').textContent=f3(pS);$('r0pEgS').textContent=f3(pEgS);$('r0pSgE').textContent=f3(pSgE)
+  $('f0').textContent='P(이공계|통계)='+nES+'/'+nS+'='+f3(pEgS)+'  /  P(통계|이공계)='+nES+'/'+nE+'='+f3(pSgE)
+  const{ctx,w,h}=sc('c0',120);ctx.clearRect(0,0,w,h)
+  ;[{l:'전체',n:N,c:'rgba(92,107,192,.4)'},{l:'이공계',n:nE,c:'rgba(21,101,192,.55)'},{l:'통계수강',n:nS,c:'rgba(29,158,117,.55)'},{l:'이공계∩통계',n:nES,c:'rgba(83,74,183,.6)'}].forEach((it,i)=>bar(ctx,it.l,it.n/N,1,it.c,6+i*27,w))
+}
+
+function u1(){
+  const pA=+$('s1A').value/100,pB=+$('s1B').value/100,pAB=Math.min(+$('s1AB').value/100,Math.min(pA,pB))
+  $('t1A').textContent=pA.toFixed(2);$('t1B').textContent=pB.toFixed(2);$('t1AB').textContent=pAB.toFixed(2)
+  const prod=pA*pB,isInd=Math.abs(pAB-prod)<0.005
+  $('r1prod').textContent=f3(prod);$('r1actual').textContent=f3(pAB)
+  $('r1ind').textContent=isInd?'독립 ✓':'종속';$('r1ind').style.color=isInd?'#2E7D32':'#B71C1C'
+  $('f1').textContent='P(A)·P(B)='+f3(prod)+'  vs  P(A∩B)='+f3(pAB)+(isInd?' → 독립':' → 종속')
+  $('m1').className=isInd?'ok':'warn';$('m1').textContent=isInd?'독립 — P(A∩B)=P(A)·P(B) 성립':'종속 — P(A∩B)≠P(A)·P(B)'
+  const{ctx,w,h}=sc('c1',140);ctx.clearRect(0,0,w,h)
+  ;[{l:'P(A)',v:pA,c:'rgba(21,101,192,.6)'},{l:'P(B)',v:pB,c:'rgba(0,131,143,.6)'},{l:'P(A)·P(B) 독립',v:prod,c:'rgba(83,74,183,.5)'},{l:'실제 P(A∩B)',v:pAB,c:isInd?'rgba(46,125,50,.7)':'rgba(183,28,28,.6)'}].forEach((it,i)=>bar(ctx,it.l,it.v,1,it.c,8+i*30,w))
+}
+
+let n2=2
+function setN2(n){n2=n;['tc0','tc1','tc2'].forEach((id,i)=>$(id).classList.toggle('on',i===n-2));buildC2();u2()}
+function buildC2(){
+  let html=''
+  for(let i=0;i<n2;i++){
+    const pb=i<n2-1?Math.round(100/n2):null,pa=Math.round(70-i*10)
+    html+=`<div class="ctrl"><label>P(B${i+1}) <span id="p2b${i}">${pb??'자동'}%</span></label>${i<n2-1?`<input type="range" min="1" max="99" value="${pb}" id="s2b${i}" oninput="u2()">`:''}</div>`
+    html+=`<div class="ctrl"><label>P(A|B${i+1}) <span id="p2a${i}">${pa}%</span></label><input type="range" min="0" max="100" value="${pa}" id="s2a${i}" oninput="u2()"></div>`
+  }
+  $('ctrls2').innerHTML=html
+}
+function u2(){
+  let ps=[],pas=[],sumP=0
+  for(let i=0;i<n2;i++){
+    if(i<n2-1){const v=+($('s2b'+i)?.value||Math.round(100/n2))/100;ps.push(v);sumP+=v}
+    else ps.push(Math.max(0,1-sumP))
+    pas.push(+($('s2a'+i)?.value||60)/100)
+    $('p2b'+i).textContent=(i<n2-1?Math.round(ps[i]*100):Math.round(Math.max(0,1-sumP)*100))+'%'
+    $('p2a'+i).textContent=Math.round(pas[i]*100)+'%'
+  }
+  const pA=ps.reduce((s,p,i)=>s+p*pas[i],0)
+  $('r2pA').textContent=f3(pA);$('r2sum').textContent=f3(ps.reduce((s,p)=>s+p,0))+' ✓';$('r2n').textContent=n2
+  $('f2').textContent='P(A)='+ps.map((p,i)=>'P(A|B'+(i+1)+')·'+f3(p)).join('+')+'='+f3(pA)
+  const{ctx,w,h}=sc('c2',130);ctx.clearRect(0,0,w,h)
+  const colors=['rgba(21,101,192,.6)','rgba(0,131,143,.6)','rgba(46,125,50,.6)','rgba(83,74,183,.6)']
+  ps.forEach((p,i)=>bar(ctx,'P(A|B'+(i+1)+')·P(B'+(i+1)+')',pas[i]*p,0.5,colors[i%4],8+i*(110/n2),w,Math.floor(105/n2)-4))
+  bar(ctx,'P(A) 합계',pA,1,'rgba(83,74,183,.7)',8+n2*(110/n2),w)
+}
+
+const scenes=[
+  {desc:'진단 검사 — 양성 시 실제 환자일 확률?',l0:'유병률 P(환자)',l1:'민감도 P(양성|환자)',l2:'위양성률 P(양성|건강)',v0:1,v1:99,v2:5},
+  {desc:'공장 불량 — 불량품이 A공장 것일 확률?',l0:'A공장 생산비율',l1:'A공장 불량률',l2:'B공장 불량률',v0:60,v1:2,v2:5},
+  {desc:'직접 입력 — 자유롭게 조작',l0:'사전확률 P(H₁)',l1:'P(E|H₁) 우도',l2:'P(E|H₂) 위양성',v0:30,v1:80,v2:20},
+]
+let scene=0
+function setScene(i){scene=i;['tb0','tb1','tb2'].forEach((id,j)=>$(id).classList.toggle('on',j===i));const sc2=scenes[i];$('bdesc').textContent=sc2.desc;$('bl0').textContent=sc2.l0;$('bl1').textContent=sc2.l1;$('bl2').textContent=sc2.l2;$('sb0').value=sc2.v0;$('sb1').value=sc2.v1;$('sb2').value=sc2.v2;u3()}
+function u3(){
+  const prior=+$('sb0').value/100,lik1=+$('sb1').value/100,lik2=+$('sb2').value/100
+  $('tv0').textContent=(+$('sb0').value).toFixed(1);$('tv1').textContent=$('sb1').value;$('tv2').textContent=$('sb2').value
+  const pE=lik1*prior+lik2*(1-prior),post=pE>0?lik1*prior/pE:0,lr=lik2>0?lik1/lik2:Infinity
+  $('r3prior').textContent=(prior*100).toFixed(1)+'%';$('r3pE').textContent=f3(pE)
+  $('r3post').textContent=(post*100).toFixed(1)+'%';$('r3lr').textContent=isFinite(lr)?lr.toFixed(1):'∞'
+  $('f3').textContent='P(H₁|E)='+lik1.toFixed(2)+'×'+prior.toFixed(3)+'/'+f3(pE)+'='+f3(post)
+  $('m3').className=post<0.3?'warn':'ok'
+  $('m3').textContent=post<0.3?'기저율 효과! 사전확률이 낮으면 사후확률도 낮을 수 있습니다':'사후확률 '+((post*100).toFixed(1))+'% — 증거 반영 완료'
+  const{ctx,w,h}=sc('c3',150);ctx.clearRect(0,0,w,h)
+  ;[{l:'사전 P(H₁)',v:prior,c:'rgba(21,101,192,.6)'},{l:'P(E|H₁) 우도',v:lik1,c:'rgba(0,131,143,.6)'},{l:'P(E) 전체증거',v:pE,c:'rgba(83,74,183,.55)'},{l:'사후 P(H₁|E)',v:post,c:'rgba(46,125,50,.75)'}].forEach((it,i)=>bar(ctx,it.l,it.v,1,it.c,8+i*33,w))
+}
+
+buildC2();setScene(0)
+setTimeout(()=>{u0();u1();u2()},60)
+window.addEventListener('resize',()=>{const ai=[...panels].findIndex(p=>p.classList.contains('active'));[u0,u1,u2,u3][ai]?.()})
+</script>
 </body>
 </html>

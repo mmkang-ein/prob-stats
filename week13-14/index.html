@@ -1,70 +1,215 @@
 <!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>13·14주차 — 확률 및 통계 시뮬레이터</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f7ff;color:#1A1A2E}
-header{background:#1E2761;color:#fff;padding:.9rem 1.2rem;display:flex;align-items:center;gap:.8rem;position:sticky;top:0;z-index:10}
-header a{color:#CADCFC;text-decoration:none;font-size:.85rem;white-space:nowrap}
-.hw{flex:1}
-header h1{font-size:1rem;font-weight:600}
-header p{font-size:.78rem;color:#90CAF9;margin-top:2px}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f7ff;color:#1A1A2E}
+header{background:#1E2761;color:#fff;padding:.9rem 1.2rem;display:flex;align-items:center;gap:.8rem}
+header a{color:#CADCFC;text-decoration:none;font-size:.85rem}.hw{flex:1}header h1{font-size:1rem;font-weight:600}header p{font-size:.78rem;color:#90CAF9;margin-top:2px}
 .wrap{max-width:740px;margin:0 auto;padding:.9rem 1rem 3rem}
 .tabs{display:flex;gap:3px;border-bottom:2px solid #C5CAE9;margin-bottom:1.2rem;flex-wrap:wrap}
 .tab{padding:6px 12px;font-size:12.5px;font-weight:500;color:#5C6BC0;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap}
-.tab.active{color:#1565C0;border-bottom-color:#1565C0}
-.panel{display:none}.panel.active{display:block}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px}
+.tab.active{color:#1565C0;border-bottom-color:#1565C0}.panel{display:none}.panel.active{display:block}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:11px}
 .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:7px;margin-bottom:11px}
 .card{background:#fff;border:1px solid #C5CAE9;border-radius:10px;padding:.8rem .9rem}
-.lbl{font-size:11px;color:#5C6BC0;margin-bottom:2px}
-.val{font-size:17px;font-weight:600;color:#1565C0}
-.ctrl{margin-bottom:9px}
-.ctrl label{display:flex;justify-content:space-between;font-size:12.5px;color:#5C6BC0;margin-bottom:2px}
-.ctrl label span{font-weight:600;color:#1A1A2E}
-input[type=range]{width:100%}
+.lbl{font-size:11px;color:#5C6BC0;margin-bottom:2px}.val{font-size:17px;font-weight:600;color:#1565C0}
+.ctrl{margin-bottom:9px}.ctrl label{display:flex;justify-content:space-between;font-size:12.5px;color:#5C6BC0;margin-bottom:2px}
+.ctrl label span{font-weight:600;color:#1A1A2E}input[type=range]{width:100%}
 canvas{display:block;width:100%!important;border-radius:8px;background:#fff;border:1px solid #EEF2FF;margin-bottom:4px}
 .formula{background:#EEF2FF;border-radius:8px;padding:8px 12px;font-size:12px;font-family:monospace;color:#1E2761;margin-bottom:9px}
 .info{background:#E3F2FD;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#1565C0;margin-bottom:9px}
 .ok{background:#E8F5E9;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#2E7D32;margin-bottom:9px}
 .warn{background:#FFF3E0;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#BF6F00;margin-bottom:9px}
-.danger{background:#FFEBEE;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#B71C1C;margin-bottom:9px}
 .sec{font-size:13px;font-weight:600;color:#1E2761;margin-bottom:8px}
 .tog-row{display:flex;gap:5px;margin-bottom:9px;flex-wrap:wrap}
 .tog{padding:3px 10px;font-size:12px;border:1px solid #C5CAE9;border-radius:20px;background:#fff;cursor:pointer;color:#5C6BC0}
 .tog.on{background:#1565C0;color:#fff;border-color:#1565C0;font-weight:500}
-.tbl{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:10px}
-.tbl th{background:#EEF2FF;padding:5px 8px;text-align:center;border-bottom:1px solid #C5CAE9;font-weight:500;color:#1E2761}
-.tbl td{padding:5px 8px;text-align:center;border-bottom:1px solid #EEF2FF}
-</style>
-</head>
-<body>
-<header>
-  <a href="../index.html">← 목록</a>
-  <div class="hw">
-    <h1>13·14주차 — 상관 · 회귀분석 · 통계 오류</h1>
-    <p>상관계수 산점도 · 단순회귀 · 잔차분석 · 통계 함정 4종</p>
-  </div>
-</header>
+</style></head><body>
+<header><a href="../index.html">← 목록</a><div class="hw"><h1>13·14주차 — 상관 · 회귀분석 · 통계 오류</h1><p>상관계수 · 단순회귀 · 잔차분석 · 통계 함정 4종</p></div></header>
 <div class="wrap">
 <div class="tabs">
-  <button class="tab active" onclick="sw(0)">① 상관계수 산점도</button>
+  <button class="tab active" onclick="sw(0)">① 상관계수</button>
   <button class="tab" onclick="sw(1)">② 단순회귀</button>
   <button class="tab" onclick="sw(2)">③ 잔차분석</button>
-  <button class="tab" onclick="sw(3)">④ 통계 함정 4종</button>
+  <button class="tab" onclick="sw(3)">④ 통계 함정</button>
 </div>
-<div class="panel active" id="p0"><div style="padding:2rem;text-align:center;color:#5C6BC0"><p style="font-size:1rem;color:#1E2761;font-weight:600">상관계수 산점도 시뮬레이터</p><p style="margin-top:.5rem">슬라이더를 조작해 결과를 확인하세요</p></div></div>
-<div class="panel" id="p1"></div>
-<div class="panel" id="p2"></div>
-<div class="panel" id="p3"></div>
+
+<div class="panel active" id="p0">
+  <div class="sec">상관계수 r — 산점도 시뮬레이터</div>
+  <div class="ctrl"><label>목표 r <span id="t0r">0.80</span></label><input type="range" min="-99" max="99" value="80" id="s0r" oninput="u0()"></div>
+  <div class="ctrl"><label>표본 수 n <span id="t0n">30</span></label><input type="range" min="5" max="100" value="30" id="s0n" oninput="u0()"></div>
+  <div class="ctrl"><label>잡음 <span id="t0ns">0.10</span></label><input type="range" min="0" max="50" value="10" id="s0ns" oninput="u0()"></div>
+  <canvas id="c0" height="195"></canvas>
+  <div class="g4">
+    <div class="card"><div class="lbl">계산된 r</div><div class="val" id="r0r">-</div></div>
+    <div class="card"><div class="lbl">r² 결정계수</div><div class="val" style="color:#2E7D32" id="r0r2">-</div></div>
+    <div class="card"><div class="lbl">Cov(X,Y)</div><div class="val" id="r0cov">-</div></div>
+    <div class="card"><div class="lbl">해석</div><div class="val" style="font-size:12px" id="r0int">-</div></div>
+  </div>
+  <div class="formula" id="f0">r=Σ(xi-x̄)(yi-ȳ)/√[Σ(xi-x̄)²·Σ(yi-ȳ)²]</div>
+</div>
+
+<div class="panel" id="p1">
+  <div class="sec">단순선형회귀 ŷ = β̂₀ + β̂₁x</div>
+  <div class="ctrl"><label>실제 β₀ <span id="t1b0">2.0</span></label><input type="range" min="-50" max="50" value="20" id="s1b0" oninput="u1()"></div>
+  <div class="ctrl"><label>실제 β₁ <span id="t1b1">1.5</span></label><input type="range" min="-30" max="30" value="15" id="s1b1" oninput="u1()"></div>
+  <div class="ctrl"><label>잡음 σε <span id="t1ep">2.0</span></label><input type="range" min="1" max="50" value="20" id="s1ep" oninput="u1()"></div>
+  <div class="ctrl"><label>n <span id="t1nn">25</span></label><input type="range" min="5" max="80" value="25" id="s1nn" oninput="u1()"></div>
+  <canvas id="c1" height="195"></canvas>
+  <div class="g4">
+    <div class="card"><div class="lbl">추정 β̂₀</div><div class="val" id="r1b0">-</div></div>
+    <div class="card"><div class="lbl">추정 β̂₁</div><div class="val" id="r1b1">-</div></div>
+    <div class="card"><div class="lbl">R²</div><div class="val" style="color:#2E7D32" id="r1r2">-</div></div>
+    <div class="card"><div class="lbl">MSE</div><div class="val" style="color:#B71C1C" id="r1mse">-</div></div>
+  </div>
+  <div class="formula" id="f1">β̂₁=Sxy/Sxx  β̂₀=ȳ-β̂₁x̄  R²=1-SSE/SST</div>
+</div>
+
+<div class="panel" id="p2">
+  <div class="sec">잔차 분석 — 회귀 가정 검토</div>
+  <div class="tog-row">
+    <button class="tog on" id="tr0" onclick="setRes('good')">정상 잔차</button>
+    <button class="tog" id="tr1" onclick="setRes('het')">이분산성</button>
+    <button class="tog" id="tr2" onclick="setRes('nl')">비선형</button>
+  </div>
+  <div class="ctrl"><label>n <span id="t2n">40</span></label><input type="range" min="10" max="80" value="40" id="s2n" oninput="u2()"></div>
+  <canvas id="c2" height="190"></canvas>
+  <div class="g3">
+    <div class="card"><div class="lbl">잔차 평균</div><div class="val" id="r2mn">≈0</div></div>
+    <div class="card"><div class="lbl">잔차 분산</div><div class="val" id="r2vr">-</div></div>
+    <div class="card"><div class="lbl">가정 위반</div><div class="val" style="font-size:12px" id="r2vl">없음</div></div>
+  </div>
+  <div id="m2" class="ok">잔차가 무작위 분포 → 회귀 가정 충족</div>
+</div>
+
+<div class="panel" id="p3">
+  <div class="sec">통계적 함정 — 4가지 주요 오류</div>
+  <div class="tog-row">
+    <button class="tog on" id="tf0" onclick="setTrap(0)">상관≠인과</button>
+    <button class="tog" id="tf1" onclick="setTrap(1)">표본편향</button>
+    <button class="tog" id="tf2" onclick="setTrap(2)">다중검정</button>
+    <button class="tog" id="tf3" onclick="setTrap(3)">p값 오해</button>
+  </div>
+  <canvas id="c3" height="180"></canvas>
+  <div id="tdesc" class="info">아이스크림 판매↑ → 익사사고↑: r=0.94 — 왜? 제3변수(더운 날씨)!</div>
+  <div class="formula" id="f3">상관관계가 있어도 인과관계는 별도 증명 필요</div>
+</div>
+</div>
+
 <script>
+const $=id=>document.getElementById(id)
+const f2=v=>v.toFixed(2),f3=v=>v.toFixed(3),f4=v=>v.toFixed(4)
 const tabs=document.querySelectorAll('.tab'),panels=document.querySelectorAll('.panel')
-function sw(i){tabs.forEach((t,j)=>t.classList.toggle('active',i===j));panels.forEach((p,j)=>p.classList.toggle('active',i===j))}
+function sw(i){tabs.forEach((t,j)=>t.classList.toggle('active',i===j));panels.forEach((p,j)=>p.classList.toggle('active',i===j));setTimeout(()=>[u0,u1,u2,u3][i](),30)}
+function sc(id,h){const c=$(id),w=c.parentElement.offsetWidth-2||360;c.width=w;c.height=h;return{ctx:c.getContext('2d'),w,h}}
+
+let seed=42
+function lcg(){seed=(seed*1664525+1013904223)>>>0;return seed/0xffffffff}
+function genData(n,rho,noise){seed=n*17+Math.round(rho*100)+Math.round(noise*100)+1;const xs=[],ys=[];for(let i=0;i<n;i++){const x=lcg()*10;const y=rho*x+(Math.sqrt(Math.max(0,1-rho*rho))+noise)*(lcg()*10-5);xs.push(x);ys.push(y)};return{xs,ys}}
+function calcStats(xs,ys){const n=xs.length,mx=xs.reduce((s,v)=>s+v,0)/n,my=ys.reduce((s,v)=>s+v,0)/n;const sxx=xs.reduce((s,v)=>s+(v-mx)**2,0),syy=ys.reduce((s,v)=>s+(v-my)**2,0),sxy=xs.reduce((s,v,i)=>s+(v-mx)*(ys[i]-my),0);return{mx,my,sxx,syy,sxy,r:sxx>0&&syy>0?sxy/Math.sqrt(sxx*syy):0,cov:sxy/n}}
+function drawScatter(ctx,w,h,xs,ys,showReg=true){
+  const ox=45,oy=h-28,pw=w-ox-10,ph=oy-18
+  const xMin=Math.min(...xs)-.5,xMax=Math.max(...xs)+.5,yMin=Math.min(...ys)-1,yMax=Math.max(...ys)+1
+  const tx=v=>ox+(v-xMin)/(xMax-xMin)*pw,ty=v=>oy-(v-yMin)/(yMax-yMin)*ph
+  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(ox,18);ctx.lineTo(ox,oy+1);ctx.lineTo(w-8,oy+1);ctx.stroke()
+  xs.forEach((x,i)=>{ctx.beginPath();ctx.arc(tx(x),ty(ys[i]),3.5,0,2*Math.PI);ctx.fillStyle='rgba(21,101,192,.65)';ctx.fill()})
+  if(showReg){const{mx,my,sxx,sxy}=calcStats(xs,ys);const b1=sxy/sxx,b0=my-b1*mx;ctx.strokeStyle='rgba(183,28,28,.8)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(tx(xMin+.2),ty(b0+b1*(xMin+.2)));ctx.lineTo(tx(xMax-.2),ty(b0+b1*(xMax-.2)));ctx.stroke()}
+}
+
+function u0(){
+  const rho=+$('s0r').value/100,n=+$('s0n').value,noise=+$('s0ns').value/100
+  $('t0r').textContent=rho.toFixed(2);$('t0n').textContent=n;$('t0ns').textContent=noise.toFixed(2)
+  const{xs,ys}=genData(n,rho,noise),st=calcStats(xs,ys)
+  $('r0r').textContent=f3(st.r);$('r0r2').textContent=f3(st.r**2);$('r0cov').textContent=f2(st.cov)
+  const interp=Math.abs(st.r)>0.8?'강한'+(st.r>0?'양':'음'):Math.abs(st.r)>0.5?'중간':Math.abs(st.r)>0.2?'약한':'무관'
+  $('r0int').textContent=interp;$('f0').textContent='r='+f3(st.r)+'  r²='+f3(st.r**2)+'  Cov='+f2(st.cov)
+  const{ctx,w,h}=sc('c0',195);ctx.clearRect(0,0,w,h);drawScatter(ctx,w,h,xs,ys,true)
+  const ox=45,oy=h-28,pw=w-ox-10,xMin=Math.min(...xs)-.5,xMax=Math.max(...xs)+.5,tx=v=>ox+(v-xMin)/(xMax-xMin)*pw
+  ctx.fillStyle='#1E2761';ctx.font='bold 11px Arial';ctx.fillText('r='+f3(st.r),ox+2,15)
+}
+
+function u1(){
+  const b0=+$('s1b0').value/10,b1=+$('s1b1').value/10,eps=+$('s1ep').value/10,n=+$('s1nn').value
+  $('t1b0').textContent=b0.toFixed(1);$('t1b1').textContent=b1.toFixed(1);$('t1ep').textContent=eps.toFixed(1);$('t1nn').textContent=n
+  seed=n*13+Math.round(b1*10)+Math.round(eps*10)+7
+  const xs=[],ys=[];for(let i=0;i<n;i++){const x=lcg()*10;xs.push(x);ys.push(b0+b1*x+(lcg()-.5)*2*eps)}
+  const st=calcStats(xs,ys),hb1=st.sxy/st.sxx,hb0=st.my-hb1*st.mx
+  const yhat=xs.map(x=>hb0+hb1*x),sse=ys.reduce((s,v,i)=>s+(v-yhat[i])**2,0),sst=ys.reduce((s,v)=>s+(v-st.my)**2,0)
+  const r2=1-sse/sst,mse=sse/(n-2)
+  $('r1b0').textContent=f2(hb0);$('r1b1').textContent=f2(hb1);$('r1r2').textContent=f3(r2);$('r1mse').textContent=f2(mse)
+  $('f1').textContent='ŷ='+hb0.toFixed(2)+'+'+hb1.toFixed(2)+'x  R²='+f3(r2)+'  MSE='+f2(mse)
+  const{ctx,w,h}=sc('c1',195);ctx.clearRect(0,0,w,h);drawScatter(ctx,w,h,xs,ys,true)
+  const ox=45,pw=2,xMin=Math.min(...xs)-.5,xMax=Math.max(...xs)+.5,tx2=v=>ox+(v-xMin)/(xMax-xMin)*(w-ox-10)
+  ctx.fillStyle='#1E2761';ctx.font='11px Arial';ctx.fillText('ŷ='+hb0.toFixed(1)+'+'+hb1.toFixed(1)+'x  R²='+f3(r2),ox+2,14)
+}
+
+let resMode='good'
+function setRes(m){resMode=m;['tr0','tr1','tr2'].forEach((id,i)=>$(id).classList.toggle('on',['good','het','nl'][i]===m));u2()}
+function u2(){
+  const n=+$('s2n').value;$('t2n').textContent=n
+  seed=n*11+resMode.length*7+3;const xs=[],ys=[]
+  for(let i=0;i<n;i++){const x=lcg()*10;let y;if(resMode==='good')y=2+1.5*x+(lcg()-.5)*4;else if(resMode==='het')y=2+1.5*x+(lcg()-.5)*x*2;else y=2+x-.1*x**2+(lcg()-.5)*3;xs.push(x);ys.push(y)}
+  const st=calcStats(xs,ys),hb1=st.sxy/st.sxx,hb0=st.my-hb1*st.mx
+  const resids=xs.map((x,i)=>ys[i]-(hb0+hb1*x))
+  const rmn=resids.reduce((s,v)=>s+v,0)/n,rvr=resids.reduce((s,v)=>s+(v-rmn)**2,0)/n
+  $('r2mn').textContent=rmn.toFixed(2);$('r2vr').textContent=rvr.toFixed(2)
+  const viol=resMode==='good'?'없음':resMode==='het'?'이분산성':'비선형성'
+  $('r2vl').textContent=viol;$('r2vl').style.color=resMode==='good'?'#2E7D32':'#B71C1C'
+  const m2=$('m2');m2.className=resMode==='good'?'ok':'warn';m2.textContent=resMode==='good'?'잔차 무작위 분포 → 가정 충족':resMode==='het'?'이분산성: x 커질수록 잔차 분산 증가 → 가정 위반':'비선형성: 잔차에 곡선 패턴 → 변환 또는 다항회귀 필요'
+  const{ctx,w,h}=sc('c2',190);ctx.clearRect(0,0,w,h)
+  const ox=45,oy=h-28,pw2=w-ox-10,ph=oy-18
+  const xMin=Math.min(...xs)-.3,xMax=Math.max(...xs)+.3,rMin=Math.min(...resids)-1,rMax=Math.max(...resids)+1
+  const tx=v=>ox+(v-xMin)/(xMax-xMin)*pw2,ty=v=>oy-(v-rMin)/(rMax-rMin)*ph
+  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(ox,18);ctx.lineTo(ox,oy+1);ctx.lineTo(w-8,oy+1);ctx.stroke()
+  ctx.strokeStyle='rgba(21,101,192,.3)';ctx.lineWidth=1;ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(ox,ty(0));ctx.lineTo(w-8,ty(0));ctx.stroke();ctx.setLineDash([])
+  xs.forEach((x,i)=>{ctx.beginPath();ctx.arc(tx(x),ty(resids[i]),3.5,0,2*Math.PI);ctx.fillStyle=resMode==='good'?'rgba(21,101,192,.65)':'rgba(183,28,28,.65)';ctx.fill()})
+  ctx.fillStyle='#5C6BC0';ctx.font='11px Arial';ctx.fillText('잔차 vs x값',ox+2,14)
+}
+
+let trapMode=0
+const traps=[
+  {desc:'상관≠인과: r=0.94 (아이스크림 판매↑ → 익사사고↑). 제3변수(더운 날씨)!',formula:'상관관계 있어도 인과관계는 별도 증명 필요'},
+  {desc:'표본편향: 생존편향 — 성공한 기업만 분석 시 과대 추정 발생',formula:'편향된 표본 → 왜곡된 추론 → 잘못된 결론'},
+  {desc:'다중검정: 가설 20개 동시검정(α=0.05) → 1개는 우연히 유의 예상!',formula:'α=0.05: 20번 중 평균 1번 1종 오류 (Bonferroni 보정 필요)'},
+  {desc:'p값 오해: p=0.03은 H₀가 거짓일 확률 3%가 아님! H₀하에서 이 결과 관측 확률',formula:'p값≠H₀거짓 확률  /  유의성≠실용적 중요성  /  효과크기 함께 보고'},
+]
+function setTrap(i){trapMode=i;['tf0','tf1','tf2','tf3'].forEach((id,j)=>$(id).classList.toggle('on',j===i));u3()}
+function u3(){
+  const t=traps[trapMode];$('tdesc').textContent=t.desc;$('f3').textContent=t.formula
+  const{ctx,w,h}=sc('c3',180);ctx.clearRect(0,0,w,h)
+  if(trapMode===0){
+    seed=42;const n=30,xs=[],ys=[];for(let i=0;i<n;i++){const x=lcg()*100;xs.push(x);ys.push(.8*x+(lcg()-.5)*20)};drawScatter(ctx,w,h,xs,ys,true)
+    ctx.fillStyle='#1E2761';ctx.font='11px Arial';ctx.fillText('아이스크림 판매량',45,h-10);ctx.save();ctx.translate(15,h/2);ctx.rotate(-Math.PI/2);ctx.fillText('익사사고 건수',0,0);ctx.restore()
+  } else if(trapMode===1){
+    const ox=30,oy=h-28;ctx.fillStyle='#5C6BC0';ctx.font='12px Arial';ctx.fillText('전체 모집단',ox,20);ctx.fillText('생존(관측 가능)',w/2+ox,20)
+    ctx.strokeStyle='#C5CAE9';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(w/2+ox-10,15);ctx.lineTo(w/2+ox-10,h-15);ctx.stroke()
+    seed=1;for(let i=0;i<80;i++){const x=ox+15+lcg()*(w/2-50),y=30+lcg()*(h-55),survived=lcg()>.5;ctx.beginPath();ctx.arc(x,y,3,0,2*Math.PI);ctx.fillStyle=survived?'rgba(21,101,192,.7)':'rgba(136,135,128,.3)';ctx.fill();if(survived){const x2=w/2+ox+15+lcg()*(w/2-60);ctx.beginPath();ctx.arc(x2,y,3,0,2*Math.PI);ctx.fillStyle='rgba(183,28,28,.7)';ctx.fill()}}
+  } else if(trapMode===2){
+    seed=99;const m=80,ps=[];for(let i=0;i<m;i++)ps.push(lcg())
+    const bins=20,bwp=1/bins,counts=Array(bins).fill(0)
+    ps.forEach(p=>{counts[Math.min(bins-1,Math.floor(p/bwp))]++})
+    const ox=40,oy=h-28,pw3=w-ox-10,maxC=Math.max(...counts)*1.2
+    ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(ox,15);ctx.lineTo(ox,oy+1);ctx.lineTo(w-8,oy+1);ctx.stroke()
+    counts.forEach((c,i)=>{const x=ox+i*(pw3/bins),bwp2=pw3/bins-1,p=i*bwp;ctx.fillStyle=p<.05?'rgba(183,28,28,.7)':'rgba(21,101,192,.5)';ctx.fillRect(x,oy-c/maxC*(oy-15),bwp2,c/maxC*(oy-15))})
+    const sigN=ps.filter(p=>p<.05).length
+    ctx.fillStyle='#B71C1C';ctx.font='12px Arial';ctx.fillText('p<0.05: '+sigN+'개/'+m+'개 = '+(sigN/m*100).toFixed(0)+'%',ox+2,28)
+    ctx.fillStyle='#5C6BC0';ctx.font='10px Arial';ctx.fillText('← 빨강: p<0.05 (우연 유의)',ox+2,h-8)
+  } else {
+    const msgs=[
+      '오해 ①: p=0.03 = H₀가 거짓일 확률 3%  ✗',
+      '오해 ②: p<0.05 = 실용적으로 중요함  ✗',
+      '오해 ③: p>0.05 = 효과 없음  ✗',
+      '',
+      '정답: p값 = H₀가 참이라 가정 시',
+      '     이보다 극단적 결과 관측 확률',
+      '',
+      '→ 유의성 ≠ 효과크기 ≠ 실용적 중요성',
+    ]
+    msgs.forEach((m,i)=>{ctx.fillStyle=m.includes('✗')?'#B71C1C':m.includes('정답')||m.includes('→')?'#2E7D32':'#5C6BC0';ctx.font=(m.includes('✗')||m.includes('정답')||m.includes('→'))?'500 12px Arial':'12px Arial';ctx.fillText(m,20,30+i*18)})
+  }
+}
+
+setTimeout(()=>{u0();u1();u2();setTrap(0)},60)
+window.addEventListener('resize',()=>{const ai=[...panels].findIndex(p=>p.classList.contains('active'));[u0,u1,u2,u3][ai]?.()})
 </script>
-</div>
-</body>
-</html>
+</body></html>

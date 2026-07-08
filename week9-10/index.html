@@ -1,70 +1,200 @@
 <!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>9·10주차 — 확률 및 통계 시뮬레이터</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f7ff;color:#1A1A2E}
-header{background:#1E2761;color:#fff;padding:.9rem 1.2rem;display:flex;align-items:center;gap:.8rem;position:sticky;top:0;z-index:10}
-header a{color:#CADCFC;text-decoration:none;font-size:.85rem;white-space:nowrap}
-.hw{flex:1}
-header h1{font-size:1rem;font-weight:600}
-header p{font-size:.78rem;color:#90CAF9;margin-top:2px}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f7ff;color:#1A1A2E}
+header{background:#1E2761;color:#fff;padding:.9rem 1.2rem;display:flex;align-items:center;gap:.8rem}
+header a{color:#CADCFC;text-decoration:none;font-size:.85rem}.hw{flex:1}header h1{font-size:1rem;font-weight:600}header p{font-size:.78rem;color:#90CAF9;margin-top:2px}
 .wrap{max-width:740px;margin:0 auto;padding:.9rem 1rem 3rem}
 .tabs{display:flex;gap:3px;border-bottom:2px solid #C5CAE9;margin-bottom:1.2rem;flex-wrap:wrap}
 .tab{padding:6px 12px;font-size:12.5px;font-weight:500;color:#5C6BC0;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap}
-.tab.active{color:#1565C0;border-bottom-color:#1565C0}
-.panel{display:none}.panel.active{display:block}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px}
+.tab.active{color:#1565C0;border-bottom-color:#1565C0}.panel{display:none}.panel.active{display:block}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:11px}
 .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:7px;margin-bottom:11px}
 .card{background:#fff;border:1px solid #C5CAE9;border-radius:10px;padding:.8rem .9rem}
-.lbl{font-size:11px;color:#5C6BC0;margin-bottom:2px}
-.val{font-size:17px;font-weight:600;color:#1565C0}
-.ctrl{margin-bottom:9px}
-.ctrl label{display:flex;justify-content:space-between;font-size:12.5px;color:#5C6BC0;margin-bottom:2px}
-.ctrl label span{font-weight:600;color:#1A1A2E}
-input[type=range]{width:100%}
+.lbl{font-size:11px;color:#5C6BC0;margin-bottom:2px}.val{font-size:17px;font-weight:600;color:#1565C0}
+.ctrl{margin-bottom:9px}.ctrl label{display:flex;justify-content:space-between;font-size:12.5px;color:#5C6BC0;margin-bottom:2px}
+.ctrl label span{font-weight:600;color:#1A1A2E}input[type=range]{width:100%}
 canvas{display:block;width:100%!important;border-radius:8px;background:#fff;border:1px solid #EEF2FF;margin-bottom:4px}
 .formula{background:#EEF2FF;border-radius:8px;padding:8px 12px;font-size:12px;font-family:monospace;color:#1E2761;margin-bottom:9px}
 .info{background:#E3F2FD;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#1565C0;margin-bottom:9px}
 .ok{background:#E8F5E9;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#2E7D32;margin-bottom:9px}
-.warn{background:#FFF3E0;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#BF6F00;margin-bottom:9px}
-.danger{background:#FFEBEE;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#B71C1C;margin-bottom:9px}
 .sec{font-size:13px;font-weight:600;color:#1E2761;margin-bottom:8px}
 .tog-row{display:flex;gap:5px;margin-bottom:9px;flex-wrap:wrap}
 .tog{padding:3px 10px;font-size:12px;border:1px solid #C5CAE9;border-radius:20px;background:#fff;cursor:pointer;color:#5C6BC0}
 .tog.on{background:#1565C0;color:#fff;border-color:#1565C0;font-weight:500}
-.tbl{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:10px}
-.tbl th{background:#EEF2FF;padding:5px 8px;text-align:center;border-bottom:1px solid #C5CAE9;font-weight:500;color:#1E2761}
-.tbl td{padding:5px 8px;text-align:center;border-bottom:1px solid #EEF2FF}
-</style>
-</head>
-<body>
-<header>
-  <a href="../index.html">← 목록</a>
-  <div class="hw">
-    <h1>9·10주차 — 연속분포 · 정규분포 · CLT</h1>
-    <p>연속분포 PDF · 정규분포 구간 · 표준정규 Z · CLT 시뮬레이터</p>
-  </div>
-</header>
+</style></head><body>
+<header><a href="../index.html">← 목록</a><div class="hw"><h1>9·10주차 — 연속분포 · 정규분포 · CLT</h1><p>연속분포 PDF · 정규분포 · 표준정규 Z · CLT 시뮬레이터</p></div></header>
 <div class="wrap">
 <div class="tabs">
   <button class="tab active" onclick="sw(0)">① 연속분포 PDF</button>
-  <button class="tab" onclick="sw(1)">② 정규분포 구간</button>
+  <button class="tab" onclick="sw(1)">② 정규분포</button>
   <button class="tab" onclick="sw(2)">③ 표준정규 Z</button>
-  <button class="tab" onclick="sw(3)">④ CLT 시뮬레이터</button>
+  <button class="tab" onclick="sw(3)">④ CLT</button>
 </div>
-<div class="panel active" id="p0"><div style="padding:2rem;text-align:center;color:#5C6BC0"><p style="font-size:1rem;color:#1E2761;font-weight:600">연속분포 PDF 시뮬레이터</p><p style="margin-top:.5rem">슬라이더를 조작해 결과를 확인하세요</p></div></div>
-<div class="panel" id="p1"></div>
-<div class="panel" id="p2"></div>
-<div class="panel" id="p3"></div>
+
+<div class="panel active" id="p0">
+  <div class="sec">연속분포 PDF — 균등·지수·정규 비교</div>
+  <div class="tog-row">
+    <button class="tog on" id="d0a" onclick="setD0('u')">균등분포</button>
+    <button class="tog" id="d0b" onclick="setD0('e')">지수분포</button>
+    <button class="tog" id="d0c" onclick="setD0('n')">정규분포</button>
+  </div>
+  <div id="dc0">
+    <div class="ctrl"><label>a <span id="ua">0.0</span></label><input type="range" min="0" max="30" value="0" id="sua" oninput="u0()"></div>
+    <div class="ctrl"><label>b <span id="ub">5.0</span></label><input type="range" min="10" max="50" value="50" id="sub_" oninput="u0()"></div>
+  </div>
+  <canvas id="c0" height="185"></canvas>
+  <div class="g3">
+    <div class="card"><div class="lbl">E[X]</div><div class="val" id="r0ex">2.5</div></div>
+    <div class="card"><div class="lbl">Var(X)</div><div class="val" id="r0var">2.08</div></div>
+    <div class="card"><div class="lbl">σ</div><div class="val" id="r0std">1.44</div></div>
+  </div>
+  <div class="formula" id="f0">f(x)=1/(b-a)  E=(a+b)/2  Var=(b-a)²/12</div>
+</div>
+
+<div class="panel" id="p1">
+  <div class="sec">정규분포 N(μ,σ²) — 파라미터 조작</div>
+  <div class="ctrl"><label>μ (평균) <span id="nmu">0.0</span></label><input type="range" min="-30" max="30" value="0" id="snmu" oninput="u1()"></div>
+  <div class="ctrl"><label>σ (표준편차) <span id="nsig">1.0</span></label><input type="range" min="2" max="30" value="10" id="snsig" oninput="u1()"></div>
+  <div class="ctrl"><label>구간 a <span id="na">-1.0</span></label><input type="range" min="-40" max="39" value="-10" id="sna" oninput="u1()"></div>
+  <div class="ctrl"><label>구간 b <span id="nb">1.0</span></label><input type="range" min="-39" max="40" value="10" id="snb" oninput="u1()"></div>
+  <canvas id="c1" height="170"></canvas>
+  <div class="g4">
+    <div class="card"><div class="lbl">μ</div><div class="val" id="t1mu">0.0</div></div>
+    <div class="card"><div class="lbl">σ</div><div class="val" id="t1sig">1.0</div></div>
+    <div class="card"><div class="lbl">P(a≤X≤b)</div><div class="val" style="color:#2E7D32" id="t1p">0.683</div></div>
+    <div class="card"><div class="lbl">Z(b)</div><div class="val" style="color:#B71C1C" id="t1z">1.00</div></div>
+  </div>
+  <div class="formula" id="f1">f(x)=1/(σ√2π)·exp(-(x-μ)²/2σ²)</div>
+</div>
+
+<div class="panel" id="p2">
+  <div class="sec">표준정규분포 Z~N(0,1) — 확률 조회</div>
+  <div class="tog-row">
+    <button class="tog on" id="tz0" onclick="setZm(0)">P(Z≤z)</button>
+    <button class="tog" id="tz1" onclick="setZm(1)">P(|Z|≤z)</button>
+    <button class="tog" id="tz2" onclick="setZm(2)">P(z₁≤Z≤z₂)</button>
+  </div>
+  <div class="ctrl"><label>z (또는 z₁) <span id="zv1">1.00</span></label><input type="range" min="-300" max="300" value="100" id="szv1" oninput="u2()"></div>
+  <div id="zctrl2" style="display:none"><div class="ctrl"><label>z₂ <span id="zv2">2.00</span></label><input type="range" min="-300" max="300" value="200" id="szv2" oninput="u2()"></div></div>
+  <canvas id="c2" height="170"></canvas>
+  <div class="g3">
+    <div class="card"><div class="lbl">확률값</div><div class="val" id="t2p">0.8413</div></div>
+    <div class="card"><div class="lbl">여사건</div><div class="val" id="t2q">0.1587</div></div>
+    <div class="card"><div class="lbl">해석</div><div class="val" style="font-size:12px" id="t2i">+1σ</div></div>
+  </div>
+  <div class="formula" id="f2">P(Z≤1.00) = Φ(1.00) = 0.8413</div>
+</div>
+
+<div class="panel" id="p3">
+  <div class="sec">중심극한정리 (CLT) — n증가 시 정규 수렴</div>
+  <div class="tog-row">
+    <button class="tog on" id="tc0" onclick="setCLT('u')">균등분포</button>
+    <button class="tog" id="tc1" onclick="setCLT('e')">지수분포</button>
+    <button class="tog" id="tc2" onclick="setCLT('b')">이항분포</button>
+  </div>
+  <div class="ctrl"><label>표본 크기 n <span id="cn">5</span></label><input type="range" min="1" max="50" value="5" id="scn" oninput="u3()"></div>
+  <div class="ctrl"><label>반복 횟수 B <span id="cB">500</span></label><input type="range" min="100" max="2000" value="500" step="100" id="scB" oninput="u3()"></div>
+  <canvas id="c3" height="185"></canvas>
+  <div class="g4">
+    <div class="card"><div class="lbl">E[X̄]</div><div class="val" id="t3ex">-</div></div>
+    <div class="card"><div class="lbl">Var(X̄)=σ²/n</div><div class="val" id="t3var">-</div></div>
+    <div class="card"><div class="lbl">관측 평균</div><div class="val" id="t3obs">-</div></div>
+    <div class="card"><div class="lbl">정규성</div><div class="val" style="font-size:12px" id="t3norm">-</div></div>
+  </div>
+  <div class="info" id="t3msg">n이 커질수록 표본평균이 정규분포에 수렴합니다!</div>
+</div>
+</div>
+
 <script>
+const $=id=>document.getElementById(id)
+const f2=v=>v.toFixed(2),f3=v=>v.toFixed(3)
 const tabs=document.querySelectorAll('.tab'),panels=document.querySelectorAll('.panel')
-function sw(i){tabs.forEach((t,j)=>t.classList.toggle('active',i===j));panels.forEach((p,j)=>p.classList.toggle('active',i===j))}
+function sw(i){tabs.forEach((t,j)=>t.classList.toggle('active',i===j));panels.forEach((p,j)=>p.classList.toggle('active',i===j));setTimeout(()=>[u0,u1,u2,u3][i](),30)}
+function sc(id,h){const c=$(id),w=c.parentElement.offsetWidth-2||360;c.width=w;c.height=h;return{ctx:c.getContext('2d'),w,h}}
+function normPDF(x,mu=0,sig=1){return Math.exp(-.5*((x-mu)/sig)**2)/(sig*Math.sqrt(2*Math.PI))}
+function normCDF(z){const t=1/(1+.2316419*Math.abs(z)),p=t*(.31938153+t*(-.356563782+t*(1.781477937+t*(-1.821255978+t*1.330274429))))*Math.exp(-.5*z*z)/Math.sqrt(2*Math.PI);return z>=0?1-p:p}
+
+let d0='u'
+function setD0(m){d0=m;['d0a','d0b','d0c'].forEach((id,i)=>$(id).classList.toggle('on','une'[i]===m));$('dc0').innerHTML=m==='u'?'<div class="ctrl"><label>a <span id="ua">0.0</span></label><input type="range" min="0" max="30" value="0" id="sua" oninput="u0()"></div><div class="ctrl"><label>b <span id="ub">5.0</span></label><input type="range" min="10" max="50" value="50" id="sub_" oninput="u0()"></div>':m==='e'?'<div class="ctrl"><label>λ (rate) <span id="ulam">1.0</span></label><input type="range" min="2" max="30" value="10" id="slam" oninput="u0()"></div>':'<div class="ctrl"><label>μ <span id="umu">0.0</span></label><input type="range" min="-30" max="30" value="0" id="smu_" oninput="u0()"></div><div class="ctrl"><label>σ <span id="usig">1.0</span></label><input type="range" min="2" max="30" value="10" id="ssig_" oninput="u0()"></div>';u0()}
+function u0(){
+  let ex,va,xs=[],fs=[],fstr
+  if(d0==='u'){const a=+($('sua')?.value||0)/10,b=+($('sub_')?.value||50)/10;if($('ua'))$('ua').textContent=a.toFixed(1);if($('ub'))$('ub').textContent=b.toFixed(1);ex=(a+b)/2;va=(b-a)**2/12;const fv=b>a?1/(b-a):0;for(let x=a-.3;x<=b+.3;x+=.05){xs.push(x);fs.push(x>=a&&x<=b?fv:0)};fstr='U('+a.toFixed(1)+','+b.toFixed(1)+')  f='+fv.toFixed(3)}
+  else if(d0==='e'){const lam=+($('slam')?.value||10)/10;if($('ulam'))$('ulam').textContent=lam.toFixed(1);ex=1/lam;va=1/(lam*lam);for(let x=0;x<=5/lam;x+=.02){xs.push(x);fs.push(lam*Math.exp(-lam*x))};fstr='Exp(λ='+lam.toFixed(1)+')  f=λe^(-λx)'}
+  else{const mu=+($('smu_')?.value||0)/10,sig=+($('ssig_')?.value||10)/10;if($('umu'))$('umu').textContent=mu.toFixed(1);if($('usig'))$('usig').textContent=sig.toFixed(1);ex=mu;va=sig*sig;for(let x=mu-4*sig;x<=mu+4*sig;x+=sig/20){xs.push(x);fs.push(normPDF(x,mu,sig))};fstr='N('+mu.toFixed(1)+','+sig.toFixed(1)+'²)'}
+  $('r0ex').textContent=f2(ex);$('r0var').textContent=f2(va);$('r0std').textContent=f2(Math.sqrt(va));$('f0').textContent=fstr
+  const{ctx,w,h}=sc('c0',185);ctx.clearRect(0,0,w,h)
+  const maxF=Math.max(...fs)*1.15||1,xMin=xs[0],xMax=xs[xs.length-1],ox=45,oy=h-30,pw=w-ox-10,ph=oy-15
+  const tx=v=>ox+(v-xMin)/(xMax-xMin)*pw,ty=v=>oy-v/maxF*ph
+  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(ox,15);ctx.lineTo(ox,oy+1);ctx.lineTo(w-8,oy+1);ctx.stroke()
+  ctx.beginPath();ctx.moveTo(tx(xs[0]),oy);xs.forEach((x,i)=>ctx.lineTo(tx(x),ty(fs[i])));ctx.lineTo(tx(xs[xs.length-1]),oy);ctx.closePath();ctx.fillStyle='rgba(21,101,192,.15)';ctx.fill()
+  ctx.beginPath();ctx.strokeStyle='rgba(21,101,192,.85)';ctx.lineWidth=2;xs.forEach((x,i)=>i===0?ctx.moveTo(tx(x),ty(fs[i])):ctx.lineTo(tx(x),ty(fs[i])));ctx.stroke()
+  if(ex>=xMin&&ex<=xMax){ctx.strokeStyle='rgba(183,28,28,.7)';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(tx(ex),oy);ctx.lineTo(tx(ex),15);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#B71C1C';ctx.font='11px Arial';ctx.fillText('E='+f2(ex),tx(ex)+3,26)}
+}
+
+function u1(){
+  const mu=+$('snmu').value/10,sig=+$('snsig').value/10,a=+$('sna').value/10,b=+$('snb').value/10
+  $('nmu').textContent=mu.toFixed(1);$('nsig').textContent=sig.toFixed(1);$('na').textContent=a.toFixed(1);$('nb').textContent=b.toFixed(1)
+  const pAB=normCDF((b-mu)/sig)-normCDF((a-mu)/sig)
+  $('t1mu').textContent=mu.toFixed(1);$('t1sig').textContent=sig.toFixed(1);$('t1p').textContent=f3(pAB);$('t1z').textContent=((b-mu)/sig).toFixed(2)
+  $('f1').textContent='P('+a.toFixed(1)+'<=X<='+b.toFixed(1)+')=Φ('+((b-mu)/sig).toFixed(2)+')-Φ('+((a-mu)/sig).toFixed(2)+')='+f3(pAB)
+  const{ctx,w,h}=sc('c1',170);ctx.clearRect(0,0,w,h)
+  const x0=mu-4*sig,x1=mu+4*sig,N=300,xs=Array.from({length:N+1},(_,i)=>x0+i*(x1-x0)/N),fs=xs.map(x=>normPDF(x,mu,sig))
+  const maxF=Math.max(...fs)*1.2,ox=45,oy=h-28,pw=w-ox-10,ph=oy-15
+  const tx=v=>ox+(v-x0)/(x1-x0)*pw,ty=v=>oy-v/maxF*ph
+  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(ox,15);ctx.lineTo(ox,oy+1);ctx.lineTo(w-8,oy+1);ctx.stroke()
+  ctx.beginPath();let s=false;xs.forEach((x,i)=>{if(x>=a&&x<=b){if(!s){ctx.moveTo(tx(x),oy);s=true}ctx.lineTo(tx(x),ty(fs[i]))}});if(s){ctx.lineTo(tx(Math.min(b,x1)),oy);ctx.closePath();ctx.fillStyle='rgba(29,158,117,.3)';ctx.fill()}
+  ctx.beginPath();ctx.strokeStyle='rgba(21,101,192,.85)';ctx.lineWidth=2;xs.forEach((x,i)=>i===0?ctx.moveTo(tx(x),ty(fs[i])):ctx.lineTo(tx(x),ty(fs[i])));ctx.stroke()
+  ctx.strokeStyle='rgba(183,28,28,.7)';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(tx(mu),oy);ctx.lineTo(tx(mu),15);ctx.stroke();ctx.setLineDash([])
+  ctx.fillStyle='#2E7D32';ctx.font='11px Arial';ctx.fillText('P='+f3(pAB),ox+4,oy-5)
+}
+
+let zMode=0
+function setZm(m){zMode=m;['tz0','tz1','tz2'].forEach((id,i)=>$(id).classList.toggle('on',i===m));$('zctrl2').style.display=m===2?'block':'none';u2()}
+function u2(){
+  const z1=+$('szv1').value/100;$('zv1').textContent=z1.toFixed(2)
+  let p
+  if(zMode===0)p=normCDF(z1)
+  else if(zMode===1)p=2*normCDF(Math.abs(z1))-1
+  else{const z2=+$('szv2').value/100;$('zv2').textContent=z2.toFixed(2);p=normCDF(z2)-normCDF(z1)}
+  $('t2p').textContent=f3(p);$('t2q').textContent=f3(1-p)
+  const zabs=Math.abs(z1),interp=zabs<1?'±1σ 내':zabs<2?'±2σ 내':zabs<3?'±3σ 내':'>3σ';$('t2i').textContent=interp
+  $('f2').textContent=(zMode===0?'P(Z<='+z1.toFixed(2)+')=':zMode===1?'P(|Z|<='+Math.abs(z1).toFixed(2)+')=':'P(Z1<=Z<=Z2)=')+f3(p)
+  const{ctx,w,h}=sc('c2',170);ctx.clearRect(0,0,w,h)
+  const N=300,xs=Array.from({length:N+1},(_,i)=>-4+8*i/N),fs=xs.map(x=>normPDF(x)),maxF=Math.max(...fs)*1.2
+  const ox=45,oy=h-28,pw=w-ox-10,ph=oy-15,tx=v=>ox+(v+4)/8*pw,ty=v=>oy-v/maxF*ph
+  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(ox,15);ctx.lineTo(ox,oy+1);ctx.lineTo(w-8,oy+1);ctx.stroke()
+  const fill=(lo,hi)=>{ctx.beginPath();let s=false;xs.forEach((x,i)=>{if(x>=lo&&x<=hi){if(!s){ctx.moveTo(tx(x),oy);s=true}ctx.lineTo(tx(x),ty(fs[i]))}});if(s){ctx.lineTo(tx(Math.min(hi,4)),oy);ctx.closePath();ctx.fillStyle='rgba(29,158,117,.3)';ctx.fill()}}
+  if(zMode===0)fill(-4,z1);else if(zMode===1){const za=Math.abs(z1);fill(-za,za)}else{const z2=+$('szv2').value/100;fill(z1,z2)}
+  ctx.beginPath();ctx.strokeStyle='rgba(21,101,192,.85)';ctx.lineWidth=2;xs.forEach((x,i)=>i===0?ctx.moveTo(tx(x),ty(fs[i])):ctx.lineTo(tx(x),ty(fs[i])));ctx.stroke()
+  ;[-3,-2,-1,0,1,2,3].forEach(v=>{ctx.fillStyle='#5C6BC0';ctx.font='10px Arial';ctx.textAlign='center';ctx.fillText(v,tx(v),oy+14)});ctx.textAlign='left'
+  ctx.strokeStyle='rgba(183,28,28,.7)';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(tx(z1),oy);ctx.lineTo(tx(z1),15);ctx.stroke();ctx.setLineDash([])
+}
+
+let cltDist='u';let seed=42
+function setCLT(d){cltDist=d;['tc0','tc1','tc2'].forEach((id,i)=>$(id).classList.toggle('on','ueb'[i]===d));u3()}
+function lcg(){seed=(seed*1664525+1013904223)>>>0;return seed/0xffffffff}
+function u3(){
+  const n=+$('scn').value,B=+$('scB').value;$('cn').textContent=n;$('cB').textContent=B
+  let popMu,popVar
+  if(cltDist==='u'){popMu=0.5;popVar=1/12}else if(cltDist==='e'){popMu=1;popVar=1}else{popMu=.3;popVar=.21}
+  seed=42;const means=[]
+  for(let b=0;b<B;b++){let sum=0;for(let i=0;i<n;i++){const u=lcg();sum+=cltDist==='u'?u:cltDist==='e'?-Math.log(Math.max(1e-10,u)):(u<.3?1:0)};means.push(sum/n)}
+  const obsMu=means.reduce((s,v)=>s+v,0)/B,obsVar=means.reduce((s,v)=>s+(v-obsMu)**2,0)/B
+  $('t3ex').textContent=f3(popMu);$('t3var').textContent=f3(popVar/n);$('t3obs').textContent=f3(obsMu)
+  $('t3norm').textContent=n>=5?'정규 근사 ✓':'아직 비대칭'
+  $('t3msg').textContent=n>=30?'n='+n+': 강한 정규 근사 (CLT 성립)':n>=5?'n='+n+': 점점 정규 형태로 수렴 중':'n='+n+': 원래 분포 형태'
+  const{ctx,w,h}=sc('c3',185);ctx.clearRect(0,0,w,h)
+  const ox=45,oy=h-28,pw=w-ox-10,ph=oy-15,bins=30
+  const mn=Math.min(...means),mx=Math.max(...means),bw=(mx-mn)/bins,counts=Array(bins).fill(0)
+  means.forEach(v=>{const i=Math.min(bins-1,Math.floor((v-mn)/bw));counts[i]++})
+  const maxC=Math.max(...counts);ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(ox,15);ctx.lineTo(ox,oy+1);ctx.lineTo(w-8,oy+1);ctx.stroke()
+  counts.forEach((c,i)=>{const x=ox+i*(pw/bins),bwp=pw/bins-1;ctx.fillStyle='rgba(21,101,192,.6)';ctx.fillRect(x,oy-c/maxC*ph,bwp,c/maxC*ph)})
+  if(n>1){const tmu=popMu,tsig=Math.sqrt(popVar/n);ctx.beginPath();ctx.strokeStyle='rgba(183,28,28,.85)';ctx.lineWidth=2;for(let i=0;i<=200;i++){const x=mn+(mx-mn)*i/200,density=normPDF(x,tmu,tsig)*B*bw,px=ox+i*(pw/200),py=oy-density/maxC*ph;i===0?ctx.moveTo(px,py):ctx.lineTo(px,py)};ctx.stroke()}
+}
+
+setTimeout(()=>{setD0('u');u1();u2();u3()},60)
+window.addEventListener('resize',()=>{const ai=[...panels].findIndex(p=>p.classList.contains('active'));[u0,u1,u2,u3][ai]?.()})
 </script>
-</div>
-</body>
-</html>
+</body></html>

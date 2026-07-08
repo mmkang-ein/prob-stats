@@ -1,55 +1,30 @@
 <!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>6주차 — 확률 및 통계 시뮬레이터</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f7ff;color:#1A1A2E}
-header{background:#1E2761;color:#fff;padding:.9rem 1.2rem;display:flex;align-items:center;gap:.8rem;position:sticky;top:0;z-index:10}
-header a{color:#CADCFC;text-decoration:none;font-size:.85rem;white-space:nowrap}
-.hw{flex:1}
-header h1{font-size:1rem;font-weight:600}
-header p{font-size:.78rem;color:#90CAF9;margin-top:2px}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f7ff;color:#1A1A2E}
+header{background:#1E2761;color:#fff;padding:.9rem 1.2rem;display:flex;align-items:center;gap:.8rem}
+header a{color:#CADCFC;text-decoration:none;font-size:.85rem}.hw{flex:1}header h1{font-size:1rem;font-weight:600}header p{font-size:.78rem;color:#90CAF9;margin-top:2px}
 .wrap{max-width:740px;margin:0 auto;padding:.9rem 1rem 3rem}
 .tabs{display:flex;gap:3px;border-bottom:2px solid #C5CAE9;margin-bottom:1.2rem;flex-wrap:wrap}
 .tab{padding:6px 12px;font-size:12.5px;font-weight:500;color:#5C6BC0;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap}
-.tab.active{color:#1565C0;border-bottom-color:#1565C0}
-.panel{display:none}.panel.active{display:block}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px}
+.tab.active{color:#1565C0;border-bottom-color:#1565C0}.panel{display:none}.panel.active{display:block}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:11px}
 .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:7px;margin-bottom:11px}
 .card{background:#fff;border:1px solid #C5CAE9;border-radius:10px;padding:.8rem .9rem}
-.lbl{font-size:11px;color:#5C6BC0;margin-bottom:2px}
-.val{font-size:17px;font-weight:600;color:#1565C0}
-.ctrl{margin-bottom:9px}
-.ctrl label{display:flex;justify-content:space-between;font-size:12.5px;color:#5C6BC0;margin-bottom:2px}
-.ctrl label span{font-weight:600;color:#1A1A2E}
-input[type=range]{width:100%}
+.lbl{font-size:11px;color:#5C6BC0;margin-bottom:2px}.val{font-size:17px;font-weight:600;color:#1565C0}
+.ctrl{margin-bottom:9px}.ctrl label{display:flex;justify-content:space-between;font-size:12.5px;color:#5C6BC0;margin-bottom:2px}
+.ctrl label span{font-weight:600;color:#1A1A2E}input[type=range]{width:100%}
 canvas{display:block;width:100%!important;border-radius:8px;background:#fff;border:1px solid #EEF2FF;margin-bottom:4px}
 .formula{background:#EEF2FF;border-radius:8px;padding:8px 12px;font-size:12px;font-family:monospace;color:#1E2761;margin-bottom:9px}
 .info{background:#E3F2FD;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#1565C0;margin-bottom:9px}
 .ok{background:#E8F5E9;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#2E7D32;margin-bottom:9px}
-.warn{background:#FFF3E0;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#BF6F00;margin-bottom:9px}
-.danger{background:#FFEBEE;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#B71C1C;margin-bottom:9px}
 .sec{font-size:13px;font-weight:600;color:#1E2761;margin-bottom:8px}
 .tog-row{display:flex;gap:5px;margin-bottom:9px;flex-wrap:wrap}
 .tog{padding:3px 10px;font-size:12px;border:1px solid #C5CAE9;border-radius:20px;background:#fff;cursor:pointer;color:#5C6BC0}
 .tog.on{background:#1565C0;color:#fff;border-color:#1565C0;font-weight:500}
-.tbl{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:10px}
-.tbl th{background:#EEF2FF;padding:5px 8px;text-align:center;border-bottom:1px solid #C5CAE9;font-weight:500;color:#1E2761}
-.tbl td{padding:5px 8px;text-align:center;border-bottom:1px solid #EEF2FF}
-</style>
-</head>
-<body>
-<header>
-  <a href="../index.html">← 목록</a>
-  <div class="hw">
-    <h1>6주차 — 이산확률분포</h1>
-    <p>베르누이 · 이항분포 · 포아송 · 분포 비교</p>
-  </div>
-</header>
+</style></head><body>
+<header><a href="../index.html">← 목록</a><div class="hw"><h1>6주차 — 이산확률분포</h1><p>베르누이 · 이항분포 · 포아송 · 분포 비교</p></div></header>
 <div class="wrap">
 <div class="tabs">
   <button class="tab active" onclick="sw(0)">① 베르누이</button>
@@ -57,14 +32,136 @@ canvas{display:block;width:100%!important;border-radius:8px;background:#fff;bord
   <button class="tab" onclick="sw(2)">③ 포아송</button>
   <button class="tab" onclick="sw(3)">④ 분포 비교</button>
 </div>
-<div class="panel active" id="p0"><div style="padding:2rem;text-align:center;color:#5C6BC0"><p style="font-size:1rem;color:#1E2761;font-weight:600">베르누이 시뮬레이터</p><p style="margin-top:.5rem">슬라이더를 조작해 결과를 확인하세요</p></div></div>
-<div class="panel" id="p1"></div>
-<div class="panel" id="p2"></div>
-<div class="panel" id="p3"></div>
-<script>
-const tabs=document.querySelectorAll('.tab'),panels=document.querySelectorAll('.panel')
-function sw(i){tabs.forEach((t,j)=>t.classList.toggle('active',i===j));panels.forEach((p,j)=>p.classList.toggle('active',i===j))}
-</script>
+<div class="panel active" id="p0">
+  <div class="sec">베르누이 분포 — 단일 시행</div>
+  <div class="ctrl"><label>성공 확률 p <span id="t0p">0.30</span></label><input type="range" min="1" max="99" value="30" id="s0p" oninput="u0()"></div>
+  <canvas id="c0" height="160"></canvas>
+  <div class="g4">
+    <div class="card"><div class="lbl">P(X=1)</div><div class="val" id="r0p1">0.300</div></div>
+    <div class="card"><div class="lbl">P(X=0)</div><div class="val" id="r0p0">0.700</div></div>
+    <div class="card"><div class="lbl">E[X]=p</div><div class="val" style="color:#2E7D32" id="r0ex">0.300</div></div>
+    <div class="card"><div class="lbl">Var=p(1-p)</div><div class="val" style="color:#BF6F00" id="r0var">0.210</div></div>
+  </div>
+  <div class="formula" id="f0">P(X=x)=p^x*(1-p)^(1-x)  E[X]=p  Var=p(1-p)</div>
+  <div class="info">이항분포 B(n,p)는 베르누이 시행을 n번 반복한 것!</div>
 </div>
-</body>
-</html>
+<div class="panel" id="p1">
+  <div class="sec">이항분포 B(n,p) — n번 시행 중 성공 횟수</div>
+  <div class="ctrl"><label>시행 횟수 n <span id="t1n">10</span></label><input type="range" min="1" max="30" value="10" id="s1n" oninput="u1()"></div>
+  <div class="ctrl"><label>성공 확률 p <span id="t1p">0.30</span></label><input type="range" min="1" max="99" value="30" id="s1p" oninput="u1()"></div>
+  <div class="tog-row"><button class="tog on" id="tb1a" onclick="setB1(0)">PMF</button><button class="tog" id="tb1b" onclick="setB1(1)">CDF</button></div>
+  <canvas id="c1" height="175"></canvas>
+  <div class="g4">
+    <div class="card"><div class="lbl">E[X]=np</div><div class="val" id="r1ex">3.0</div></div>
+    <div class="card"><div class="lbl">Var=np(1-p)</div><div class="val" id="r1var">2.1</div></div>
+    <div class="card"><div class="lbl">σ</div><div class="val" style="color:#2E7D32" id="r1std">1.45</div></div>
+    <div class="card"><div class="lbl">최빈값</div><div class="val" id="r1mode">3</div></div>
+  </div>
+  <div class="formula" id="f1">P(X=k)=C(n,k)*p^k*(1-p)^(n-k)</div>
+</div>
+<div class="panel" id="p2">
+  <div class="sec">포아송 분포 Poisson(λ) — 단위시간 사건 수</div>
+  <div class="ctrl"><label>평균 λ <span id="t2l">3.0</span></label><input type="range" min="1" max="200" value="30" id="s2l" oninput="u2()"></div>
+  <div class="tog-row"><button class="tog on" id="tp2a" onclick="setP2(0)">PMF</button><button class="tog" id="tp2b" onclick="setP2(1)">CDF</button></div>
+  <canvas id="c2" height="175"></canvas>
+  <div class="g3">
+    <div class="card"><div class="lbl">E[X]=λ</div><div class="val" id="r2ex">3.0</div></div>
+    <div class="card"><div class="lbl">Var(X)=λ</div><div class="val" id="r2var">3.0</div></div>
+    <div class="card"><div class="lbl">σ=√λ</div><div class="val" style="color:#2E7D32" id="r2std">1.73</div></div>
+  </div>
+  <div class="formula" id="f2">P(X=k)=e^(-λ)*λ^k/k!  E[X]=Var(X)=λ</div>
+  <div class="info" id="t2msg">λ=3: P(0건)=0.050</div>
+</div>
+<div class="panel" id="p3">
+  <div class="sec">이항분포 vs 포아송 — λ=np 근사 비교</div>
+  <div class="ctrl"><label>n (이항) <span id="t3n">20</span></label><input type="range" min="5" max="50" value="20" id="s3n" oninput="u3()"></div>
+  <div class="ctrl"><label>p (이항) <span id="t3p">0.15</span></label><input type="range" min="1" max="30" value="15" id="s3p" oninput="u3()"></div>
+  <canvas id="c3" height="185"></canvas>
+  <div class="g3">
+    <div class="card"><div class="lbl">이항 E[X]=np</div><div class="val" id="r3bex">3.0</div></div>
+    <div class="card"><div class="lbl">포아송 λ=np</div><div class="val" id="r3lam">3.0</div></div>
+    <div class="card"><div class="lbl">최대 차이</div><div class="val" id="r3diff">-</div></div>
+  </div>
+  <div class="ok" id="m3">n>=20, p<=0.1이면 이항≈포아송</div>
+</div>
+</div>
+<script>
+const $=id=>document.getElementById(id)
+const f3=v=>v.toFixed(3),f2=v=>v.toFixed(2),f4=v=>v.toFixed(4)
+const tabs=document.querySelectorAll('.tab'),panels=document.querySelectorAll('.panel')
+function sw(i){tabs.forEach((t,j)=>t.classList.toggle('active',i===j));panels.forEach((p,j)=>p.classList.toggle('active',i===j));setTimeout(()=>[u0,u1,u2,u3][i](),30)}
+function sc(id,h){const c=$(id),w=c.parentElement.offsetWidth-2||360;c.width=w;c.height=h;return{ctx:c.getContext('2d'),w,h}}
+function comb(n,k){if(k<0||k>n)return 0;if(k===0||k===n)return 1;let r=1;for(let i=0;i<Math.min(k,n-k);i++)r=r*(n-i)/(i+1);return Math.round(r)}
+function binomPMF(n,k,p){return comb(n,k)*Math.pow(p,k)*Math.pow(1-p,n-k)}
+function poissonPMF(lam,k){let lp=-lam;for(let i=1;i<=k;i++)lp+=Math.log(lam)-Math.log(i);return Math.exp(lp)}
+function drawBars(ctx,w,h,data,colors,labels,isCDF){
+  const ox=40,oy=h-28,pw=w-ox-10,ph=oy-15,maxV=isCDF?1:Math.max(...data.flat())*1.15
+  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(ox,12);ctx.lineTo(ox,oy+1);ctx.lineTo(w-8,oy+1);ctx.stroke()
+  const n=data[0].length,step=pw/n
+  data.forEach((series,si)=>{series.forEach((v,i)=>{const x=ox+i*step+(si*(step*.4/data.length)),bw=step*.4/data.length;ctx.fillStyle=colors[si];ctx.fillRect(x,oy-v/maxV*ph,bw,v/maxV*ph)})})
+  const skip=Math.ceil(n/10);data[0].forEach((_,i)=>{if(i%skip===0){ctx.fillStyle='#5C6BC0';ctx.font='10px Arial';ctx.textAlign='center';ctx.fillText(labels[i]??i,ox+i*step+step*.2,oy+14)}});ctx.textAlign='left'
+}
+function u0(){
+  const p=+$('s0p').value/100;$('t0p').textContent=p.toFixed(2)
+  $('r0p1').textContent=f3(p);$('r0p0').textContent=f3(1-p);$('r0ex').textContent=f3(p);$('r0var').textContent=f3(p*(1-p))
+  $('f0').textContent='P(X=1)='+f3(p)+'  E[X]='+f3(p)+'  Var='+f3(p*(1-p))
+  const{ctx,w,h}=sc('c0',160);ctx.clearRect(0,0,w,h)
+  const ox=w*.2,oy=h-28,bw=w*.2
+  ;[{v:1-p,l:'X=0 실패',c:'rgba(183,28,28,.55)'},{v:p,l:'X=1 성공',c:'rgba(21,101,192,.7)'}].forEach((b,i)=>{
+    const x=ox+i*(bw+w*.1),bh=b.v*(oy-20)
+    ctx.fillStyle=b.c;ctx.fillRect(x,oy-bh,bw,bh)
+    ctx.fillStyle='#1E2761';ctx.font='12px Arial';ctx.textAlign='center';ctx.fillText(b.l,x+bw/2,oy+16)
+    ctx.fillStyle='#1565C0';ctx.font='bold 13px Arial';ctx.fillText(f3(b.v),x+bw/2,oy-bh-6)
+  });ctx.textAlign='left'
+}
+let b1mode=0
+function setB1(m){b1mode=m;['tb1a','tb1b'].forEach((id,i)=>$(id).classList.toggle('on',i===m));u1()}
+function u1(){
+  const n=+$('s1n').value,p=+$('s1p').value/100;$('t1n').textContent=n;$('t1p').textContent=p.toFixed(2)
+  const pmfs=Array.from({length:n+1},(_,k)=>binomPMF(n,k,p))
+  const cdfs=pmfs.map((_,i)=>pmfs.slice(0,i+1).reduce((s,v)=>s+v,0))
+  const EX=n*p,VarX=n*p*(1-p)
+  $('r1ex').textContent=f2(EX);$('r1var').textContent=f2(VarX);$('r1std').textContent=f2(Math.sqrt(VarX));$('r1mode').textContent=Math.floor((n+1)*p)
+  $('f1').textContent='B('+n+','+p.toFixed(2)+')  E=np='+f2(EX)+'  Var=np(1-p)='+f2(VarX)
+  const{ctx,w,h}=sc('c1',175);ctx.clearRect(0,0,w,h)
+  drawBars(ctx,w,h,[b1mode?cdfs:pmfs],['rgba(21,101,192,.65)'],Array.from({length:n+1},(_,i)=>i),b1mode)
+  const ox=40,oy=h-28,pw=w-ox-10,step=pw/(n+1)
+  ctx.strokeStyle='rgba(183,28,28,.8)';ctx.lineWidth=1.5;ctx.setLineDash([4,3])
+  ctx.beginPath();ctx.moveTo(ox+EX*step,oy);ctx.lineTo(ox+EX*step,14);ctx.stroke();ctx.setLineDash([])
+  ctx.fillStyle='#B71C1C';ctx.font='500 11px Arial';ctx.fillText('μ='+f2(EX),ox+EX*step+3,26)
+}
+let p2mode=0
+function setP2(m){p2mode=m;['tp2a','tp2b'].forEach((id,i)=>$(id).classList.toggle('on',i===m));u2()}
+function u2(){
+  const lam=+$('s2l').value/10;$('t2l').textContent=lam.toFixed(1)
+  $('r2ex').textContent=f2(lam);$('r2var').textContent=f2(lam);$('r2std').textContent=f2(Math.sqrt(lam))
+  const maxK=Math.max(15,Math.ceil(lam+4*Math.sqrt(lam)))
+  const pmfs=Array.from({length:maxK+1},(_,k)=>poissonPMF(lam,k))
+  const cdfs=pmfs.map((_,i)=>pmfs.slice(0,i+1).reduce((s,v)=>s+v,0))
+  $('f2').textContent='Poisson(λ='+lam.toFixed(1)+')  E[X]=Var(X)=λ='+lam.toFixed(1)
+  $('t2msg').textContent='λ='+lam.toFixed(1)+': P(X=0)='+f3(poissonPMF(lam,0))+',  P(X='+Math.round(lam)+')='+f3(poissonPMF(lam,Math.round(lam)))
+  const{ctx,w,h}=sc('c2',175);ctx.clearRect(0,0,w,h)
+  drawBars(ctx,w,h,[p2mode?cdfs:pmfs],['rgba(29,158,117,.65)'],Array.from({length:maxK+1},(_,i)=>i),p2mode)
+  const ox=40,oy=h-28,pw=w-ox-10,step=pw/(maxK+1)
+  ctx.strokeStyle='rgba(183,28,28,.8)';ctx.lineWidth=1.5;ctx.setLineDash([4,3])
+  ctx.beginPath();ctx.moveTo(ox+lam*step,oy);ctx.lineTo(ox+lam*step,14);ctx.stroke();ctx.setLineDash([])
+  ctx.fillStyle='#B71C1C';ctx.font='500 11px Arial';ctx.fillText('λ='+lam.toFixed(1),ox+lam*step+3,26)
+}
+function u3(){
+  const n=+$('s3n').value,p=+$('s3p').value/100,lam=n*p;$('t3n').textContent=n;$('t3p').textContent=p.toFixed(2)
+  $('r3bex').textContent=f2(n*p);$('r3lam').textContent=f2(lam)
+  const maxK=Math.max(15,Math.ceil(lam+4*Math.sqrt(lam)))
+  const binom=Array.from({length:maxK+1},(_,k)=>binomPMF(n,k,p))
+  const pois=Array.from({length:maxK+1},(_,k)=>poissonPMF(lam,k))
+  const maxDiff=Math.max(...binom.map((b,i)=>Math.abs(b-pois[i])))
+  $('r3diff').textContent=f4(maxDiff)
+  const ok=n>=20&&p<=0.1;$('m3').className=ok?'ok':'info';$('m3').textContent=ok?'근사 양호 (n>=20, p<=0.1)':'n이 크고 p가 작을수록 근사 좋아짐'
+  const{ctx,w,h}=sc('c3',185);ctx.clearRect(0,0,w,h)
+  drawBars(ctx,w,h,[binom,pois],['rgba(21,101,192,.6)','rgba(29,158,117,.6)'],Array.from({length:maxK+1},(_,i)=>i),false)
+  ctx.fillStyle='rgba(21,101,192,.8)';ctx.fillRect(w-110,8,12,12);ctx.fillStyle='#5C6BC0';ctx.font='11px Arial';ctx.fillText('이항 B('+n+','+p.toFixed(2)+')',w-95,19)
+  ctx.fillStyle='rgba(29,158,117,.8)';ctx.fillRect(w-110,24,12,12);ctx.fillText('포아송(λ='+f2(lam)+')',w-95,35)
+}
+setTimeout(()=>{u0();u1();u2();u3()},60)
+window.addEventListener('resize',()=>{const ai=[...panels].findIndex(p=>p.classList.contains('active'));[u0,u1,u2,u3][ai]?.()})
+</script>
+</body></html>
