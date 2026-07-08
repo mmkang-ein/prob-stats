@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>9·10주차 — 확률 및 통계 시뮬레이터</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f7ff;color:#1A1A2E}
+header{background:#1E2761;color:#fff;padding:.9rem 1.2rem;display:flex;align-items:center;gap:.8rem;position:sticky;top:0;z-index:10}
+header a{color:#CADCFC;text-decoration:none;font-size:.85rem;white-space:nowrap}
+.hw{flex:1}
+header h1{font-size:1rem;font-weight:600}
+header p{font-size:.78rem;color:#90CAF9;margin-top:2px}
+.wrap{max-width:740px;margin:0 auto;padding:.9rem 1rem 3rem}
+.tabs{display:flex;gap:3px;border-bottom:2px solid #C5CAE9;margin-bottom:1.2rem;flex-wrap:wrap}
+.tab{padding:6px 12px;font-size:12.5px;font-weight:500;color:#5C6BC0;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap}
+.tab.active{color:#1565C0;border-bottom-color:#1565C0}
+.panel{display:none}.panel.active{display:block}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:11px}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:7px;margin-bottom:11px}
+.card{background:#fff;border:1px solid #C5CAE9;border-radius:10px;padding:.8rem .9rem}
+.lbl{font-size:11px;color:#5C6BC0;margin-bottom:2px}
+.val{font-size:17px;font-weight:600;color:#1565C0}
+.ctrl{margin-bottom:9px}
+.ctrl label{display:flex;justify-content:space-between;font-size:12.5px;color:#5C6BC0;margin-bottom:2px}
+.ctrl label span{font-weight:600;color:#1A1A2E}
+input[type=range]{width:100%}
+canvas{display:block;width:100%!important;border-radius:8px;background:#fff;border:1px solid #EEF2FF;margin-bottom:4px}
+.formula{background:#EEF2FF;border-radius:8px;padding:8px 12px;font-size:12px;font-family:monospace;color:#1E2761;margin-bottom:9px}
+.info{background:#E3F2FD;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#1565C0;margin-bottom:9px}
+.ok{background:#E8F5E9;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#2E7D32;margin-bottom:9px}
+.warn{background:#FFF3E0;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#BF6F00;margin-bottom:9px}
+.danger{background:#FFEBEE;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#B71C1C;margin-bottom:9px}
+.sec{font-size:13px;font-weight:600;color:#1E2761;margin-bottom:8px}
+.tog-row{display:flex;gap:5px;margin-bottom:9px;flex-wrap:wrap}
+.tog{padding:3px 10px;font-size:12px;border:1px solid #C5CAE9;border-radius:20px;background:#fff;cursor:pointer;color:#5C6BC0}
+.tog.on{background:#1565C0;color:#fff;border-color:#1565C0;font-weight:500}
+.tbl{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:10px}
+.tbl th{background:#EEF2FF;padding:5px 8px;text-align:center;border-bottom:1px solid #C5CAE9;font-weight:500;color:#1E2761}
+.tbl td{padding:5px 8px;text-align:center;border-bottom:1px solid #EEF2FF}
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html">← 목록</a>
+  <div class="hw">
+    <h1>9·10주차 — 연속분포 · 정규분포 · CLT</h1>
+    <p>연속분포 PDF · 정규분포 구간 · 표준정규 Z · CLT 시뮬레이터</p>
+  </div>
+</header>
+<div class="wrap">
+<div class="tabs">
+  <button class="tab active" onclick="sw(0)">① 연속분포 PDF</button>
+  <button class="tab" onclick="sw(1)">② 정규분포 구간</button>
+  <button class="tab" onclick="sw(2)">③ 표준정규 Z</button>
+  <button class="tab" onclick="sw(3)">④ CLT 시뮬레이터</button>
+</div>
+<div class="panel active" id="p0"><div style="padding:2rem;text-align:center;color:#5C6BC0"><p style="font-size:1rem;color:#1E2761;font-weight:600">연속분포 PDF 시뮬레이터</p><p style="margin-top:.5rem">슬라이더를 조작해 결과를 확인하세요</p></div></div>
+<div class="panel" id="p1"></div>
+<div class="panel" id="p2"></div>
+<div class="panel" id="p3"></div>
+<script>
+const tabs=document.querySelectorAll('.tab'),panels=document.querySelectorAll('.panel')
+function sw(i){tabs.forEach((t,j)=>t.classList.toggle('active',i===j));panels.forEach((p,j)=>p.classList.toggle('active',i===j))}
+</script>
+</div>
+</body>
+</html>

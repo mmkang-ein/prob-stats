@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>확률 및 통계 — 웹 시뮬레이터</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#0F1F5C;color:#fff;min-height:100vh}
+header{background:#1E2761;padding:2rem 1.5rem 1.5rem;text-align:center;border-bottom:3px solid #1565C0}
+header h1{font-size:1.8rem;font-weight:700;letter-spacing:-.5px}
+header p{margin-top:.5rem;color:#CADCFC;font-size:.95rem}
+.badge{display:inline-block;background:#1565C0;color:#fff;font-size:.75rem;padding:3px 10px;border-radius:20px;margin-top:.5rem}
+main{max-width:800px;margin:0 auto;padding:2rem 1.2rem}
+h2{font-size:1rem;color:#FFD54F;font-weight:600;margin:1.8rem 0 .8rem;letter-spacing:.5px;text-transform:uppercase}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.9rem}
+a.card{display:block;background:#1E2761;border:1px solid #1565C0;border-radius:12px;padding:1.1rem 1.2rem;text-decoration:none;color:#fff;transition:all .2s}
+a.card:hover{background:#1565C0;transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.3)}
+.card-week{font-size:.75rem;color:#CADCFC;margin-bottom:.3rem}
+.card-title{font-size:1rem;font-weight:600;line-height:1.4}
+.card-sub{font-size:.78rem;color:#90CAF9;margin-top:.35rem}
+.tag{display:inline-block;background:#00838F;color:#fff;font-size:.68rem;padding:2px 7px;border-radius:4px;margin-top:.5rem}
+footer{text-align:center;padding:2rem;color:#5C6BC0;font-size:.82rem;margin-top:2rem}
+</style>
+</head>
+<body>
+<header>
+  <h1>확률 및 통계</h1>
+  <p>인터랙티브 웹 시뮬레이터</p>
+  <span class="badge">공학/이공계 1학년 · 전자반도체공학부</span>
+</header>
+<main>
+  <h2>📐 확률 기초 (1~4주)</h2>
+  <div class="grid">
+    <a class="card" href="week1-2/index.html">
+      <div class="card-week">1·2주차</div>
+      <div class="card-title">표본공간·사건·확률 연산</div>
+      <div class="card-sub">벤다이어그램 · 덧셈법칙 · 여사건</div>
+      <span class="tag">4개 탭</span>
+    </a>
+    <a class="card" href="week3/index.html">
+      <div class="card-week">3주차</div>
+      <div class="card-title">곱셈법칙 · 독립사건</div>
+      <div class="card-sub">여사건 · 덧셈 · 곱셈 · 종합연습</div>
+      <span class="tag">4개 탭</span>
+    </a>
+    <a class="card" href="week4/index.html">
+      <div class="card-week">4주차</div>
+      <div class="card-title">조건부확률 · 베이즈 정리</div>
+      <div class="card-sub">조건부 · 독립판별 · 전체확률 · 베이즈</div>
+      <span class="tag">4개 탭</span>
+    </a>
+  </div>
+
+  <h2>📊 확률변수와 분포 (5~7주)</h2>
+  <div class="grid">
+    <a class="card" href="week5/index.html">
+      <div class="card-week">5주차</div>
+      <div class="card-title">확률변수 · PMF · PDF · CDF</div>
+      <div class="card-sub">PMF막대 · CDF계단 · PDF곡선 · E·Var</div>
+      <span class="tag">4개 탭</span>
+    </a>
+    <a class="card" href="week6/index.html">
+      <div class="card-week">6주차</div>
+      <div class="card-title">이산확률분포</div>
+      <div class="card-sub">베르누이 · 이항 · 포아송 · 분포비교</div>
+      <span class="tag">4개 탭</span>
+    </a>
+    <a class="card" href="week7/index.html">
+      <div class="card-week">7주차</div>
+      <div class="card-title">기댓값 · 분산 · 공분산 · 상관계수</div>
+      <div class="card-sub">E성질 · Var · 공분산 · 상관계수</div>
+      <span class="tag">4개 탭</span>
+    </a>
+  </div>
+
+  <h2>📈 연속분포 · 통계적 추론 (9~14주)</h2>
+  <div class="grid">
+    <a class="card" href="week9-10/index.html">
+      <div class="card-week">9·10주차</div>
+      <div class="card-title">연속분포 · 정규분포 · CLT</div>
+      <div class="card-sub">PDF비교 · 정규분포 · 표준정규 · CLT</div>
+      <span class="tag">4개 탭</span>
+    </a>
+    <a class="card" href="week11-12/index.html">
+      <div class="card-week">11·12주차</div>
+      <div class="card-title">표본분포 · 추정 · 가설검정</div>
+      <div class="card-sub">표본분포 · 신뢰구간 · Z검정 · 검정력</div>
+      <span class="tag">4개 탭</span>
+    </a>
+    <a class="card" href="week13-14/index.html">
+      <div class="card-week">13·14주차</div>
+      <div class="card-title">상관 · 회귀분석 · 통계 오류</div>
+      <div class="card-sub">상관계수 · 단순회귀 · 잔차 · 통계함정</div>
+      <span class="tag">4개 탭</span>
+    </a>
+  </div>
+</main>
+<footer>확률 및 통계 · 전자반도체공학부 · Jason 교수</footer>
+</body>
+</html>

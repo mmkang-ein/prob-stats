@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1·2주차 — 확률 및 통계 시뮬레이터</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f7ff;color:#1A1A2E;min-height:100vh}
+header{background:#1E2761;color:#fff;padding:1rem 1.2rem;display:flex;align-items:center;gap:.8rem}
+header a{color:#CADCFC;text-decoration:none;font-size:.85rem}
+header h1{font-size:1.05rem;font-weight:600;flex:1}
+.wrap{max-width:720px;margin:0 auto;padding:1rem 1rem 3rem}
+.tabs{display:flex;gap:3px;border-bottom:2px solid #C5CAE9;margin-bottom:1.2rem;flex-wrap:wrap}
+.tab{padding:7px 13px;font-size:13px;font-weight:500;color:#5C6BC0;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px}
+.tab.active{color:#1565C0;border-bottom-color:#1565C0}
+.panel{display:none}.panel.active{display:block}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px}
+.card{background:#fff;border:1px solid #C5CAE9;border-radius:10px;padding:.85rem 1rem}
+.lbl{font-size:11px;color:#5C6BC0;margin-bottom:3px}
+.val{font-size:19px;font-weight:600;color:#1565C0}
+.ctrl{margin-bottom:10px}
+.ctrl label{display:flex;justify-content:space-between;font-size:13px;color:#5C6BC0;margin-bottom:3px}
+.ctrl label span{font-weight:600;color:#1A1A2E}
+input[type=range]{width:100%}
+canvas{display:block;width:100%!important;border-radius:8px;background:#fff;border:1px solid #EEF2FF}
+.formula{background:#EEF2FF;border-radius:8px;padding:9px 13px;font-size:12.5px;font-family:monospace;color:#1E2761;margin-bottom:10px}
+.info{background:#E3F2FD;border-radius:8px;padding:9px 13px;font-size:13px;color:#1565C0;margin-bottom:10px}
+.ok{background:#E8F5E9;border-radius:8px;padding:9px 13px;font-size:13px;color:#2E7D32;margin-bottom:10px}
+.sec{font-size:13.5px;font-weight:600;color:#1E2761;margin-bottom:9px}
+.tog-row{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.tog{padding:4px 11px;font-size:12px;border:1px solid #C5CAE9;border-radius:20px;background:#fff;cursor:pointer;color:#5C6BC0}
+.tog.on{background:#1565C0;color:#fff;border-color:#1565C0;font-weight:500}
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html">← 목록</a>
+  <h1>1·2주차 — 표본공간·사건·확률 연산</h1>
+</header>
+<div class="wrap">
+<div class="tabs">
+  <button class="tab active" onclick="sw(0)">① 벤다이어그램</button>
+  <button class="tab" onclick="sw(1)">② 덧셈법칙</button>
+  <button class="tab" onclick="sw(2)">③ 여사건</button>
+  <button class="tab" onclick="sw(3)">④ 종합연습</button>
+</div>
+
+<!-- TAB 0 : 벤다이어그램 -->
+<div class="panel active" id="p0">
+  <div class="sec">벤다이어그램 — 집합 연산 시각화</div>
+  <div class="ctrl"><label>P(A) <span id="t0a">0.40</span></label><input type="range" min="5" max="90" value="40" id="s0a" oninput="u0()"></div>
+  <div class="ctrl"><label>P(B) <span id="t0b">0.35</span></label><input type="range" min="5" max="90" value="35" id="s0b" oninput="u0()"></div>
+  <div class="ctrl"><label>P(A∩B) <span id="t0ab">0.10</span></label><input type="range" min="0" max="40" value="10" id="s0ab" oninput="u0()"></div>
+  <div class="tog-row">
+    <button class="tog on" id="bv0" onclick="setVenn('union')">A∪B</button>
+    <button class="tog" id="bv1" onclick="setVenn('inter')">A∩B</button>
+    <button class="tog" id="bv2" onclick="setVenn('ac')">Aᶜ</button>
+    <button class="tog" id="bv3" onclick="setVenn('acbc')">Aᶜ∩Bᶜ</button>
+  </div>
+  <canvas id="c0" height="200"></canvas>
+  <div class="g3" style="margin-top:10px">
+    <div class="card"><div class="lbl">P(A∪B)</div><div class="val" id="r0union">0.65</div></div>
+    <div class="card"><div class="lbl">P(Aᶜ)</div><div class="val" id="r0ac">0.60</div></div>
+    <div class="card"><div class="lbl">P(Aᶜ∩Bᶜ)</div><div class="val" id="r0acbc">0.35</div></div>
+  </div>
+  <div class="formula" id="f0">P(A∪B) = P(A)+P(B)−P(A∩B) = 0.40+0.35−0.10 = 0.65</div>
+</div>
+
+<!-- TAB 1 : 덧셈법칙 -->
+<div class="panel" id="p1">
+  <div class="sec">덧셈법칙 — 2사건·서로소 비교</div>
+  <div class="tog-row">
+    <button class="tog on" id="ta0" onclick="setAdd('general')">일반</button>
+    <button class="tog" id="ta1" onclick="setAdd('disjoint')">서로소</button>
+    <button class="tog" id="ta2" onclick="setAdd('three')">3사건</button>
+  </div>
+  <div id="addCtrl"></div>
+  <canvas id="c1" height="180"></canvas>
+  <div class="g3" style="margin-top:10px">
+    <div class="card"><div class="lbl">P(A)</div><div class="val" id="r1a">0.40</div></div>
+    <div class="card"><div class="lbl">P(B)</div><div class="val" id="r1b">0.35</div></div>
+    <div class="card"><div class="lbl">P(A∪B)</div><div class="val" id="r1u">0.65</div></div>
+  </div>
+  <div class="formula" id="f1">P(A∪B)=P(A)+P(B)−P(A∩B)</div>
+  <div class="ok" id="m1">포함-배제 원리 적용</div>
+</div>
+
+<!-- TAB 2 : 여사건 -->
+<div class="panel" id="p2">
+  <div class="sec">여사건 법칙 — '적어도' 문제 패턴</div>
+  <div class="ctrl"><label>성공 확률 p <span id="t2p">0.30</span></label><input type="range" min="1" max="99" value="30" id="s2p" oninput="u2()"></div>
+  <div class="ctrl"><label>시행 횟수 n <span id="t2n">5</span></label><input type="range" min="1" max="20" value="5" id="s2n" oninput="u2()"></div>
+  <canvas id="c2" height="180"></canvas>
+  <div class="g3" style="margin-top:10px">
+    <div class="card"><div class="lbl">P(모두 실패)</div><div class="val" id="r2fail">0.168</div></div>
+    <div class="card"><div class="lbl">P(적어도 1번 성공)</div><div class="val" id="r2atleast">0.832</div></div>
+    <div class="card"><div class="lbl">합계 확인</div><div class="val" style="color:#2E7D32" id="r2sum">1.000 ✓</div></div>
+  </div>
+  <div class="formula" id="f2">P(적어도 1번)=1−P(모두 실패)=1−(1−p)ⁿ</div>
+  <div class="info">여사건: P(Aᶜ)=1−P(A) — '적어도' 문제에서 필수!</div>
+</div>
+
+<!-- TAB 3 : 종합연습 -->
+<div class="panel" id="p3">
+  <div class="sec">종합 연습 — 랜덤 문제</div>
+  <div id="qBox" style="background:#EEF2FF;border-radius:10px;padding:1rem;margin-bottom:12px;font-size:14px;line-height:1.7;min-height:80px"></div>
+  <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+    <button onclick="newQ()" style="padding:8px 18px;background:#1565C0;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px">새 문제</button>
+    <button onclick="showHint()" style="padding:8px 18px;background:#00838F;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px">힌트</button>
+    <button onclick="showAns()" style="padding:8px 18px;background:#2E7D32;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px">정답 확인</button>
+  </div>
+  <div id="hintBox" class="info" style="display:none"></div>
+  <div id="ansBox" class="ok" style="display:none"></div>
+</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id)
+const f3=v=>v.toFixed(3), f2=v=>v.toFixed(2)
+
+const tabs=document.querySelectorAll('.tab')
+const panels=document.querySelectorAll('.panel')
+function sw(i){tabs.forEach((t,j)=>t.classList.toggle('active',i===j));panels.forEach((p,j)=>p.classList.toggle('active',i===j));setTimeout(()=>[u0,u1,u2,u3][i](),30)}
+function sc(id,h){const c=$(id),w=c.parentElement.offsetWidth-2||360;c.width=w;c.height=h;return{ctx:c.getContext('2d'),w,h}}
+
+// TAB 0 벤다이어그램
+let vennMode='union'
+function setVenn(m){vennMode=m;['bv0','bv1','bv2','bv3'].forEach((id,i)=>$(id).classList.toggle('on',['union','inter','ac','acbc'][i]===m));u0()}
+function u0(){
+  const pA=+$('s0a').value/100,pB=+$('s0b').value/100
+  let pAB=Math.min(+$('s0ab').value/100,Math.min(pA,pB))
+  $('t0a').textContent=pA.toFixed(2);$('t0b').textContent=pB.toFixed(2);$('t0ab').textContent=pAB.toFixed(2)
+  const pU=pA+pB-pAB,pAc=1-pA,pAcBc=1-pU
+  $('r0union').textContent=f3(pU);$('r0ac').textContent=f3(pAc);$('r0acbc').textContent=f3(pAcBc)
+  $('f0').textContent=`P(A∪B)=${pA.toFixed(2)}+${pB.toFixed(2)}−${pAB.toFixed(2)}=${f3(pU)}  /  P(Aᶜ)=1−${pA.toFixed(2)}=${f3(pAc)}`
+  const{ctx,w,h}=sc('c0',200);ctx.clearRect(0,0,w,h)
+  const cx1=w*.36,cx2=w*.64,cy=h*.5,r=Math.min(w*.22,70)
+  // Ω 배경
+  ctx.fillStyle='#F0F4FF';ctx.fillRect(0,0,w,h)
+  // 강조 영역
+  ctx.save();ctx.beginPath()
+  if(vennMode==='union'){ctx.arc(cx1,cy,r,0,2*Math.PI);ctx.arc(cx2,cy,r,0,2*Math.PI)}
+  else if(vennMode==='inter'){ctx.arc(cx1,cy,r,0,2*Math.PI);ctx.clip();ctx.arc(cx2,cy,r,0,2*Math.PI)}
+  else if(vennMode==='ac'){ctx.rect(0,0,w,h);ctx.arc(cx1,cy,r,0,2*Math.PI,'true')}
+  else{ctx.rect(0,0,w,h);ctx.arc(cx1,cy,r,0,2*Math.PI,'true');ctx.arc(cx2,cy,r,0,2*Math.PI,'true')}
+  ctx.fillStyle='rgba(21,101,192,.25)';ctx.fill();ctx.restore()
+  // 원 테두리
+  [cx1,cx2].forEach((cx,i)=>{
+    ctx.beginPath();ctx.arc(cx,cy,r,0,2*Math.PI)
+    ctx.strokeStyle='#1565C0';ctx.lineWidth=2;ctx.stroke()
+  })
+  // 레이블
+  ctx.fillStyle='#1E2761';ctx.font='bold 14px Arial'
+  ctx.fillText('A',cx1-5,cy+5);ctx.fillText('B',cx2-5,cy+5)
+  ctx.fillStyle='#5C6BC0';ctx.font='12px Arial'
+  ctx.fillText('Ω',10,20)
+}
+
+// TAB 1 덧셈법칙
+let addMode='general'
+function setAdd(m){addMode=m;['ta0','ta1','ta2'].forEach((id,i)=>$(id).classList.toggle('on',['general','disjoint','three'][i]===m));buildAddCtrl();u1()}
+function buildAddCtrl(){
+  $('addCtrl').innerHTML=addMode==='three'?
+    `<div class="ctrl"><label>P(A) <span id="a1">0.30</span></label><input type="range" min="5" max="60" value="30" id="sa1" oninput="u1()"></div>
+     <div class="ctrl"><label>P(B) <span id="a2">0.25</span></label><input type="range" min="5" max="60" value="25" id="sa2" oninput="u1()"></div>
+     <div class="ctrl"><label>P(C) <span id="a3">0.20</span></label><input type="range" min="5" max="60" value="20" id="sa3" oninput="u1()"></div>`:
+    `<div class="ctrl"><label>P(A) <span id="a1">0.40</span></label><input type="range" min="5" max="90" value="40" id="sa1" oninput="u1()"></div>
+     <div class="ctrl"><label>P(B) <span id="a2">0.35</span></label><input type="range" min="5" max="90" value="35" id="sa2" oninput="u1()"></div>
+     ${addMode==='general'?'<div class="ctrl"><label>P(A∩B) <span id="a3">0.10</span></label><input type="range" min="0" max="40" value="10" id="sa3" oninput="u1()"></div>':''}`
+}
+function u1(){
+  const pA=+(($('sa1')?.value||40))/100,pB=+(($('sa2')?.value||35))/100
+  if(addMode==='general'){
+    const pAB=+(($('sa3')?.value||10))/100
+    $('a1').textContent=pA.toFixed(2);$('a2').textContent=pB.toFixed(2);$('a3').textContent=pAB.toFixed(2)
+    const pU=Math.min(1,pA+pB-pAB)
+    $('r1a').textContent=pA.toFixed(2);$('r1b').textContent=pB.toFixed(2);$('r1u').textContent=f3(pU)
+    $('f1').textContent=`P(A∪B)=${pA.toFixed(2)}+${pB.toFixed(2)}−${pAB.toFixed(2)}=${f3(pU)}`;$('m1').textContent='포함-배제 원리 적용'
+  }else if(addMode==='disjoint'){
+    $('a1').textContent=pA.toFixed(2);$('a2').textContent=pB.toFixed(2)
+    const pU=Math.min(1,pA+pB)
+    $('r1a').textContent=pA.toFixed(2);$('r1b').textContent=pB.toFixed(2);$('r1u').textContent=f3(pU)
+    $('f1').textContent=`서로소 → P(A∪B)=${pA.toFixed(2)}+${pB.toFixed(2)}=${f3(pU)}`;$('m1').textContent='A∩B=∅이므로 중복 뺄 필요 없음!'
+  }else{
+    const pC=+(($('sa3')?.value||20))/100
+    $('a1').textContent=pA.toFixed(2);$('a2').textContent=pB.toFixed(2);$('a3').textContent=pC.toFixed(2)
+    const pU=Math.min(1,pA+pB+pC)
+    $('r1a').textContent=pA.toFixed(2);$('r1b').textContent=pB.toFixed(2);$('r1u').textContent=f3(pU)
+    $('f1').textContent=`3사건 서로소: P(A∪B∪C)=${pA.toFixed(2)}+${pB.toFixed(2)}+${pC.toFixed(2)}=${f3(pU)}`;$('m1').textContent='3사건 서로소 — 모두 더하면 됩니다'
+  }
+  const{ctx,w,h}=sc('c1',180);ctx.clearRect(0,0,w,h)
+  const pA2=+($('sa1')?.value||40)/100,pB2=+($('sa2')?.value||35)/100
+  const pU2=+$('r1u').textContent
+  const bars=[{l:'P(A)',v:pA2,c:'rgba(21,101,192,.65)'},{l:'P(B)',v:pB2,c:'rgba(0,131,143,.65)'},{l:'P(A∪B)',v:pU2,c:'rgba(46,125,50,.7)'}]
+  const ox=45,oy=h-30,bw=(w-ox-20)/3-8
+  bars.forEach((b,i)=>{const x=ox+i*(bw+8)+8,bh=b.v*(oy-15);ctx.fillStyle=b.c;ctx.fillRect(x,oy-bh,bw,bh);ctx.fillStyle='#1E2761';ctx.font='12px Arial';ctx.fillText(b.l,x,oy+14);ctx.fillStyle='#1565C0';ctx.font='bold 11px Arial';ctx.fillText(b.v.toFixed(2),x+bw/2-14,oy-bh-5)})
+  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(w-8,oy);ctx.stroke()
+}
+
+// TAB 2 여사건
+function u2(){
+  const p=+$('s2p').value/100,n=+$('s2n').value
+  $('t2p').textContent=p.toFixed(2);$('t2n').textContent=n
+  const fail=Math.pow(1-p,n),atleast=1-fail
+  $('r2fail').textContent=f3(fail);$('r2atleast').textContent=f3(atleast);$('r2sum').textContent=(fail+atleast).toFixed(3)+' ✓'
+  $('f2').textContent=`P(적어도 1번)=1−(1−${p.toFixed(2)})^${n}=1−${f3(fail)}=${f3(atleast)}`
+  const{ctx,w,h}=sc('c2',180);ctx.clearRect(0,0,w,h)
+  const bars=[{l:'P(모두 실패)',v:fail,c:'rgba(183,28,28,.55)'},{l:'P(적어도 1번)',v:atleast,c:'rgba(46,125,50,.7)'}]
+  const ox=45,oy=h-30,bw=(w-ox-20)/2-12
+  bars.forEach((b,i)=>{const x=ox+i*(bw+12)+12,bh=b.v*(oy-15);ctx.fillStyle=b.c;ctx.fillRect(x,oy-bh,bw,bh);ctx.fillStyle='#1E2761';ctx.font='11px Arial';ctx.fillText(b.l,x,oy+14);ctx.fillStyle='#1E2761';ctx.font='bold 12px Arial';ctx.fillText(b.v.toFixed(3),x+bw/2-18,oy-bh-6)})
+  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(w-8,oy);ctx.stroke()
+}
+
+// TAB 3 종합연습
+const qs=[
+  {q:"P(A)=0.4, P(B)=0.3, P(A∩B)=0.1. P(A∪B) = ?",h:"덧셈법칙: P(A∪B)=P(A)+P(B)−P(A∩B)",a:"0.4+0.3−0.1 = 0.60"},
+  {q:"P(A)=0.6. P(Aᶜ) = ?",h:"여사건: P(Aᶜ)=1−P(A)",a:"1−0.6 = 0.40"},
+  {q:"동전 4번. 적어도 1번 앞면 확률?",h:"여사건: 1−P(모두 뒷면)=1−(1/2)⁴",a:"1−(0.5)⁴=1−0.0625=0.9375"},
+  {q:"A∩B=∅, P(A)=0.3, P(B)=0.2. P(A∪B)=?",h:"서로소: P(A∪B)=P(A)+P(B)",a:"0.3+0.2 = 0.50"},
+  {q:"P(A∪B)=0.7, P(A)=0.5, P(B)=0.4. P(A∩B)=?",h:"포함배제 변형: P(A∩B)=P(A)+P(B)−P(A∪B)",a:"0.5+0.4−0.7 = 0.20"},
+  {q:"P(Aᶜ∩Bᶜ)=0.25. P(A∪B)=?",h:"드모르간: P(Aᶜ∩Bᶜ)=P((A∪B)ᶜ)=1−P(A∪B)",a:"1−0.25 = 0.75"},
+]
+let curQ=0
+function newQ(){curQ=Math.floor(Math.random()*qs.length);$('qBox').textContent='Q. '+qs[curQ].q;$('hintBox').style.display='none';$('ansBox').style.display='none'}
+function showHint(){$('hintBox').textContent='💡 힌트: '+qs[curQ].h;$('hintBox').style.display='block'}
+function showAns(){$('ansBox').textContent='✓ 정답: '+qs[curQ].a;$('ansBox').style.display='block'}
+
+buildAddCtrl()
+setTimeout(()=>{u0();u1();u2();newQ()},60)
+window.addEventListener('resize',()=>{const ai=[...panels].findIndex(p=>p.classList.contains('active'));[u0,u1,u2,()=>{}][ai]?.()})
+</script>
+</body>
+</html>
