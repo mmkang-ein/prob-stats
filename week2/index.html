@@ -15,6 +15,7 @@ header a{color:#CADCFC;text-decoration:none;font-size:.85rem}
 .tab{padding:6px 12px;font-size:12.5px;font-weight:500;color:#5C6BC0;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap}
 .tab.active{color:#1565C0;border-bottom-color:#1565C0}
 .panel{display:none}.panel.active{display:block}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:11px}
 .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:7px;margin-bottom:11px}
 .card{background:#fff;border:1px solid #C5CAE9;border-radius:10px;padding:.8rem .9rem}
@@ -28,17 +29,35 @@ canvas{display:block;width:100%!important;border-radius:8px;background:#fff;bord
 .info{background:#E3F2FD;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#1565C0;margin-bottom:9px}
 .ok{background:#E8F5E9;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#2E7D32;margin-bottom:9px}
 .warn{background:#FFF3E0;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#BF6F00;margin-bottom:9px}
+.danger{background:#FFEBEE;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#B71C1C;margin-bottom:9px}
 .sec{font-size:13px;font-weight:600;color:#1E2761;margin-bottom:8px}
 .tog-row{display:flex;gap:5px;margin-bottom:9px;flex-wrap:wrap}
 .tog{padding:3px 10px;font-size:12px;border:1px solid #C5CAE9;border-radius:20px;background:#fff;cursor:pointer;color:#5C6BC0}
 .tog.on{background:#1565C0;color:#fff;border-color:#1565C0;font-weight:500}
-.step-box{background:#fff;border:1px solid #C5CAE9;border-radius:10px;padding:1rem;margin-bottom:10px;font-size:13px;line-height:1.8}
+/* 단계별 풀이 */
+.step-box{background:#fff;border:1px solid #C5CAE9;border-radius:10px;padding:1rem;margin-bottom:10px}
 .step-item{background:#EEF2FF;border-radius:8px;padding:8px 12px;margin-bottom:6px}
 .step-item-title{color:#1565C0;font-weight:600;font-size:12px;margin-bottom:3px}
 .step-item-body{font-family:monospace;font-size:12.5px;color:#1A1A2E;white-space:pre-wrap}
-.step-ans{background:#E8F5E9;border-radius:8px;padding:8px 12px}
+.step-ans{background:#E8F5E9;border-radius:8px;padding:8px 12px;margin-bottom:6px}
 .step-ans-title{color:#2E7D32;font-weight:600;font-size:12px;margin-bottom:3px}
 .step-ans-body{font-family:monospace;font-size:13px;font-weight:600;color:#2E7D32}
+/* 비교표 */
+.cmp-table{width:100%;border-collapse:collapse;font-size:12.5px;margin-bottom:10px}
+.cmp-table th{background:#1E2761;color:#fff;padding:7px 10px;text-align:center}
+.cmp-table td{padding:7px 10px;text-align:center;border-bottom:1px solid #EEF2FF}
+.cmp-table tr:nth-child(even) td{background:#F5F7FF}
+.cmp-table .best{color:#2E7D32;font-weight:600}
+.cmp-table .worst{color:#B71C1C;font-weight:600}
+/* 실제 예시 */
+.ex-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.ex-card{background:#fff;border:1px solid #C5CAE9;border-radius:10px;padding:.8rem;text-align:center}
+.ex-icon{font-size:1.8rem;margin-bottom:5px}
+.ex-title{font-size:12px;font-weight:600;color:#1E2761;margin-bottom:4px}
+.ex-desc{font-size:11px;color:#5C6BC0;line-height:1.5}
+.ex-type{display:inline-block;background:#EEF2FF;color:#1565C0;border-radius:20px;padding:2px 8px;font-size:10px;margin-top:4px;font-weight:500}
+/* 여사건 단계별 */
+.step-why{color:#5C6BC0;font-size:12px;margin-left:8px;margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -78,7 +97,7 @@ canvas{display:block;width:100%!important;border-radius:8px;background:#fff;bord
     <div style="font-weight:600;color:#1E2761;margin-bottom:8px">📝 단계별 풀이</div>
     <div style="color:#5C6BC0;margin-bottom:6px">❓ 문제: <span id="s1_q"></span></div>
     <div style="color:#B71C1C;font-weight:500;font-size:12.5px">왜 여사건인가?</div>
-    <div style="color:#5C6BC0;font-size:12px;margin-left:8px;margin-bottom:8px" id="s1_why"></div>
+    <div class="step-why" id="s1_why"></div>
     <div class="step-item">
       <div class="step-item-title">Step 1 — P(모두 실패) 계산</div>
       <div class="step-item-body" id="s1_step1"></div>
@@ -113,14 +132,76 @@ canvas{display:block;width:100%!important;border-radius:8px;background:#fff;bord
   <div class="ctrl"><label>P(A 정상) <span id="t2a">0.95</span></label><input type="range" min="50" max="99" value="95" id="s2a" oninput="u2()"></div>
   <div class="ctrl"><label>P(B 정상) <span id="t2b">0.90</span></label><input type="range" min="50" max="99" value="90" id="s2b" oninput="u2()"></div>
   <div class="ctrl"><label>P(C 정상) <span id="t2c">0.85</span></label><input type="range" min="50" max="99" value="85" id="s2c" oninput="u2()"></div>
-  <canvas id="c2" height="160"></canvas>
-  <div class="g3">
-    <div class="card"><div class="lbl">시스템 신뢰도</div><div class="val" style="color:#2E7D32" id="r2rel">-</div></div>
-    <div class="card"><div class="lbl">고장 확률</div><div class="val" style="color:#B71C1C" id="r2fail">-</div></div>
-    <div class="card"><div class="lbl">구성 방식</div><div class="val" style="font-size:13px" id="r2type">직렬</div></div>
+
+  <!-- 단계별 풀이 -->
+  <div class="step-box">
+    <div style="font-weight:600;color:#1E2761;margin-bottom:8px">📝 단계별 풀이</div>
+    <div style="color:#5C6BC0;margin-bottom:8px">❓ 문제: <span id="s2_q"></span></div>
+    <div class="step-item">
+      <div class="step-item-title" id="s2_step1_title">Step 1 — 구성 방식 파악</div>
+      <div class="step-item-body" id="s2_step1"></div>
+    </div>
+    <div class="step-item">
+      <div class="step-item-title" id="s2_step2_title">Step 2 — 확률 계산</div>
+      <div class="step-item-body" id="s2_step2"></div>
+    </div>
+    <div class="step-ans">
+      <div class="step-ans-title">✓ 정답</div>
+      <div class="step-ans-body" id="s2_ans"></div>
+    </div>
   </div>
-  <div class="formula" id="f2">직렬: P(A)xP(B)  /  병렬: 1-(1-P(A))x(1-P(B))</div>
-  <div class="ok" id="m2">병렬 연결이 직렬보다 신뢰도가 높습니다!</div>
+
+  <canvas id="c2" height="155"></canvas>
+
+  <!-- 비교표 -->
+  <div class="sec" style="margin-top:12px">📊 직렬 vs 병렬 vs 혼합 비교</div>
+  <table class="cmp-table" id="cmpTable">
+    <tr><th>구성</th><th>신뢰도</th><th>고장 확률</th><th>특징</th></tr>
+  </table>
+
+  <!-- 실제 공학 예시 -->
+  <div class="sec">🔧 실제 공학 적용 예시</div>
+  <div class="ex-grid">
+    <div class="ex-card">
+      <div class="ex-icon">✈️</div>
+      <div class="ex-title">항공기 엔진</div>
+      <div class="ex-desc">엔진 2~4개 병렬. 1개 고장해도 나머지로 운항 가능</div>
+      <span class="ex-type">병렬 (OR)</span>
+    </div>
+    <div class="ex-card">
+      <div class="ex-icon">💾</div>
+      <div class="ex-title">RAID 디스크</div>
+      <div class="ex-desc">RAID-1: 미러링(병렬). RAID-0: 스트라이핑(직렬). RAID-5: 혼합</div>
+      <span class="ex-type">혼합</span>
+    </div>
+    <div class="ex-card">
+      <div class="ex-icon">📡</div>
+      <div class="ex-title">통신 네트워크</div>
+      <div class="ex-desc">주경로 + 백업경로 병렬 구성. 인터넷 라우팅의 핵심 원리</div>
+      <span class="ex-type">병렬 (OR)</span>
+    </div>
+    <div class="ex-card">
+      <div class="ex-icon">🏭</div>
+      <div class="ex-title">생산 라인</div>
+      <div class="ex-desc">공정A→공정B→공정C 직렬. 하나 멈추면 전체 중단</div>
+      <span class="ex-type">직렬 (AND)</span>
+    </div>
+    <div class="ex-card">
+      <div class="ex-icon">⚡</div>
+      <div class="ex-title">전력 시스템</div>
+      <div class="ex-desc">발전소(병렬) → 변압기(직렬) → 배전망. 혼합 구성</div>
+      <span class="ex-type">혼합</span>
+    </div>
+    <div class="ex-card">
+      <div class="ex-icon">🏥</div>
+      <div class="ex-title">의료 장비</div>
+      <div class="ex-desc">주전원 + UPS 백업(병렬). 생명과 직결 → 초고신뢰도 필요</div>
+      <span class="ex-type">병렬 (OR)</span>
+    </div>
+  </div>
+
+  <div class="formula" id="f2">직렬: P(A)xP(B)xP(C)  /  병렬: 1-(1-P(A))(1-P(B))(1-P(C))</div>
+  <div class="info">💡 설계 원칙: 고신뢰도 시스템은 병렬(이중화) 구성 — 비용과 신뢰도의 균형이 핵심!</div>
 </div>
 
 <!-- TAB 3: 종합연습 -->
@@ -141,11 +222,14 @@ canvas{display:block;width:100%!important;border-radius:8px;background:#fff;bord
 var tabs=document.querySelectorAll('.tab'),panels=document.querySelectorAll('.panel');
 function $(id){return document.getElementById(id);}
 function f3(v){return v.toFixed(3);}
+function f4(v){return v.toFixed(4);}
 
 function sw(i){tabs.forEach(function(t,j){t.classList.toggle('active',i===j);});panels.forEach(function(p,j){p.classList.toggle('active',i===j);});setTimeout(function(){[u0,u1,u2,function(){}][i]();},30);}
 function sc(id,h){var c=$(id),w=c.parentElement.offsetWidth-2||360;c.width=w;c.height=h;return{ctx:c.getContext('2d'),w:w,h:h};}
 
-// TAB 0: 덧셈법칙
+/* ============================
+   TAB 0: 덧셈법칙
+   ============================ */
 var addMode='general';
 function setAdd(m){addMode=m;['ta0','ta1','ta2'].forEach(function(id,i){$(id).classList.toggle('on',['general','disjoint','three'][i]===m);});buildAdd();u0();}
 function buildAdd(){
@@ -170,8 +254,7 @@ function u0(){
   if(addMode==='general'){
     var pAB=Math.min(+($('sa2')?$('sa2').value:15)/100,Math.min(pA,pB));
     if($('a0'))$('a0').textContent=pA.toFixed(2);if($('a1'))$('a1').textContent=pB.toFixed(2);if($('a2'))$('a2').textContent=pAB.toFixed(2);
-    pU=Math.min(1,pA+pB-pAB);
-    fText='P(A∪B)='+pA.toFixed(2)+'+'+pB.toFixed(2)+'-'+pAB.toFixed(2)+'='+f3(pU);msg='포함-배제 원리 적용';
+    pU=Math.min(1,pA+pB-pAB);fText='P(A∪B)='+pA.toFixed(2)+'+'+pB.toFixed(2)+'-'+pAB.toFixed(2)+'='+f3(pU);msg='포함-배제 원리 적용';
   } else if(addMode==='disjoint'){
     if($('a0'))$('a0').textContent=pA.toFixed(2);if($('a1'))$('a1').textContent=pB.toFixed(2);
     pU=Math.min(1,pA+pB);fText='서로소: P(A∪B)='+pA.toFixed(2)+'+'+pB.toFixed(2)+'='+f3(pU);msg='A∩B=공집합 → 중복 없음!';
@@ -199,7 +282,9 @@ function u0(){
   ctx.textAlign='left';
 }
 
-// TAB 1: 여사건 단계별
+/* ============================
+   TAB 1: 여사건 단계별
+   ============================ */
 function u1(){
   var p=+$('s1p').value/100,n=+$('s1n').value;
   $('t1p').textContent=p.toFixed(2);$('t1n').textContent=n;
@@ -219,52 +304,121 @@ function u1(){
   ctx.textAlign='left';
 }
 
-// TAB 2: 시스템 신뢰도
+/* ============================
+   TAB 2: 시스템 신뢰도
+   ============================ */
 var sysMode='series';
 function setSys(m){sysMode=m;['ts0','ts1','ts2'].forEach(function(id,i){$(id).classList.toggle('on',['series','parallel','mixed'][i]===m);});u2();}
+
 function u2(){
   var pA=+$('s2a').value/100,pB=+$('s2b').value/100,pC=+$('s2c').value/100;
   $('t2a').textContent=pA.toFixed(2);$('t2b').textContent=pB.toFixed(2);$('t2c').textContent=pC.toFixed(2);
-  var rel,fText,typeText;
-  if(sysMode==='series'){rel=pA*pB*pC;fText='직렬: P(A)xP(B)xP(C)='+pA.toFixed(2)+'x'+pB.toFixed(2)+'x'+pC.toFixed(2)+'='+f3(rel);typeText='직렬 (AND)';}
-  else if(sysMode==='parallel'){rel=1-(1-pA)*(1-pB)*(1-pC);fText='병렬: 1-(1-P(A))(1-P(B))(1-P(C))='+f3(rel);typeText='병렬 (OR)';}
-  else{var pBC=1-(1-pB)*(1-pC);rel=pA*pBC;fText='혼합: A직렬(B∥C)  P(B∥C)='+f3(pBC)+'  전체='+pA.toFixed(2)+'x'+f3(pBC)+'='+f3(rel);typeText='혼합 (A직렬+BC병렬)';}
-  $('r2rel').textContent=f3(rel);$('r2fail').textContent=f3(1-rel);$('r2type').textContent=typeText;$('f2').textContent=fText;
-  $('m2').textContent=rel>0.95?'신뢰도 우수 (>95%)':rel>0.90?'신뢰도 양호 (>90%)':'신뢰도 개선 필요 (<90%)';
-  $('m2').className=rel>0.95?'ok':rel>0.90?'info':'warn';
 
-  var r=sc('c2',160),ctx=r.ctx,w=r.w,h=r.h;ctx.clearRect(0,0,w,h);
-  ctx.fillStyle='#F0F4FF';ctx.fillRect(0,0,w,h);
-  var bx=30,by=h/2,ex=w-30;
-  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=1.5;
+  var relS=pA*pB*pC;
+  var relP=1-(1-pA)*(1-pB)*(1-pC);
+  var pBC=1-(1-pB)*(1-pC);
+  var relM=pA*pBC;
+  var rel,fText,typeText,step1,step2,ans,qText;
+
   if(sysMode==='series'){
-    ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(ex,by);ctx.stroke();
-    [{l:'A\n'+pA.toFixed(2),x:w*.25},{l:'B\n'+pB.toFixed(2),x:w*.5},{l:'C\n'+pC.toFixed(2),x:w*.75}].forEach(function(nd){drawBox(ctx,nd.x,by,nd.l,rel>0.9?'rgba(46,125,50,.7)':'rgba(191,111,0,.7)');});
+    rel=relS;typeText='직렬 (AND)';
+    qText='P(A)='+pA.toFixed(2)+', P(B)='+pB.toFixed(2)+', P(C)='+pC.toFixed(2)+'. 직렬 연결 시 시스템 신뢰도는?';
+    step1='직렬 구성 = A AND B AND C 모두 정상이어야 작동\n핵심: 가장 약한 부품이 전체 신뢰도를 결정!';
+    step2='P(시스템) = P(A) x P(B) x P(C)\n           = '+pA.toFixed(2)+' x '+pB.toFixed(2)+' x '+pC.toFixed(2)+'\n           = '+f3(relS);
+    ans='직렬 신뢰도 = '+f3(rel)+' ('+(rel*100).toFixed(1)+'%)  고장 확률 = '+f3(1-rel);
+    fText='직렬: P(A)xP(B)xP(C) = '+pA.toFixed(2)+'x'+pB.toFixed(2)+'x'+pC.toFixed(2)+'='+f3(rel);
   } else if(sysMode==='parallel'){
-    var y1=by-38,y2=by,y3=by+38;
-    [y1,y2,y3].forEach(function(y){ctx.beginPath();ctx.moveTo(bx+20,y);ctx.lineTo(ex-20,y);ctx.stroke();});
-    ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(bx+20,y1);ctx.moveTo(bx,by);ctx.lineTo(bx+20,y2);ctx.moveTo(bx,by);ctx.lineTo(bx+20,y3);ctx.moveTo(ex-20,y1);ctx.lineTo(ex,by);ctx.moveTo(ex-20,y2);ctx.lineTo(ex,by);ctx.moveTo(ex-20,y3);ctx.lineTo(ex,by);ctx.stroke();
-    [{l:'A\n'+pA.toFixed(2),x:w*.5,y:y1},{l:'B\n'+pB.toFixed(2),x:w*.5,y:y2},{l:'C\n'+pC.toFixed(2),x:w*.5,y:y3}].forEach(function(nd){drawBox(ctx,nd.x,nd.y,nd.l,'rgba(21,101,192,.7)');});
+    rel=relP;typeText='병렬 (OR)';
+    qText='P(A)='+pA.toFixed(2)+', P(B)='+pB.toFixed(2)+', P(C)='+pC.toFixed(2)+'. 병렬 연결 시 시스템 신뢰도는?';
+    step1='병렬 구성 = A OR B OR C 중 적어도 하나 정상이면 작동\n→ 여사건 적용: P(시스템) = 1 - P(모두 고장)';
+    step2='P(모두 고장) = (1-P(A)) x (1-P(B)) x (1-P(C))\n             = '+( 1-pA).toFixed(2)+' x '+(1-pB).toFixed(2)+' x '+(1-pC).toFixed(2)+'\n             = '+f3((1-pA)*(1-pB)*(1-pC))+'\nP(시스템) = 1 - '+f3((1-pA)*(1-pB)*(1-pC))+' = '+f3(relP);
+    ans='병렬 신뢰도 = '+f3(rel)+' ('+(rel*100).toFixed(1)+'%)  고장 확률 = '+f4(1-rel);
+    fText='병렬: 1-(1-P(A))(1-P(B))(1-P(C))='+f3(rel);
   } else {
-    var ym1=by-30,ym2=by+30;
-    ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(w*.3,by);ctx.stroke();
-    drawBox(ctx,w*.3,by,'A\n'+pA.toFixed(2),'rgba(21,101,192,.7)');
-    ctx.beginPath();ctx.moveTo(w*.48,by);ctx.lineTo(w*.52,ym1);ctx.moveTo(w*.48,by);ctx.lineTo(w*.52,ym2);ctx.moveTo(w*.78,ym1);ctx.lineTo(ex,by);ctx.moveTo(w*.78,ym2);ctx.lineTo(ex,by);ctx.stroke();
-    drawBox(ctx,w*.65,ym1,'B\n'+pB.toFixed(2),'rgba(0,131,143,.7)');drawBox(ctx,w*.65,ym2,'C\n'+pC.toFixed(2),'rgba(83,74,183,.7)');
+    rel=relM;typeText='혼합 (A직렬 + BC병렬)';
+    qText='A는 직렬, B와 C는 병렬 연결 후 A와 직렬. 시스템 신뢰도는?';
+    step1='혼합 구성: A 직렬 → (B∥C) 병렬\n구조: A AND (B OR C)';
+    step2='Step 2-1: B∥C 병렬 신뢰도\n         P(B∥C) = 1-(1-P(B))(1-P(C))\n                = 1-'+(1-pB).toFixed(2)+'x'+(1-pC).toFixed(2)+' = '+f3(pBC)+'\nStep 2-2: 전체 = A 직렬 P(B∥C)\n         P(시스템) = P(A) x P(B∥C)\n                  = '+pA.toFixed(2)+' x '+f3(pBC)+' = '+f3(relM);
+    ans='혼합 신뢰도 = '+f3(rel)+' ('+(rel*100).toFixed(1)+'%)  고장 확률 = '+f3(1-rel);
+    fText='혼합: P(A) x [1-(1-P(B))(1-P(C))] = '+f3(rel);
   }
-  ctx.fillStyle='#1E2761';ctx.font='bold 12px Arial';ctx.textAlign='center';
-  ctx.fillText('신뢰도: '+f3(rel),w/2,h-8);ctx.textAlign='left';
-}
-function drawBox(ctx,x,y,label,color){ctx.fillStyle=color;ctx.fillRect(x-28,y-18,56,36);ctx.fillStyle='#fff';ctx.font='bold 10px Arial';ctx.textAlign='center';label.split('\n').forEach(function(l,i){ctx.fillText(l,x,y-3+i*13);});}
 
-// TAB 3: 종합연습
+  $('s2_q').textContent=qText;
+  $('s2_step1').textContent=step1;
+  $('s2_step2').textContent=step2;
+  $('s2_ans').textContent=ans;
+  $('f2').textContent=fText;
+
+  // 비교표 업데이트
+  var rows=[
+    {name:'직렬 (AND)', rel:relS, feat:'약한 고리가 전체를 결정'},
+    {name:'혼합 (A+BC)', rel:relM, feat:'비용과 신뢰도의 절충'},
+    {name:'병렬 (OR)', rel:relP, feat:'하나만 살아도 작동'},
+  ];
+  rows.sort(function(a,b){return a.rel-b.rel;});
+  var tbl='<tr><th>구성</th><th>신뢰도</th><th>고장 확률</th><th>특징</th></tr>';
+  rows.forEach(function(row,i){
+    var cls=i===rows.length-1?'best':i===0?'worst':'';
+    tbl+='<tr><td>'+row.name+'</td><td class="'+cls+'">'+f3(row.rel)+'</td><td class="'+(i===0?'worst':i===rows.length-1?'best':'')+'">'+(i===0?f3(1-row.rel):f4(1-row.rel))+'</td><td>'+row.feat+'</td></tr>';
+  });
+  $('cmpTable').innerHTML=tbl;
+
+  // 다이어그램
+  var r2=sc('c2',155),ctx=r2.ctx,w=r2.w,h=r2.h;
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle='#F0F4FF';ctx.fillRect(0,0,w,h);
+
+  function drawBox2(x,y,label,color){
+    ctx.fillStyle=color;ctx.fillRect(x-30,y-18,60,36);
+    ctx.fillStyle='#fff';ctx.font='bold 10px Arial';ctx.textAlign='center';
+    var lines=label.split('\n');lines.forEach(function(l,i){ctx.fillText(l,x,y-3+(i-(lines.length-1)/2)*13);});
+  }
+  function drawLine(x1,y1,x2,y2){ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.strokeStyle='#5C6BC0';ctx.lineWidth=1.5;ctx.stroke();}
+
+  var bx=25,ex=w-25,my=h/2;
+  var nodeColor='rgba(21,101,192,.8)';
+
+  // 입력/출력 원
+  [bx,ex].forEach(function(x){ctx.beginPath();ctx.arc(x,my,8,0,2*Math.PI);ctx.fillStyle='#1E2761';ctx.fill();});
+  ctx.fillStyle='#1E2761';ctx.font='10px Arial';ctx.textAlign='center';
+  ctx.fillText('IN',bx,my+20);ctx.fillText('OUT',ex,my+20);
+
+  if(sysMode==='series'){
+    drawLine(bx+8,my,ex-8,my);
+    var pts=[w*.3,w*.52,w*.74];
+    pts.forEach(function(x,i){drawBox2(x,my,['A\n'+pA.toFixed(2),'B\n'+pB.toFixed(2),'C\n'+pC.toFixed(2)][i],nodeColor);});
+  } else if(sysMode==='parallel'){
+    var ys=[my-42,my,my+42];
+    ys.forEach(function(y){drawLine(bx+8,my,bx+30,y);drawLine(ex-30,y,ex-8,my);drawLine(bx+30,y,ex-30,y);});
+    [{y:ys[0],l:'A\n'+pA.toFixed(2)},{y:ys[1],l:'B\n'+pB.toFixed(2)},{y:ys[2],l:'C\n'+pC.toFixed(2)}].forEach(function(nd){drawBox2(w/2,nd.y,nd.l,nodeColor);});
+  } else {
+    var mx1=w*.38,mx2=w*.62,y1=my-32,y2=my+32;
+    drawLine(bx+8,my,mx1-30,my);
+    drawBox2(mx1-30,my,'A\n'+pA.toFixed(2),nodeColor);
+    drawLine(mx1,my,mx1+8,y1);drawLine(mx1,my,mx1+8,y2);
+    drawLine(mx1+8,y1,mx2-8,y1);drawLine(mx1+8,y2,mx2-8,y2);
+    drawBox2(w/2,y1,'B\n'+pB.toFixed(2),nodeColor);drawBox2(w/2,y2,'C\n'+pC.toFixed(2),nodeColor);
+    drawLine(mx2-8,y1,mx2,my);drawLine(mx2-8,y2,mx2,my);
+    drawLine(mx2,my,ex-8,my);
+  }
+
+  // 신뢰도 표시
+  var relColor=rel>0.95?'#2E7D32':rel>0.90?'#BF6F00':'#B71C1C';
+  ctx.fillStyle=relColor;ctx.font='bold 13px Arial';ctx.textAlign='center';
+  ctx.fillText('신뢰도: '+f3(rel)+' ('+(rel*100).toFixed(1)+'%)',w/2,h-8);
+  ctx.textAlign='left';
+}
+
+/* ============================
+   TAB 3: 종합연습
+   ============================ */
 var qs=[
   {q:"불량률 5%, 독립. 4개 검사. 적어도 1개 불량 확률?",h:"여사건: 1-(1-0.05)^4=1-(0.95)^4",a:"1-0.8145=0.1855 (약 18.6%)"},
   {q:"P(A)=0.6, P(B)=0.5, P(A∩B)=0.3. P(A∪B)=?",h:"포함배제: P(A∪B)=P(A)+P(B)-P(A∩B)",a:"0.6+0.5-0.3=0.80"},
   {q:"A∩B=공집합, P(A)=0.4, P(B)=0.3. P(A∪B)=?",h:"서로소: P(A∪B)=P(A)+P(B)",a:"0.4+0.3=0.70"},
   {q:"P(A)=0.95, P(B)=0.90. 직렬 신뢰도?",h:"직렬: P(A)xP(B)",a:"0.95x0.90=0.855 (85.5%)"},
-  {q:"P(A)=0.95, P(B)=0.90. 병렬 신뢰도?",h:"병렬: 1-(1-P(A))(1-P(B))=1-(0.05)(0.10)",a:"1-0.005=0.995 (99.5%)"},
-  {q:"P(Ac∩Bc)=0.3. P(A∪B)=?",h:"드모르간: P(Ac∩Bc)=1-P(A∪B)",a:"1-0.3=0.70"}
+  {q:"P(A)=0.95, P(B)=0.90. 병렬 신뢰도?",h:"병렬: 1-(1-P(A))(1-P(B))=1-0.05x0.10",a:"1-0.005=0.995 (99.5%)"},
+  {q:"왜 병렬이 직렬보다 신뢰도가 높은가?",h:"병렬: 하나만 정상이면 작동 / 직렬: 모두 정상이어야 작동",a:"병렬=여사건(적어도 1개 정상) → 여러 부품이 서로 보완. 직렬=모두 AND → 하나만 고장해도 전체 중단"}
 ];
 var curQ=0;
 function newQ(){curQ=Math.floor(Math.random()*qs.length);$('qBox').textContent='Q. '+qs[curQ].q;$('hintBox').style.display='none';$('ansBox').style.display='none';}
