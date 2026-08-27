@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1주차 — 확률 및 통계 시뮬레이터</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f7ff;color:#1A1A2E}
+header{background:#1E2761;color:#fff;padding:.9rem 1.2rem;display:flex;align-items:center;gap:.8rem}
+header a{color:#CADCFC;text-decoration:none;font-size:.85rem}
+.hw{flex:1}header h1{font-size:1rem;font-weight:600}header p{font-size:.78rem;color:#90CAF9;margin-top:2px}
+.wrap{max-width:740px;margin:0 auto;padding:.9rem 1rem 3rem}
+.tabs{display:flex;gap:3px;border-bottom:2px solid #C5CAE9;margin-bottom:1.2rem;flex-wrap:wrap}
+.tab{padding:6px 12px;font-size:12.5px;font-weight:500;color:#5C6BC0;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap}
+.tab.active{color:#1565C0;border-bottom-color:#1565C0}
+.panel{display:none}.panel.active{display:block}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:11px}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:7px;margin-bottom:11px}
+.card{background:#fff;border:1px solid #C5CAE9;border-radius:10px;padding:.8rem .9rem}
+.lbl{font-size:11px;color:#5C6BC0;margin-bottom:2px}.val{font-size:17px;font-weight:600;color:#1565C0}
+.ctrl{margin-bottom:9px}
+.ctrl label{display:flex;justify-content:space-between;font-size:12.5px;color:#5C6BC0;margin-bottom:2px}
+.ctrl label span{font-weight:600;color:#1A1A2E}
+input[type=range]{width:100%}
+canvas{display:block;width:100%!important;border-radius:8px;background:#fff;border:1px solid #EEF2FF;margin-bottom:4px}
+.formula{background:#EEF2FF;border-radius:8px;padding:8px 12px;font-size:12px;font-family:monospace;color:#1E2761;margin-bottom:9px}
+.info{background:#E3F2FD;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#1565C0;margin-bottom:9px}
+.ok{background:#E8F5E9;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#2E7D32;margin-bottom:9px}
+.warn{background:#FFF3E0;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#BF6F00;margin-bottom:9px}
+.sec{font-size:13px;font-weight:600;color:#1E2761;margin-bottom:8px}
+.tog-row{display:flex;gap:5px;margin-bottom:9px;flex-wrap:wrap}
+.tog{padding:3px 10px;font-size:12px;border:1px solid #C5CAE9;border-radius:20px;background:#fff;cursor:pointer;color:#5C6BC0}
+.tog.on{background:#1565C0;color:#fff;border-color:#1565C0;font-weight:500}
+.step-box{background:#fff;border:1px solid #C5CAE9;border-radius:10px;padding:1rem;margin-bottom:10px;font-size:13px;line-height:1.8}
+.step-item{background:#EEF2FF;border-radius:8px;padding:8px 12px;margin-bottom:6px}
+.step-item-title{color:#1565C0;font-weight:600;font-size:12px;margin-bottom:3px}
+.step-item-body{font-family:monospace;font-size:12.5px;color:#1A1A2E;white-space:pre-wrap}
+.step-ans{background:#E8F5E9;border-radius:8px;padding:8px 12px}
+.step-ans-title{color:#2E7D32;font-weight:600;font-size:12px;margin-bottom:3px}
+.step-ans-body{font-family:monospace;font-size:13px;font-weight:600;color:#2E7D32}
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html">← 목록</a>
+  <div class="hw"><h1>1주차 — 확률의 개념·정의·표본공간·사건</h1><p>벤다이어그램 · 집합 연산 · 콜모고로프 공리 · 종합연습</p></div>
+</header>
+<div class="wrap">
+<div class="tabs">
+  <button class="tab active" onclick="sw(0)">① 벤다이어그램</button>
+  <button class="tab" onclick="sw(1)">② 집합 연산</button>
+  <button class="tab" onclick="sw(2)">③ 공리·기본 성질</button>
+  <button class="tab" onclick="sw(3)">④ 종합연습</button>
+</div>
+
+<!-- TAB 0: 벤다이어그램 -->
+<div class="panel active" id="p0">
+  <div class="sec">벤다이어그램 — 집합 연산 시각화</div>
+  <div class="ctrl"><label>P(A) <span id="t0a">0.40</span></label><input type="range" min="5" max="90" value="40" id="s0a" oninput="u0()"></div>
+  <div class="ctrl"><label>P(B) <span id="t0b">0.35</span></label><input type="range" min="5" max="90" value="35" id="s0b" oninput="u0()"></div>
+  <div class="ctrl"><label>P(A∩B) <span id="t0ab">0.10</span></label><input type="range" min="0" max="40" value="10" id="s0ab" oninput="u0()"></div>
+  <div class="tog-row">
+    <button class="tog on" id="bv0" onclick="setVenn('union')">A∪B 합사건</button>
+    <button class="tog" id="bv1" onclick="setVenn('inter')">A∩B 곱사건</button>
+    <button class="tog" id="bv2" onclick="setVenn('ac')">Aᶜ 여사건</button>
+    <button class="tog" id="bv3" onclick="setVenn('acbc')">Aᶜ∩Bᶜ 드모르간</button>
+  </div>
+  <canvas id="c0" height="220"></canvas>
+  <div class="g4">
+    <div class="card"><div class="lbl">P(A∪B)</div><div class="val" id="r0union">0.65</div></div>
+    <div class="card"><div class="lbl">P(A∩B)</div><div class="val" id="r0inter">0.10</div></div>
+    <div class="card"><div class="lbl">P(Aᶜ)</div><div class="val" id="r0ac">0.60</div></div>
+    <div class="card"><div class="lbl">P(Aᶜ∩Bᶜ)</div><div class="val" id="r0acbc">0.35</div></div>
+  </div>
+  <div class="formula" id="f0">P(A∪B) = P(A)+P(B)-P(A∩B) = 0.65</div>
+  <div class="info">드모르간: P(Aᶜ∩Bᶜ) = P((A∪B)ᶜ) = 1 - P(A∪B)</div>
+</div>
+
+<!-- TAB 1: 집합 연산 -->
+<div class="panel" id="p1">
+  <div class="sec">집합 연산 확인 — 포함배제·드모르간</div>
+  <div class="ctrl"><label>P(A) <span id="t1a">0.50</span></label><input type="range" min="5" max="90" value="50" id="s1a" oninput="u1()"></div>
+  <div class="ctrl"><label>P(B) <span id="t1b">0.40</span></label><input type="range" min="5" max="90" value="40" id="s1b" oninput="u1()"></div>
+  <div class="ctrl"><label>P(A∩B) <span id="t1ab">0.15</span></label><input type="range" min="0" max="40" value="15" id="s1ab" oninput="u1()"></div>
+  <canvas id="c1" height="165"></canvas>
+  <div class="g4">
+    <div class="card"><div class="lbl">P(A∪B)</div><div class="val" id="r1u">0.75</div></div>
+    <div class="card"><div class="lbl">P(Aᶜ)</div><div class="val" id="r1ac">0.50</div></div>
+    <div class="card"><div class="lbl">P(Bᶜ)</div><div class="val" id="r1bc">0.60</div></div>
+    <div class="card"><div class="lbl">P(Aᶜ∩Bᶜ)</div><div class="val" id="r1acbc">0.25</div></div>
+  </div>
+  <div class="formula" id="f1">P(A∪B)=P(A)+P(B)-P(A∩B)  /  P(Ac∩Bc)=1-P(A∪B)</div>
+  <div class="ok" id="m1">드모르간 법칙: (A∪B)c = Ac∩Bc 검증</div>
+</div>
+
+<!-- TAB 2: 공리·기본 성질 -->
+<div class="panel" id="p2">
+  <div class="sec">콜모고로프 공리 — 기본 성질 검증</div>
+  <div class="ctrl"><label>P(A) <span id="t2a">0.40</span></label><input type="range" min="1" max="99" value="40" id="s2a" oninput="u2()"></div>
+  <div class="ctrl"><label>P(B|서로소) <span id="t2b">0.30</span></label><input type="range" min="1" max="59" value="30" id="s2b" oninput="u2()"></div>
+  <canvas id="c2" height="160"></canvas>
+  <div class="g3">
+    <div class="card"><div class="lbl">공리① P(A)≥0</div><div class="val" style="color:#2E7D32" id="r2ax1">✓</div></div>
+    <div class="card"><div class="lbl">공리② P(Ω)=1</div><div class="val" style="color:#2E7D32" id="r2ax2">✓</div></div>
+    <div class="card"><div class="lbl">공리③ 가산가법</div><div class="val" style="color:#2E7D32" id="r2ax3">✓</div></div>
+  </div>
+  <div class="formula" id="f2">P(Ac)=1-P(A)  /  P(∅)=0  /  A⊆B이면 P(A)≤P(B)</div>
+  <div id="axiom_detail" class="info"></div>
+</div>
+
+<!-- TAB 3: 종합연습 -->
+<div class="panel" id="p3">
+  <div class="sec">종합 연습 — 1주차 개념 확인</div>
+  <div id="qBox" style="background:#EEF2FF;border-radius:10px;padding:1rem;margin-bottom:12px;font-size:14px;line-height:1.7;min-height:80px"></div>
+  <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+    <button onclick="newQ()" style="padding:8px 18px;background:#1565C0;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px">새 문제</button>
+    <button onclick="showHint()" style="padding:8px 18px;background:#00838F;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px">힌트</button>
+    <button onclick="showAns()" style="padding:8px 18px;background:#2E7D32;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px">정답 확인</button>
+  </div>
+  <div id="hintBox" class="info" style="display:none"></div>
+  <div id="ansBox" class="ok" style="display:none"></div>
+</div>
+</div>
+
+<script>
+var tabs=document.querySelectorAll('.tab'),panels=document.querySelectorAll('.panel');
+function $(id){return document.getElementById(id);}
+function f3(v){return v.toFixed(3);}
+
+function sw(i){
+  tabs.forEach(function(t,j){t.classList.toggle('active',i===j);});
+  panels.forEach(function(p,j){p.classList.toggle('active',i===j);});
+  setTimeout(function(){[u0,u1,u2,function(){}][i]();},30);
+}
+function sc(id,h){var c=$(id),w=c.parentElement.offsetWidth-2||360;c.width=w;c.height=h;return{ctx:c.getContext('2d'),w:w,h:h};}
+
+// TAB 0: 벤다이어그램 (픽셀 판별)
+var vennMode='union';
+function setVenn(m){vennMode=m;['bv0','bv1','bv2','bv3'].forEach(function(id,i){$(id).classList.toggle('on',['union','inter','ac','acbc'][i]===m);});u0();}
+
+function u0(){
+  var pA=+$('s0a').value/100, pB=+$('s0b').value/100;
+  var pAB=Math.min(+$('s0ab').value/100,Math.min(pA,pB));
+  $('t0a').textContent=pA.toFixed(2);$('t0b').textContent=pB.toFixed(2);$('t0ab').textContent=pAB.toFixed(2);
+  var pU=Math.min(1,pA+pB-pAB);
+  $('r0union').textContent=f3(pU);$('r0inter').textContent=f3(pAB);
+  $('r0ac').textContent=f3(1-pA);$('r0acbc').textContent=f3(Math.max(0,1-pU));
+  $('f0').textContent='P(A∪B)='+pA.toFixed(2)+'+'+pB.toFixed(2)+'-'+pAB.toFixed(2)+'='+f3(pU)+'  P(Ac)='+f3(1-pA)+'  P(Ac∩Bc)='+f3(Math.max(0,1-pU));
+
+  var r=sc('c0',220),ctx=r.ctx,w=r.w,h=r.h;
+  ctx.clearRect(0,0,w,h);
+  var rad=Math.min(w*0.26,75),gap=rad*0.7;
+  var cx1=w/2-gap/2,cx2=w/2+gap/2,cy=h/2;
+  ctx.fillStyle='#F0F4FF';ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=1;ctx.strokeRect(2,2,w-4,h-4);
+  ctx.fillStyle='#5C6BC0';ctx.font='12px Arial';ctx.fillText('Ω',10,20);
+
+  function inA(px,py){return Math.hypot(px-cx1,py-cy)<rad;}
+  function inB(px,py){return Math.hypot(px-cx2,py-cy)<rad;}
+  function shouldFill(px,py){var a=inA(px,py),b=inB(px,py);
+    if(vennMode==='union')return a||b;if(vennMode==='inter')return a&&b;
+    if(vennMode==='ac')return !a;if(vennMode==='acbc')return !a&&!b;return false;}
+
+  var off=document.createElement('canvas');off.width=w;off.height=h;
+  var octx=off.getContext('2d'),img=octx.createImageData(w,h),d=img.data,step=2;
+  for(var py=0;py<h;py+=step)for(var px=0;px<w;px+=step)if(shouldFill(px,py)){
+    for(var dy=0;dy<step&&py+dy<h;dy++)for(var dx=0;dx<step&&px+dx<w;dx++){
+      var idx=((py+dy)*w+(px+dx))*4;d[idx]=21;d[idx+1]=101;d[idx+2]=192;d[idx+3]=75;}}
+  octx.putImageData(img,0,0);ctx.drawImage(off,0,0);
+
+  [cx1,cx2].forEach(function(cx){ctx.beginPath();ctx.arc(cx,cy,rad,0,2*Math.PI);ctx.strokeStyle='#1565C0';ctx.lineWidth=2.5;ctx.stroke();});
+  ctx.fillStyle='#1E2761';ctx.font='bold 15px Arial';ctx.textAlign='center';
+  ctx.fillText('A',cx1-rad*.4,cy+5);ctx.fillText('B',cx2+rad*.4,cy+5);
+  ctx.font='11px Arial';ctx.fillStyle='#5C6BC0';
+  ctx.fillText('P(A)='+pA.toFixed(2),cx1,cy+rad+18);
+  ctx.fillText('P(B)='+pB.toFixed(2),cx2,cy+rad+18);
+  ctx.fillText('P(A∩B)='+pAB.toFixed(2),w/2,cy-rad-8);
+  var ml={union:'A∪B (합사건)',inter:'A∩B (곱사건)',ac:'Ac (여사건)',acbc:'Ac∩Bc (드모르간)'};
+  ctx.fillStyle='#1565C0';ctx.font='bold 12px Arial';ctx.fillText('선택: '+ml[vennMode],w/2,h-8);
+  ctx.textAlign='left';
+}
+
+// TAB 1: 집합 연산
+function u1(){
+  var pA=+$('s1a').value/100,pB=+$('s1b').value/100,pAB=Math.min(+$('s1ab').value/100,Math.min(pA,pB));
+  $('t1a').textContent=pA.toFixed(2);$('t1b').textContent=pB.toFixed(2);$('t1ab').textContent=pAB.toFixed(2);
+  var pU=Math.min(1,pA+pB-pAB),pAc=1-pA,pBc=1-pB,pAcBc=Math.max(0,1-pU);
+  $('r1u').textContent=f3(pU);$('r1ac').textContent=f3(pAc);$('r1bc').textContent=f3(pBc);$('r1acbc').textContent=f3(pAcBc);
+  var check=Math.abs(pAcBc-(1-pU))<0.001;
+  $('f1').textContent='P(A∪B)='+f3(pU)+'  /  P(Ac∩Bc)=1-P(A∪B)='+f3(pAcBc);
+  $('m1').textContent='드모르간 검증: P(Ac∩Bc)='+f3(pAcBc)+' = 1-P(A∪B)=1-'+f3(pU)+'='+f3(1-pU)+(check?' ✓':' 확인');
+
+  var r=sc('c1',165),ctx=r.ctx,w=r.w,h=r.h;ctx.clearRect(0,0,w,h);
+  var labels=['P(A)','P(B)','P(A∩B)','P(A∪B)','P(Ac)','P(Ac∩Bc)'];
+  var vals=[pA,pB,pAB,pU,pAc,pAcBc];
+  var colors=['rgba(21,101,192,.6)','rgba(0,131,143,.6)','rgba(83,74,183,.6)','rgba(46,125,50,.7)','rgba(191,111,0,.6)','rgba(183,28,28,.55)'];
+  var ox=8,oy=h-28,bw=(w-ox*2)/(labels.length)-5;
+  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(w-4,oy);ctx.stroke();
+  labels.forEach(function(l,i){var x=ox+i*(bw+5),bh=vals[i]*(oy-15);ctx.fillStyle=colors[i];ctx.fillRect(x,oy-bh,bw,bh);ctx.fillStyle='#1E2761';ctx.font='9px Arial';ctx.textAlign='center';ctx.fillText(l,x+bw/2,oy+14);ctx.font='bold 10px Arial';ctx.fillText(f3(vals[i]),x+bw/2,oy-bh-4);});
+  ctx.textAlign='left';
+}
+
+// TAB 2: 공리
+function u2(){
+  var pA=+$('s2a').value/100,pB=+$('s2b').value/100;
+  if(pA+pB>1)pB=Math.max(0.01,1-pA);
+  $('t2a').textContent=pA.toFixed(2);$('t2b').textContent=pB.toFixed(2);
+  $('r2ax1').textContent=pA>=0?'✓':'✗';
+  $('r2ax2').textContent='1.000 ✓';
+  var ax3=Math.min(1,pA+pB);$('r2ax3').textContent=f3(ax3)+' ✓';
+  $('f2').textContent='P(Ac)=1-'+pA.toFixed(2)+'='+f3(1-pA)+'  /  P(A∪B)서로소='+f3(ax3);
+  $('axiom_detail').textContent='P(A)='+pA.toFixed(2)+'≥0 ✓  /  P(Ac)='+f3(1-pA)+'  /  A·B 서로소→P(A∪B)='+f3(ax3)+'  /  P(∅)=0 ✓';
+
+  var r=sc('c2',160),ctx=r.ctx,w=r.w,h=r.h;ctx.clearRect(0,0,w,h);
+  var bars=[{l:'P(A)',v:pA,c:'rgba(21,101,192,.65)'},{l:'P(Ac)=1-P(A)',v:1-pA,c:'rgba(191,111,0,.65)'},{l:'합=1',v:1,c:'rgba(46,125,50,.4)'},{l:'P(B)서로소',v:pB,c:'rgba(0,131,143,.65)'},{l:'P(A∪B)',v:ax3,c:'rgba(46,125,50,.7)'}];
+  var ox=8,oy=h-28,bw=(w-ox*2)/bars.length-5;
+  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(w-4,oy);ctx.stroke();
+  bars.forEach(function(b,i){var x=ox+i*(bw+5),bh=b.v*(oy-15);ctx.fillStyle=b.c;ctx.fillRect(x,oy-bh,bw,bh);ctx.fillStyle='#1E2761';ctx.font='9px Arial';ctx.textAlign='center';ctx.fillText(b.l,x+bw/2,oy+14);ctx.font='bold 10px Arial';ctx.fillText(f3(b.v),x+bw/2,oy-bh-4);});
+  ctx.textAlign='left';
+}
+
+// TAB 3: 종합연습
+var qs=[
+  {q:"Ω={1,2,3,4,5,6}, A={2,4,6}, B={1,2,3}. P(A∩B)=?",h:"A∩B={2}. P(A∩B)=n(A∩B)/n(Ω)",a:"P(A∩B)=1/6≈0.167"},
+  {q:"P(A)=0.4. P(Ac)=?",h:"여사건: P(Ac)=1-P(A)",a:"1-0.4=0.60"},
+  {q:"P(A)=0.5, P(B)=0.3, P(A∩B)=0.1. P(A∪B)=?",h:"포함배제: P(A∪B)=P(A)+P(B)-P(A∩B)",a:"0.5+0.3-0.1=0.70"},
+  {q:"콜모고로프 공리 3가지를 말하시오",h:"비음성/정규화/가산가법성",a:"①P(A)≥0  ②P(Ω)=1  ③서로소→P(A∪B)=P(A)+P(B)"},
+  {q:"P(A∪B)=0.8. P(Ac∩Bc)=?",h:"드모르간: P(Ac∩Bc)=P((A∪B)c)=1-P(A∪B)",a:"1-0.8=0.20"},
+  {q:"주사위 1개. P(3 이상)=?",h:"Ω={1,2,3,4,5,6}, 3이상={3,4,5,6}",a:"4/6=2/3≈0.667"}
+];
+var curQ=0;
+function newQ(){curQ=Math.floor(Math.random()*qs.length);$('qBox').textContent='Q. '+qs[curQ].q;$('hintBox').style.display='none';$('ansBox').style.display='none';}
+function showHint(){$('hintBox').textContent='힌트: '+qs[curQ].h;$('hintBox').style.display='block';}
+function showAns(){$('ansBox').textContent='정답: '+qs[curQ].a;$('ansBox').style.display='block';}
+
+setTimeout(function(){u0();u1();u2();newQ();},60);
+window.addEventListener('resize',function(){var ai=Array.from(panels).findIndex(function(p){return p.classList.contains('active');});[u0,u1,u2,function(){}][ai]();});
+</script>
+</body>
+</html>

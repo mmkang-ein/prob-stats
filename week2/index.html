@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2주차 — 확률 및 통계 시뮬레이터</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f7ff;color:#1A1A2E}
+header{background:#1E2761;color:#fff;padding:.9rem 1.2rem;display:flex;align-items:center;gap:.8rem}
+header a{color:#CADCFC;text-decoration:none;font-size:.85rem}
+.hw{flex:1}header h1{font-size:1rem;font-weight:600}header p{font-size:.78rem;color:#90CAF9;margin-top:2px}
+.wrap{max-width:740px;margin:0 auto;padding:.9rem 1rem 3rem}
+.tabs{display:flex;gap:3px;border-bottom:2px solid #C5CAE9;margin-bottom:1.2rem;flex-wrap:wrap}
+.tab{padding:6px 12px;font-size:12.5px;font-weight:500;color:#5C6BC0;border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap}
+.tab.active{color:#1565C0;border-bottom-color:#1565C0}
+.panel{display:none}.panel.active{display:block}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:11px}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:7px;margin-bottom:11px}
+.card{background:#fff;border:1px solid #C5CAE9;border-radius:10px;padding:.8rem .9rem}
+.lbl{font-size:11px;color:#5C6BC0;margin-bottom:2px}.val{font-size:17px;font-weight:600;color:#1565C0}
+.ctrl{margin-bottom:9px}
+.ctrl label{display:flex;justify-content:space-between;font-size:12.5px;color:#5C6BC0;margin-bottom:2px}
+.ctrl label span{font-weight:600;color:#1A1A2E}
+input[type=range]{width:100%}
+canvas{display:block;width:100%!important;border-radius:8px;background:#fff;border:1px solid #EEF2FF;margin-bottom:4px}
+.formula{background:#EEF2FF;border-radius:8px;padding:8px 12px;font-size:12px;font-family:monospace;color:#1E2761;margin-bottom:9px}
+.info{background:#E3F2FD;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#1565C0;margin-bottom:9px}
+.ok{background:#E8F5E9;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#2E7D32;margin-bottom:9px}
+.warn{background:#FFF3E0;border-radius:8px;padding:8px 12px;font-size:12.5px;color:#BF6F00;margin-bottom:9px}
+.sec{font-size:13px;font-weight:600;color:#1E2761;margin-bottom:8px}
+.tog-row{display:flex;gap:5px;margin-bottom:9px;flex-wrap:wrap}
+.tog{padding:3px 10px;font-size:12px;border:1px solid #C5CAE9;border-radius:20px;background:#fff;cursor:pointer;color:#5C6BC0}
+.tog.on{background:#1565C0;color:#fff;border-color:#1565C0;font-weight:500}
+.step-box{background:#fff;border:1px solid #C5CAE9;border-radius:10px;padding:1rem;margin-bottom:10px;font-size:13px;line-height:1.8}
+.step-item{background:#EEF2FF;border-radius:8px;padding:8px 12px;margin-bottom:6px}
+.step-item-title{color:#1565C0;font-weight:600;font-size:12px;margin-bottom:3px}
+.step-item-body{font-family:monospace;font-size:12.5px;color:#1A1A2E;white-space:pre-wrap}
+.step-ans{background:#E8F5E9;border-radius:8px;padding:8px 12px}
+.step-ans-title{color:#2E7D32;font-weight:600;font-size:12px;margin-bottom:3px}
+.step-ans-body{font-family:monospace;font-size:13px;font-weight:600;color:#2E7D32}
+</style>
+</head>
+<body>
+<header>
+  <a href="../index.html">← 목록</a>
+  <div class="hw"><h1>2주차 — 확률 연산·덧셈법칙·여사건</h1><p>덧셈법칙 · 여사건 단계별 풀이 · 시스템 신뢰도 · 종합연습</p></div>
+</header>
+<div class="wrap">
+<div class="tabs">
+  <button class="tab active" onclick="sw(0)">① 덧셈법칙</button>
+  <button class="tab" onclick="sw(1)">② 여사건 풀이</button>
+  <button class="tab" onclick="sw(2)">③ 시스템 신뢰도</button>
+  <button class="tab" onclick="sw(3)">④ 종합연습</button>
+</div>
+
+<!-- TAB 0: 덧셈법칙 -->
+<div class="panel active" id="p0">
+  <div class="sec">덧셈법칙 — 2사건·서로소·3사건</div>
+  <div class="tog-row">
+    <button class="tog on" id="ta0" onclick="setAdd('general')">2사건 일반</button>
+    <button class="tog" id="ta1" onclick="setAdd('disjoint')">2사건 서로소</button>
+    <button class="tog" id="ta2" onclick="setAdd('three')">3사건 서로소</button>
+  </div>
+  <div id="addCtrl"></div>
+  <canvas id="c0" height="175"></canvas>
+  <div id="addCards"></div>
+  <div class="formula" id="f0">P(A∪B)=P(A)+P(B)-P(A∩B)</div>
+  <div class="ok" id="m0">포함-배제 원리 적용</div>
+</div>
+
+<!-- TAB 1: 여사건 단계별 풀이 -->
+<div class="panel" id="p1">
+  <div class="sec">여사건 법칙 — '적어도' 문제 단계별 풀이</div>
+  <div class="ctrl"><label>성공 확률 p <span id="t1p">0.30</span></label><input type="range" min="1" max="99" value="30" id="s1p" oninput="u1()"></div>
+  <div class="ctrl"><label>시행 횟수 n <span id="t1n">5</span></label><input type="range" min="1" max="20" value="5" id="s1n" oninput="u1()"></div>
+  <div class="step-box">
+    <div style="font-weight:600;color:#1E2761;margin-bottom:8px">📝 단계별 풀이</div>
+    <div style="color:#5C6BC0;margin-bottom:6px">❓ 문제: <span id="s1_q"></span></div>
+    <div style="color:#B71C1C;font-weight:500;font-size:12.5px">왜 여사건인가?</div>
+    <div style="color:#5C6BC0;font-size:12px;margin-left:8px;margin-bottom:8px" id="s1_why"></div>
+    <div class="step-item">
+      <div class="step-item-title">Step 1 — P(모두 실패) 계산</div>
+      <div class="step-item-body" id="s1_step1"></div>
+    </div>
+    <div class="step-item">
+      <div class="step-item-title">Step 2 — 여사건 적용</div>
+      <div class="step-item-body" id="s1_step2"></div>
+    </div>
+    <div class="step-ans">
+      <div class="step-ans-title">✓ 정답</div>
+      <div class="step-ans-body" id="s1_ans"></div>
+    </div>
+  </div>
+  <canvas id="c1" height="150"></canvas>
+  <div class="g3">
+    <div class="card"><div class="lbl">P(모두 실패)=(1-p)ⁿ</div><div class="val" id="r1fail">0.168</div></div>
+    <div class="card"><div class="lbl">P(적어도 1번 성공)</div><div class="val" style="color:#2E7D32" id="r1at">0.832</div></div>
+    <div class="card"><div class="lbl">합계 검증</div><div class="val" style="color:#2E7D32" id="r1sum">1.000 ✓</div></div>
+  </div>
+  <div class="formula" id="f1">P(적어도 1번) = 1 - (1-p)^n</div>
+  <div class="warn">💡 핵심: '적어도' 보이면 즉시 여사건! 직접 계산보다 훨씬 간단합니다</div>
+</div>
+
+<!-- TAB 2: 시스템 신뢰도 -->
+<div class="panel" id="p2">
+  <div class="sec">시스템 신뢰도 — 직렬·병렬 구성</div>
+  <div class="tog-row">
+    <button class="tog on" id="ts0" onclick="setSys('series')">직렬 (AND)</button>
+    <button class="tog" id="ts1" onclick="setSys('parallel')">병렬 (OR)</button>
+    <button class="tog" id="ts2" onclick="setSys('mixed')">혼합 구성</button>
+  </div>
+  <div class="ctrl"><label>P(A 정상) <span id="t2a">0.95</span></label><input type="range" min="50" max="99" value="95" id="s2a" oninput="u2()"></div>
+  <div class="ctrl"><label>P(B 정상) <span id="t2b">0.90</span></label><input type="range" min="50" max="99" value="90" id="s2b" oninput="u2()"></div>
+  <div class="ctrl"><label>P(C 정상) <span id="t2c">0.85</span></label><input type="range" min="50" max="99" value="85" id="s2c" oninput="u2()"></div>
+  <canvas id="c2" height="160"></canvas>
+  <div class="g3">
+    <div class="card"><div class="lbl">시스템 신뢰도</div><div class="val" style="color:#2E7D32" id="r2rel">-</div></div>
+    <div class="card"><div class="lbl">고장 확률</div><div class="val" style="color:#B71C1C" id="r2fail">-</div></div>
+    <div class="card"><div class="lbl">구성 방식</div><div class="val" style="font-size:13px" id="r2type">직렬</div></div>
+  </div>
+  <div class="formula" id="f2">직렬: P(A)xP(B)  /  병렬: 1-(1-P(A))x(1-P(B))</div>
+  <div class="ok" id="m2">병렬 연결이 직렬보다 신뢰도가 높습니다!</div>
+</div>
+
+<!-- TAB 3: 종합연습 -->
+<div class="panel" id="p3">
+  <div class="sec">종합 연습 — 2주차 개념 확인</div>
+  <div id="qBox" style="background:#EEF2FF;border-radius:10px;padding:1rem;margin-bottom:12px;font-size:14px;line-height:1.7;min-height:80px"></div>
+  <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+    <button onclick="newQ()" style="padding:8px 18px;background:#1565C0;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px">새 문제</button>
+    <button onclick="showHint()" style="padding:8px 18px;background:#00838F;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px">힌트</button>
+    <button onclick="showAns()" style="padding:8px 18px;background:#2E7D32;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:13px">정답 확인</button>
+  </div>
+  <div id="hintBox" class="info" style="display:none"></div>
+  <div id="ansBox" class="ok" style="display:none"></div>
+</div>
+</div>
+
+<script>
+var tabs=document.querySelectorAll('.tab'),panels=document.querySelectorAll('.panel');
+function $(id){return document.getElementById(id);}
+function f3(v){return v.toFixed(3);}
+
+function sw(i){tabs.forEach(function(t,j){t.classList.toggle('active',i===j);});panels.forEach(function(p,j){p.classList.toggle('active',i===j);});setTimeout(function(){[u0,u1,u2,function(){}][i]();},30);}
+function sc(id,h){var c=$(id),w=c.parentElement.offsetWidth-2||360;c.width=w;c.height=h;return{ctx:c.getContext('2d'),w:w,h:h};}
+
+// TAB 0: 덧셈법칙
+var addMode='general';
+function setAdd(m){addMode=m;['ta0','ta1','ta2'].forEach(function(id,i){$(id).classList.toggle('on',['general','disjoint','three'][i]===m);});buildAdd();u0();}
+function buildAdd(){
+  var html='';
+  if(addMode==='three'){
+    html+='<div class="ctrl"><label>P(A) <span id="a0">0.30</span></label><input type="range" min="5" max="55" value="30" id="sa0" oninput="u0()"></div>';
+    html+='<div class="ctrl"><label>P(B) <span id="a1">0.25</span></label><input type="range" min="5" max="55" value="25" id="sa1" oninput="u0()"></div>';
+    html+='<div class="ctrl"><label>P(C) <span id="a2">0.20</span></label><input type="range" min="5" max="55" value="20" id="sa2" oninput="u0()"></div>';
+    html+='<div class="info" style="font-size:12px">A·B·C 서로소 가정 (모든 교집합=공집합)</div>';
+  } else {
+    html+='<div class="ctrl"><label>P(A) <span id="a0">0.50</span></label><input type="range" min="5" max="90" value="50" id="sa0" oninput="u0()"></div>';
+    html+='<div class="ctrl"><label>P(B) <span id="a1">0.40</span></label><input type="range" min="5" max="90" value="40" id="sa1" oninput="u0()"></div>';
+    if(addMode==='general') html+='<div class="ctrl"><label>P(A∩B) <span id="a2">0.15</span></label><input type="range" min="0" max="40" value="15" id="sa2" oninput="u0()"></div>';
+    else html+='<div class="info" style="font-size:12px">A∩B=공집합 (서로소) 고정</div>';
+  }
+  $('addCtrl').innerHTML=html;
+}
+function u0(){
+  var pA=+($('sa0')?$('sa0').value:50)/100;
+  var pB=+($('sa1')?$('sa1').value:40)/100;
+  var pU,fText,msg;
+  if(addMode==='general'){
+    var pAB=Math.min(+($('sa2')?$('sa2').value:15)/100,Math.min(pA,pB));
+    if($('a0'))$('a0').textContent=pA.toFixed(2);if($('a1'))$('a1').textContent=pB.toFixed(2);if($('a2'))$('a2').textContent=pAB.toFixed(2);
+    pU=Math.min(1,pA+pB-pAB);
+    fText='P(A∪B)='+pA.toFixed(2)+'+'+pB.toFixed(2)+'-'+pAB.toFixed(2)+'='+f3(pU);msg='포함-배제 원리 적용';
+  } else if(addMode==='disjoint'){
+    if($('a0'))$('a0').textContent=pA.toFixed(2);if($('a1'))$('a1').textContent=pB.toFixed(2);
+    pU=Math.min(1,pA+pB);fText='서로소: P(A∪B)='+pA.toFixed(2)+'+'+pB.toFixed(2)+'='+f3(pU);msg='A∩B=공집합 → 중복 없음!';
+  } else {
+    var pC=+($('sa2')?$('sa2').value:20)/100;
+    if($('a0'))$('a0').textContent=pA.toFixed(2);if($('a1'))$('a1').textContent=pB.toFixed(2);if($('a2'))$('a2').textContent=pC.toFixed(2);
+    pU=Math.min(1,pA+pB+pC);fText='3사건 서로소: '+pA.toFixed(2)+'+'+pB.toFixed(2)+'+'+pC.toFixed(2)+'='+f3(pU);msg='3개 서로소 → 모두 더하기';
+  }
+  $('f0').textContent=fText;$('m0').textContent=msg;
+
+  if(addMode==='three'){
+    var pC2=+($('sa2')?$('sa2').value:20)/100;
+    $('addCards').innerHTML='<div class="g4"><div class="card"><div class="lbl">P(A)</div><div class="val" style="color:#1565C0">'+pA.toFixed(2)+'</div></div><div class="card"><div class="lbl">P(B)</div><div class="val" style="color:#1565C0">'+pB.toFixed(2)+'</div></div><div class="card"><div class="lbl">P(C)</div><div class="val" style="color:#1565C0">'+pC2.toFixed(2)+'</div></div><div class="card"><div class="lbl">P(A∪B∪C)</div><div class="val" style="color:#2E7D32">'+f3(pU)+'</div></div></div>';
+  } else {
+    $('addCards').innerHTML='<div class="g3"><div class="card"><div class="lbl">P(A)</div><div class="val" style="color:#1565C0">'+pA.toFixed(2)+'</div></div><div class="card"><div class="lbl">P(B)</div><div class="val" style="color:#1565C0">'+pB.toFixed(2)+'</div></div><div class="card"><div class="lbl">P(A∪B)</div><div class="val" style="color:#2E7D32">'+f3(pU)+'</div></div></div>';
+  }
+
+  var r=sc('c0',175),ctx=r.ctx,w=r.w,h=r.h;ctx.clearRect(0,0,w,h);
+  var bars=addMode==='three'?
+    [{l:'P(A)',v:pA,c:'rgba(21,101,192,.65)'},{l:'P(B)',v:pB,c:'rgba(0,131,143,.65)'},{l:'P(C)',v:+($('sa2')?$('sa2').value:20)/100,c:'rgba(83,74,183,.65)'},{l:'P(A∪B∪C)',v:pU,c:'rgba(46,125,50,.7)'}]:
+    [{l:'P(A)',v:pA,c:'rgba(21,101,192,.65)'},{l:'P(B)',v:pB,c:'rgba(0,131,143,.65)'},{l:'P(A∪B)',v:pU,c:'rgba(46,125,50,.7)'}];
+  var ox=10,oy=h-28,bw=(w-ox*2-20)/bars.length-6;
+  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(w-8,oy);ctx.stroke();
+  bars.forEach(function(b,i){var x=ox+i*(bw+6)+6,bh=b.v*(oy-15);ctx.fillStyle=b.c;ctx.fillRect(x,oy-bh,bw,bh);ctx.fillStyle='#1E2761';ctx.font='10px Arial';ctx.textAlign='center';ctx.fillText(b.l,x+bw/2,oy+14);ctx.fillStyle='#1565C0';ctx.font='bold 11px Arial';ctx.fillText(f3(b.v),x+bw/2,oy-bh-5);});
+  ctx.textAlign='left';
+}
+
+// TAB 1: 여사건 단계별
+function u1(){
+  var p=+$('s1p').value/100,n=+$('s1n').value;
+  $('t1p').textContent=p.toFixed(2);$('t1n').textContent=n;
+  var fail=Math.pow(1-p,n),at=1-fail;
+  $('r1fail').textContent=f3(fail);$('r1at').textContent=f3(at);$('r1sum').textContent=f3(fail+at)+' ✓';
+  $('f1').textContent='P(적어도 1번) = 1 - (1-'+p.toFixed(2)+')^'+n+' = 1 - '+f3(fail)+' = '+f3(at);
+  $('s1_q').textContent='성공 확률 '+p.toFixed(2)+'인 시행을 '+n+'번 반복. 적어도 1번 성공할 확률은?';
+  $('s1_why').textContent="'적어도 1번' = 1번, 2번, ..., "+n+"번 성공 → "+n+"가지 경우 직접 계산 복잡! → 여사건(모두 실패)만 계산하면 간단!";
+  $('s1_step1').textContent='P(모두 실패) = (1-'+p.toFixed(2)+')^'+n+'\n             = '+(1-p).toFixed(2)+'^'+n+' = '+f3(fail);
+  $('s1_step2').textContent='P(적어도 1번 성공) = 1 - P(모두 실패)\n                   = 1 - '+f3(fail)+' = '+f3(at);
+  $('s1_ans').textContent='P(적어도 1번 성공) = '+f3(at)+' ('+(at*100).toFixed(1)+'%)';
+
+  var r=sc('c1',150),ctx=r.ctx,w=r.w,h=r.h;ctx.clearRect(0,0,w,h);
+  var ox=20,oy=h-28,bw=(w-ox*2-20)/2;
+  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(w-8,oy);ctx.stroke();
+  [{l:'P(모두 실패)',v:fail,c:'rgba(183,28,28,.55)'},{l:'P(적어도 1번)',v:at,c:'rgba(46,125,50,.7)'}].forEach(function(b,i){var x=ox+i*(bw+20),bh=b.v*(oy-18);ctx.fillStyle=b.c;ctx.fillRect(x,oy-bh,bw,bh);ctx.fillStyle='#1E2761';ctx.font='11px Arial';ctx.textAlign='center';ctx.fillText(b.l,x+bw/2,oy+16);ctx.font='bold 13px Arial';ctx.fillText(f3(b.v),x+bw/2,oy-bh-6);});
+  ctx.textAlign='left';
+}
+
+// TAB 2: 시스템 신뢰도
+var sysMode='series';
+function setSys(m){sysMode=m;['ts0','ts1','ts2'].forEach(function(id,i){$(id).classList.toggle('on',['series','parallel','mixed'][i]===m);});u2();}
+function u2(){
+  var pA=+$('s2a').value/100,pB=+$('s2b').value/100,pC=+$('s2c').value/100;
+  $('t2a').textContent=pA.toFixed(2);$('t2b').textContent=pB.toFixed(2);$('t2c').textContent=pC.toFixed(2);
+  var rel,fText,typeText;
+  if(sysMode==='series'){rel=pA*pB*pC;fText='직렬: P(A)xP(B)xP(C)='+pA.toFixed(2)+'x'+pB.toFixed(2)+'x'+pC.toFixed(2)+'='+f3(rel);typeText='직렬 (AND)';}
+  else if(sysMode==='parallel'){rel=1-(1-pA)*(1-pB)*(1-pC);fText='병렬: 1-(1-P(A))(1-P(B))(1-P(C))='+f3(rel);typeText='병렬 (OR)';}
+  else{var pBC=1-(1-pB)*(1-pC);rel=pA*pBC;fText='혼합: A직렬(B∥C)  P(B∥C)='+f3(pBC)+'  전체='+pA.toFixed(2)+'x'+f3(pBC)+'='+f3(rel);typeText='혼합 (A직렬+BC병렬)';}
+  $('r2rel').textContent=f3(rel);$('r2fail').textContent=f3(1-rel);$('r2type').textContent=typeText;$('f2').textContent=fText;
+  $('m2').textContent=rel>0.95?'신뢰도 우수 (>95%)':rel>0.90?'신뢰도 양호 (>90%)':'신뢰도 개선 필요 (<90%)';
+  $('m2').className=rel>0.95?'ok':rel>0.90?'info':'warn';
+
+  var r=sc('c2',160),ctx=r.ctx,w=r.w,h=r.h;ctx.clearRect(0,0,w,h);
+  ctx.fillStyle='#F0F4FF';ctx.fillRect(0,0,w,h);
+  var bx=30,by=h/2,ex=w-30;
+  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=1.5;
+  if(sysMode==='series'){
+    ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(ex,by);ctx.stroke();
+    [{l:'A\n'+pA.toFixed(2),x:w*.25},{l:'B\n'+pB.toFixed(2),x:w*.5},{l:'C\n'+pC.toFixed(2),x:w*.75}].forEach(function(nd){drawBox(ctx,nd.x,by,nd.l,rel>0.9?'rgba(46,125,50,.7)':'rgba(191,111,0,.7)');});
+  } else if(sysMode==='parallel'){
+    var y1=by-38,y2=by,y3=by+38;
+    [y1,y2,y3].forEach(function(y){ctx.beginPath();ctx.moveTo(bx+20,y);ctx.lineTo(ex-20,y);ctx.stroke();});
+    ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(bx+20,y1);ctx.moveTo(bx,by);ctx.lineTo(bx+20,y2);ctx.moveTo(bx,by);ctx.lineTo(bx+20,y3);ctx.moveTo(ex-20,y1);ctx.lineTo(ex,by);ctx.moveTo(ex-20,y2);ctx.lineTo(ex,by);ctx.moveTo(ex-20,y3);ctx.lineTo(ex,by);ctx.stroke();
+    [{l:'A\n'+pA.toFixed(2),x:w*.5,y:y1},{l:'B\n'+pB.toFixed(2),x:w*.5,y:y2},{l:'C\n'+pC.toFixed(2),x:w*.5,y:y3}].forEach(function(nd){drawBox(ctx,nd.x,nd.y,nd.l,'rgba(21,101,192,.7)');});
+  } else {
+    var ym1=by-30,ym2=by+30;
+    ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(w*.3,by);ctx.stroke();
+    drawBox(ctx,w*.3,by,'A\n'+pA.toFixed(2),'rgba(21,101,192,.7)');
+    ctx.beginPath();ctx.moveTo(w*.48,by);ctx.lineTo(w*.52,ym1);ctx.moveTo(w*.48,by);ctx.lineTo(w*.52,ym2);ctx.moveTo(w*.78,ym1);ctx.lineTo(ex,by);ctx.moveTo(w*.78,ym2);ctx.lineTo(ex,by);ctx.stroke();
+    drawBox(ctx,w*.65,ym1,'B\n'+pB.toFixed(2),'rgba(0,131,143,.7)');drawBox(ctx,w*.65,ym2,'C\n'+pC.toFixed(2),'rgba(83,74,183,.7)');
+  }
+  ctx.fillStyle='#1E2761';ctx.font='bold 12px Arial';ctx.textAlign='center';
+  ctx.fillText('신뢰도: '+f3(rel),w/2,h-8);ctx.textAlign='left';
+}
+function drawBox(ctx,x,y,label,color){ctx.fillStyle=color;ctx.fillRect(x-28,y-18,56,36);ctx.fillStyle='#fff';ctx.font='bold 10px Arial';ctx.textAlign='center';label.split('\n').forEach(function(l,i){ctx.fillText(l,x,y-3+i*13);});}
+
+// TAB 3: 종합연습
+var qs=[
+  {q:"불량률 5%, 독립. 4개 검사. 적어도 1개 불량 확률?",h:"여사건: 1-(1-0.05)^4=1-(0.95)^4",a:"1-0.8145=0.1855 (약 18.6%)"},
+  {q:"P(A)=0.6, P(B)=0.5, P(A∩B)=0.3. P(A∪B)=?",h:"포함배제: P(A∪B)=P(A)+P(B)-P(A∩B)",a:"0.6+0.5-0.3=0.80"},
+  {q:"A∩B=공집합, P(A)=0.4, P(B)=0.3. P(A∪B)=?",h:"서로소: P(A∪B)=P(A)+P(B)",a:"0.4+0.3=0.70"},
+  {q:"P(A)=0.95, P(B)=0.90. 직렬 신뢰도?",h:"직렬: P(A)xP(B)",a:"0.95x0.90=0.855 (85.5%)"},
+  {q:"P(A)=0.95, P(B)=0.90. 병렬 신뢰도?",h:"병렬: 1-(1-P(A))(1-P(B))=1-(0.05)(0.10)",a:"1-0.005=0.995 (99.5%)"},
+  {q:"P(Ac∩Bc)=0.3. P(A∪B)=?",h:"드모르간: P(Ac∩Bc)=1-P(A∪B)",a:"1-0.3=0.70"}
+];
+var curQ=0;
+function newQ(){curQ=Math.floor(Math.random()*qs.length);$('qBox').textContent='Q. '+qs[curQ].q;$('hintBox').style.display='none';$('ansBox').style.display='none';}
+function showHint(){$('hintBox').textContent='힌트: '+qs[curQ].h;$('hintBox').style.display='block';}
+function showAns(){$('ansBox').textContent='정답: '+qs[curQ].a;$('ansBox').style.display='block';}
+
+buildAdd();
+$('addCards').innerHTML='<div class="g3"><div class="card"><div class="lbl">P(A)</div><div class="val" style="color:#1565C0">0.50</div></div><div class="card"><div class="lbl">P(B)</div><div class="val" style="color:#1565C0">0.40</div></div><div class="card"><div class="lbl">P(A∪B)</div><div class="val" style="color:#2E7D32">0.75</div></div></div>';
+setTimeout(function(){u0();u1();u2();newQ();},60);
+window.addEventListener('resize',function(){var ai=Array.from(panels).findIndex(function(p){return p.classList.contains('active');});[u0,u1,u2,function(){}][ai]();});
+</script>
+</body>
+</html>
