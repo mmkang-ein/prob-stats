@@ -25,13 +25,14 @@ canvas{display:block;width:100%!important;border-radius:8px;background:#fff;bord
 .tog{padding:3px 10px;font-size:12px;border:1px solid #C5CAE9;border-radius:20px;background:#fff;cursor:pointer;color:#5C6BC0}
 .tog.on{background:#1565C0;color:#fff;border-color:#1565C0;font-weight:500}
 </style></head><body>
-<header><a href="../index.html">← 목록</a><div class="hw"><h1>7주차 — 기댓값 · 분산 · 공분산 · 상관계수</h1><p>E성질 · Var성질 · 공분산 · 상관계수 산점도</p></div></header>
+<header><a href="../index.html">← 목록</a><div class="hw"><h1>7주차 — 기댓값 · 분산 · 공분산 · 상관계수</h1><p>E성질 · Var성질 · 공분산 · 상관계수 산점도 · 선형성 시뮬레이션</p></div></header>
 <div class="wrap">
 <div class="tabs">
   <button class="tab active" onclick="sw(0)">① 기댓값 성질</button>
   <button class="tab" onclick="sw(1)">② 분산 성질</button>
   <button class="tab" onclick="sw(2)">③ 공분산</button>
   <button class="tab" onclick="sw(3)">④ 상관계수</button>
+  <button class="tab" onclick="sw(4)">⑤ 선형성</button>
 </div>
 
 <div class="panel active" id="p0">
@@ -93,13 +94,34 @@ canvas{display:block;width:100%!important;border-radius:8px;background:#fff;bord
   <div class="formula" id="f3">ρ(X,Y) = Cov(X,Y) / (σ_X * σ_Y)   [-1,1]</div>
   <div class="ok" id="t3msg"></div>
 </div>
+
+<div class="panel" id="p4">
+  <div class="sec">기댓값의 선형성 — 관계가 달라도 E[X+Y] = E[X]+E[Y]</div>
+  <div class="tog-row">
+    <button class="tog on" id="tg4_0" onclick="m4(0)">① 독립</button>
+    <button class="tog" id="tg4_1" onclick="m4(1)">② 완전 종속 (Y=X)</button>
+    <button class="tog" id="tg4_2" onclick="m4(2)">③ 역상관 (Y=7−X)</button>
+  </div>
+  <div class="ctrl"><label>시행 횟수 n <span id="t4n">500</span></label><input type="range" min="1" max="200" value="50" id="s4n" oninput="u4()"></div>
+  <div class="tog-row"><button class="tog" onclick="u4()">다시 시행</button></div>
+  <div class="info" id="d4"></div>
+  <canvas id="c4" height="195"></canvas>
+  <div class="g4">
+    <div class="card"><div class="lbl">E[X]+E[Y] (이론)</div><div class="val">7.00</div></div>
+    <div class="card"><div class="lbl">X+Y 표본평균</div><div class="val" style="color:#2E7D32" id="r4mean">-</div></div>
+    <div class="card"><div class="lbl">Var(X+Y) 이론</div><div class="val" style="color:#BF6F00" id="r4vt">-</div></div>
+    <div class="card"><div class="lbl">X+Y 표본분산</div><div class="val" style="color:#B71C1C" id="r4vs">-</div></div>
+  </div>
+  <div class="formula" id="f4"></div>
+  <div class="ok" id="t4msg"></div>
+</div>
 </div>
 
 <script>
 const $=id=>document.getElementById(id)
 const f2=v=>v.toFixed(2),f3=v=>v.toFixed(3)
 const tabs=document.querySelectorAll('.tab'),panels=document.querySelectorAll('.panel')
-function sw(i){tabs.forEach((t,j)=>t.classList.toggle('active',i===j));panels.forEach((p,j)=>p.classList.toggle('active',i===j));setTimeout(()=>[u0,u1,u2,u3][i](),30)}
+function sw(i){tabs.forEach((t,j)=>t.classList.toggle('active',i===j));panels.forEach((p,j)=>p.classList.toggle('active',i===j));setTimeout(()=>[u0,u1,u2,u3,u4][i](),30)}
 function sc(id,h){const c=$(id),w=c.parentElement.offsetWidth-2||360;c.width=w;c.height=h;return{ctx:c.getContext('2d'),w,h}}
 
 function u0(){
@@ -193,7 +215,46 @@ function u3(){
   ctx.fillStyle='#B71C1C';ctx.font='bold 11px Arial';ctx.fillText('ρ='+f3(rhoC),w-60,20)
 }
 
-setTimeout(()=>{u0();u1();u2();u3()},60)
-window.addEventListener('resize',()=>{const ai=[...panels].findIndex(p=>p.classList.contains('active'));[u0,u1,u2,u3][ai]?.()})
+let mode4=0
+const m4info=[
+  {desc:'독립: 두 주사위를 따로 굴린다. 합의 분포는 삼각형이고 Var = 35/12 + 35/12 = 5.83',cov:0,vt:35/6,cs:'0'},
+  {desc:'완전 종속: Y = X. 합은 2X라 짝수만 나오며 Var(2X) = 4×35/12 = 11.67',cov:35/12,vt:35/3,cs:'35/12'},
+  {desc:'역상관: Y = 7 − X. 합은 항상 7로 고정되어 Var = 0',cov:-35/12,vt:0,cs:'-35/12'}
+]
+function m4(k){mode4=k;[0,1,2].forEach(i=>$('tg4_'+i).classList.toggle('on',i===k));u4()}
+function pth4(k,s){return k===0?(6-Math.abs(s-7))/36:k===1?(s%2===0&&s>=2&&s<=12?1/6:0):(s===7?1:0)}
+function u4(){
+  const k=mode4,n=+$('s4n').value*10,info=m4info[k]
+  $('t4n').textContent=n;$('d4').textContent=info.desc
+  const cnt=new Array(13).fill(0);let sum=0,sq=0
+  for(let i=0;i<n;i++){
+    const x=1+Math.floor(Math.random()*6)
+    const y=k===0?1+Math.floor(Math.random()*6):k===1?x:7-x
+    const t=x+y;cnt[t]++;sum+=t;sq+=t*t
+  }
+  const mean=sum/n,vs=sq/n-mean*mean
+  $('r4mean').textContent=f2(mean);$('r4vt').textContent=f2(info.vt);$('r4vs').textContent=f2(vs)
+  $('f4').textContent='Var(X+Y)=Var(X)+Var(Y)+2Cov = 2.92+2.92+2×('+info.cs+') = '+f2(info.vt)
+  $('t4msg').textContent='표본평균 '+f2(mean)+' ≈ 7 (이론값) — 관계가 달라도 평균은 같고, 퍼짐(Var)만 달라진다'
+  const{ctx,w,h}=sc('c4',195);ctx.clearRect(0,0,w,h)
+  const ox=30,oy=h-28,pw=w-ox-12,ph=oy-30,slot=pw/11,bw=slot*0.7
+  let maxP=0;for(let s=2;s<=12;s++)maxP=Math.max(maxP,pth4(k,s),cnt[s]/n);maxP*=1.12
+  ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.6;ctx.beginPath();ctx.moveTo(ox,18);ctx.lineTo(ox,oy+1);ctx.lineTo(w-8,oy+1);ctx.stroke()
+  for(let s=2;s<=12;s++){
+    const x=ox+(s-2)*slot+(slot-bw)/2,hs=cnt[s]/n/maxP*ph,ht=pth4(k,s)/maxP*ph
+    ctx.fillStyle='rgba(21,101,192,.65)';ctx.fillRect(x,oy-hs,bw,hs)
+    if(ht>0){ctx.strokeStyle='#1E2761';ctx.lineWidth=1.2;ctx.setLineDash([3,2]);ctx.strokeRect(x,oy-ht,bw,ht);ctx.setLineDash([])}
+    ctx.fillStyle=s===7?'#BF6F00':'#5C6BC0';ctx.font=(s===7?'bold ':'')+'11px Arial';ctx.textAlign='center';ctx.fillText(s,x+bw/2,oy+14)
+  }
+  const mx=v=>ox+(v-2)*slot+slot/2
+  ctx.strokeStyle='#BF6F00';ctx.lineWidth=1.8;ctx.setLineDash([5,3]);ctx.beginPath();ctx.moveTo(mx(7),20);ctx.lineTo(mx(7),oy);ctx.stroke();ctx.setLineDash([])
+  ctx.strokeStyle='#2E7D32';ctx.lineWidth=1.8;ctx.beginPath();ctx.moveTo(mx(mean),26);ctx.lineTo(mx(mean),oy);ctx.stroke()
+  ctx.font='bold 11px Arial';ctx.textAlign='right';ctx.fillStyle='#BF6F00';ctx.fillText('E=7',mx(7)-5,16)
+  ctx.textAlign='left';ctx.fillStyle='#2E7D32';ctx.fillText('표본평균 '+f2(mean),mx(7)+5,16)
+  ctx.fillStyle='#5C6BC0';ctx.font='10px Arial';ctx.fillText('파란 막대: 시뮬레이션 상대도수 / 점선 막대: 이론 확률',ox+4,h-2);ctx.textAlign='left'
+}
+
+setTimeout(()=>{u0();u1();u2();u3();u4()},60)
+window.addEventListener('resize',()=>{const ai=[...panels].findIndex(p=>p.classList.contains('active'));[u0,u1,u2,u3,u4][ai]?.()})
 </script>
 </body></html>
