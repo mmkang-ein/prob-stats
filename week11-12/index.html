@@ -25,13 +25,16 @@ canvas{display:block;width:100%!important;border-radius:8px;background:#fff;bord
 .tog{padding:3px 10px;font-size:12px;border:1px solid #C5CAE9;border-radius:20px;background:#fff;cursor:pointer;color:#5C6BC0}
 .tog.on{background:#1565C0;color:#fff;border-color:#1565C0;font-weight:500}
 </style></head><body>
-<header><a href="../index.html">← 목록</a><div class="hw"><h1>11·12주차 — 표본분포 · 추정 · 가설검정</h1><p>표본분포 · 신뢰구간 · Z검정 · 검정력 α·β</p></div></header>
+<header><a href="../index.html">← 목록</a><div class="hw"><h1>11·12주차 — 표본분포 · 추정 · 가설검정</h1><p>표본분포 · 신뢰구간 · Z검정 · 검정력 α·β · 반복 표집 · t vs Z · 표본크기</p></div></header>
 <div class="wrap">
 <div class="tabs">
   <button class="tab active" onclick="sw(0)">① 표본분포</button>
   <button class="tab" onclick="sw(1)">② 신뢰구간</button>
   <button class="tab" onclick="sw(2)">③ 가설검정</button>
   <button class="tab" onclick="sw(3)">④ 검정력</button>
+  <button class="tab" onclick="sw(4)">⑤ 반복 표집</button>
+  <button class="tab" onclick="sw(5)">⑥ t vs Z</button>
+  <button class="tab" onclick="sw(6)">⑦ 표본크기</button>
 </div>
 
 <div class="panel active" id="p0">
@@ -105,13 +108,67 @@ canvas{display:block;width:100%!important;border-radius:8px;background:#fff;bord
   </div>
   <div class="formula" id="f3">검정력 = P(기각|H₁참) = 1-β</div>
 </div>
+
+<div class="panel" id="p4">
+  <div class="sec">반복 표집 — 신뢰구간 100개 (정규모집단 μ=100, σ=10)</div>
+  <div class="ctrl"><label>표본 크기 n <span id="t4n">25</span></label><input type="range" min="5" max="100" value="25" id="s4n" oninput="u4()"></div>
+  <div class="tog-row">
+    <button class="tog" id="l40" onclick="setLvl4(.9)">90%</button>
+    <button class="tog on" id="l41" onclick="setLvl4(.95)">95%</button>
+    <button class="tog" id="l42" onclick="setLvl4(.99)">99%</button>
+    <button class="tog" onclick="draw4()">다시 뽑기</button>
+  </div>
+  <canvas id="c4" height="200"></canvas>
+  <div class="g4">
+    <div class="card"><div class="lbl">μ 포함 (이번 100개)</div><div class="val" style="color:#1565C0" id="r4h">-</div></div>
+    <div class="card"><div class="lbl">μ 미포함</div><div class="val" style="color:#C62828" id="r4m">-</div></div>
+    <div class="card"><div class="lbl">누적 포함률</div><div class="val" style="color:#2E7D32" id="r4c">-</div></div>
+    <div class="card"><div class="lbl">이론 포함률</div><div class="val" id="r4t">-</div></div>
+  </div>
+  <div class="formula" id="f4"></div>
+  <div class="info" id="m4"></div>
+</div>
+
+<div class="panel" id="p5">
+  <div class="sec">t 분포 vs 표준정규 — 표본이 작을수록 꼬리가 두껍다</div>
+  <div class="ctrl"><label>표본 크기 n (자유도 ν=n−1) <span id="t5n">5</span></label><input type="range" min="3" max="60" value="5" id="s5n" oninput="u5()"></div>
+  <canvas id="c5" height="175"></canvas>
+  <div class="g4">
+    <div class="card"><div class="lbl">자유도 ν=n−1</div><div class="val" id="r5v">-</div></div>
+    <div class="card"><div class="lbl">t_(0.025,ν)</div><div class="val" style="color:#E65100" id="r5t">-</div></div>
+    <div class="card"><div class="lbl">Z_(0.025)</div><div class="val" style="color:#5A5F73" id="r5z">1.960</div></div>
+    <div class="card"><div class="lbl">t가 Z보다 큰 정도</div><div class="val" style="color:#B71C1C" id="r5d">-</div></div>
+  </div>
+  <div class="formula" id="f5"></div>
+  <div class="info" id="m5"></div>
+</div>
+
+<div class="panel" id="p6">
+  <div class="sec">표본 크기 설계 — n = (z·σ/E)²</div>
+  <div class="ctrl"><label>모표준편차 σ <span id="t6sg">10.0</span></label><input type="range" min="1" max="30" value="10" id="s6sg" oninput="u6()"></div>
+  <div class="ctrl"><label>오차한계 E <span id="t6e">1.0</span></label><input type="range" min="1" max="10" value="2" id="s6e" oninput="u6()"></div>
+  <div class="tog-row">
+    <button class="tog" id="l60" onclick="setLvl6(.9)">90%</button>
+    <button class="tog on" id="l61" onclick="setLvl6(.95)">95%</button>
+    <button class="tog" id="l62" onclick="setLvl6(.99)">99%</button>
+  </div>
+  <canvas id="c6" height="185"></canvas>
+  <div class="g4">
+    <div class="card"><div class="lbl">z_(α/2)</div><div class="val" id="r6z">-</div></div>
+    <div class="card"><div class="lbl">필요한 n (올림)</div><div class="val" style="color:#B71C1C" id="r6n">-</div></div>
+    <div class="card"><div class="lbl">E 절반일 때 n</div><div class="val" style="color:#BF6F00" id="r6h">-</div></div>
+    <div class="card"><div class="lbl">배율</div><div class="val" id="r6r">-</div></div>
+  </div>
+  <div class="formula" id="f6"></div>
+  <div class="info" id="m6"></div>
+</div>
 </div>
 
 <script>
 const $=id=>document.getElementById(id)
 const f2=v=>v.toFixed(2),f3=v=>v.toFixed(3),f4=v=>v.toFixed(4)
 const tabs=document.querySelectorAll('.tab'),panels=document.querySelectorAll('.panel')
-function sw(i){tabs.forEach((t,j)=>t.classList.toggle('active',i===j));panels.forEach((p,j)=>p.classList.toggle('active',i===j));setTimeout(()=>[u0,u1,u2,u3][i](),30)}
+function sw(i){tabs.forEach((t,j)=>t.classList.toggle('active',i===j));panels.forEach((p,j)=>p.classList.toggle('active',i===j));setTimeout(()=>[u0,u1,u2,u3,u4,u5,u6][i](),30)}
 function sc(id,h){const c=$(id),w=c.parentElement.offsetWidth-2||360;c.width=w;c.height=h;return{ctx:c.getContext('2d'),w,h}}
 function normPDF(x,mu=0,sig=1){return Math.exp(-.5*((x-mu)/sig)**2)/(sig*Math.sqrt(2*Math.PI))}
 function normCDF(z){const t=1/(1+.2316419*Math.abs(z)),p=t*(.31938153+t*(-.356563782+t*(1.781477937+t*(-1.821255978+t*1.330274429))))*Math.exp(-.5*z*z)/Math.sqrt(2*Math.PI);return z>=0?1-p:p}
@@ -190,7 +247,7 @@ function u3(){
   fillR(-999,critL,f0s,'rgba(183,28,28,.3)');fillR(critU,999,f0s,'rgba(183,28,28,.3)')
   fillR(critL,critU,f1s,'rgba(191,111,0,.25)')
   fillR(-999,critL,f1s,'rgba(29,158,117,.35)');fillR(critU,999,f1s,'rgba(29,158,117,.35)')
-  [[f0s,'rgba(21,101,192,.85)'],[f1s,'rgba(29,158,117,.85)']].forEach(([fs,c])=>{ctx.beginPath();ctx.strokeStyle=c;ctx.lineWidth=2;xs.forEach((x,i)=>i===0?ctx.moveTo(tx(x),ty(fs[i],maxF)):ctx.lineTo(tx(x),ty(fs[i],maxF)));ctx.stroke()})
+  ;[[f0s,'rgba(21,101,192,.85)'],[f1s,'rgba(29,158,117,.85)']].forEach(([fs,c])=>{ctx.beginPath();ctx.strokeStyle=c;ctx.lineWidth=2;xs.forEach((x,i)=>i===0?ctx.moveTo(tx(x),ty(fs[i],maxF)):ctx.lineTo(tx(x),ty(fs[i],maxF)));ctx.stroke()})
   ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.5
   ;[critL,critU].forEach(v=>{ctx.beginPath();ctx.moveTo(tx(v),oy);ctx.lineTo(tx(v),15);ctx.stroke()})
   ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(ox,15);ctx.lineTo(ox,oy+1);ctx.lineTo(w-8,oy+1);ctx.stroke()
@@ -198,7 +255,96 @@ function u3(){
   ctx.fillStyle='rgba(29,158,117,.9)';ctx.fillText('H₁(μ='+mu1+')',tx(mu1)-15,38)
 }
 
-setTimeout(()=>{u0();u1();u2();u3()},60)
-window.addEventListener('resize',()=>{const ai=[...panels].findIndex(p=>p.classList.contains('active'));[u0,u1,u2,u3][ai]?.()})
+// ---------- shared helpers for tabs 5-7 ----------
+function zq(p){let x=normINV(p);x-=(normCDF(x)-p)/normPDF(x);return x}
+function randn(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
+function axisBox(ctx,ox,oy,w,top){ctx.strokeStyle='#C5CAE9';ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(ox,top);ctx.lineTo(ox,oy+1);ctx.lineTo(w-8,oy+1);ctx.stroke()}
+
+// ---------- tab 5: repeated sampling ----------
+let lvl4=.95,hist4=[]
+function setLvl4(l){lvl4=l;['l40','l41','l42'].forEach((id,i)=>$(id).classList.toggle('on',[.9,.95,.99][i]===l));u4()}
+function draw4(){hist4.push(Array.from({length:100},randn));u4()}
+function u4(){
+  if(!hist4.length)hist4.push(Array.from({length:100},randn))
+  const n=+$('s4n').value;$('t4n').textContent=n
+  const se=10/Math.sqrt(n),zc=zq(1-(1-lvl4)/2),zs=hist4[hist4.length-1]
+  const hit=zs.filter(z=>Math.abs(z)<=zc).length
+  let tot=0;hist4.forEach(a=>a.forEach(z=>{if(Math.abs(z)<=zc)tot++}))
+  const cum=tot/(100*hist4.length)*100
+  $('r4h').textContent=hit+'개';$('r4m').textContent=(100-hit)+'개'
+  $('r4c').textContent=cum.toFixed(1)+'%';$('r4t').textContent=(lvl4*100).toFixed(0)+'%'
+  $('f4').textContent='CI = X̄ ± '+zc.toFixed(3)+'×'+se.toFixed(2)+'  (폭 '+(2*zc*se).toFixed(2)+')   |   뽑은 횟수: '+hist4.length+'번 (누적 '+(100*hist4.length)+'개 구간)'
+  $('m4').textContent='100개 중 '+hit+'개가 μ=100을 포함 — 매번 '+Math.round(lvl4*100)+'개 안팎으로 흔들리며, 여러 번 뽑을수록 포함률이 '+Math.round(lvl4*100)+'%에 가까워진다'
+  const{ctx,w,h}=sc('c4',200);ctx.clearRect(0,0,w,h)
+  const ox=38,oy=h-24,top=14,pw=w-ox-12,R=(3.3+zc)*se,ymin=100-R,ymax=100+R
+  const ty=v=>top+(ymax-Math.max(ymin,Math.min(ymax,v)))/(ymax-ymin)*(oy-top)
+  axisBox(ctx,ox,oy,w,top)
+  const bw=Math.max(1.4,pw/100*.5)
+  zs.forEach((z,k)=>{const x=ox+(k+.5)/100*pw,lo=100+se*(z-zc),hi=100+se*(z+zc)
+    ctx.fillStyle=Math.abs(z)<=zc?'#1565C0':'#C62828';ctx.fillRect(x-bw/2,ty(hi),bw,ty(lo)-ty(hi))})
+  ctx.strokeStyle='#E65100';ctx.lineWidth=1.6;ctx.setLineDash([5,3]);ctx.beginPath();ctx.moveTo(ox,ty(100));ctx.lineTo(w-8,ty(100));ctx.stroke();ctx.setLineDash([])
+  ctx.fillStyle='#5C6BC0';ctx.font='10px Arial';ctx.textAlign='right'
+  ;[ymin,100,ymax].forEach(v=>ctx.fillText(v.toFixed(1),ox-4,ty(v)+3))
+  ctx.textAlign='left';ctx.font='bold 11px Arial'
+  let lx=w-12;[['점선=μ(100)','#E65100'],['빨강=미포함','#C62828'],['파랑=포함','#1565C0']].forEach(([t,c])=>{lx-=ctx.measureText(t).width;ctx.fillStyle=c;ctx.fillText(t,lx,top+8);lx-=12})
+}
+
+// ---------- tab 6: t vs Z ----------
+function lgam(z){const c=[76.18009172947146,-86.50532032941677,24.01409824083091,-1.231739572450155,.1208650973866179e-2,-.5395239384953e-5];let y=z,t=z+5.5;t-=(z+.5)*Math.log(t);let s=1.000000000190015;for(let j=0;j<6;j++)s+=c[j]/++y;return -t+Math.log(2.5066282746310005*s/z)}
+function tPDF(x,v){return Math.exp(lgam((v+1)/2)-lgam(v/2))/Math.sqrt(v*Math.PI)*Math.pow(1+x*x/v,-(v+1)/2)}
+function tCDF(x,v){const a=Math.abs(x),N=800,hh=a/N;let s=tPDF(0,v)+tPDF(a,v);for(let i=1;i<N;i++)s+=tPDF(i*hh,v)*(i%2?4:2);const c=.5+s*hh/3;return x>=0?c:1-c}
+function tCrit(v,p=.975){let lo=0,hi=60;for(let i=0;i<50;i++){const m=(lo+hi)/2;if(tCDF(m,v)<p)lo=m;else hi=m}return(lo+hi)/2}
+function u5(){
+  const n=+$('s5n').value,v=n-1;$('t5n').textContent=n
+  const tc=tCrit(v),zc=zq(.975),diff=(tc/zc-1)*100
+  $('r5v').textContent=v;$('r5t').textContent=tc.toFixed(3);$('r5z').textContent=zc.toFixed(3);$('r5d').textContent='+'+diff.toFixed(1)+'%'
+  const xb=98,S=12,se=S/Math.sqrt(n)
+  $('f5').textContent='예) X̄=98, S=12, n='+n+' →  t-CI ['+(xb-tc*se).toFixed(2)+', '+(xb+tc*se).toFixed(2)+']   Z-CI ['+(xb-zc*se).toFixed(2)+', '+(xb+zc*se).toFixed(2)+']'
+  $('m5').textContent=diff>4.5?'표본이 작아 t의 임계값이 Z보다 '+diff.toFixed(1)+'% 크다 — Z를 쓰면 구간이 너무 좁아져 과신하게 된다':'n이 커지면 t→Z — 차이가 '+diff.toFixed(1)+'%로 작아져 Z 근사를 허용할 수 있다 (n≥30)'
+  const{ctx,w,h}=sc('c5',175);ctx.clearRect(0,0,w,h)
+  const ox=30,oy=h-26,top=14,pw=w-ox-10,ph=oy-top-8,X=5,maxF=.42
+  const tx=x=>ox+(x+X)/(2*X)*pw,ty=f=>oy-f/maxF*ph
+  axisBox(ctx,ox,oy,w,top)
+  const xs=Array.from({length:201},(_,i)=>-X+2*X*i/200)
+  ctx.beginPath();xs.forEach((x,i)=>i?ctx.lineTo(tx(x),ty(normPDF(x))):ctx.moveTo(tx(x),ty(normPDF(x))));ctx.lineTo(tx(X),oy);ctx.lineTo(tx(-X),oy);ctx.closePath();ctx.fillStyle='rgba(90,95,115,.12)';ctx.fill()
+  ctx.beginPath();ctx.strokeStyle='#5A5F73';ctx.lineWidth=2;xs.forEach((x,i)=>i?ctx.lineTo(tx(x),ty(normPDF(x))):ctx.moveTo(tx(x),ty(normPDF(x))));ctx.stroke()
+  ctx.beginPath();ctx.strokeStyle='#E65100';ctx.lineWidth=2.5;xs.forEach((x,i)=>i?ctx.lineTo(tx(x),ty(tPDF(x,v))):ctx.moveTo(tx(x),ty(tPDF(x,v))));ctx.stroke()
+  ctx.lineWidth=1.3;ctx.setLineDash([4,3])
+  ;[[zc,'#5A5F73'],[tc,'#E65100']].forEach(([c,col])=>{ctx.strokeStyle=col;[-c,c].forEach(x=>{ctx.beginPath();ctx.moveTo(tx(x),oy);ctx.lineTo(tx(x),top+14);ctx.stroke()})})
+  ctx.setLineDash([]);ctx.font='10px Arial';ctx.textAlign='center';ctx.fillStyle='#5C6BC0'
+  for(let x=-4;x<=4;x++)ctx.fillText(x,tx(x),oy+13)
+  ctx.font='bold 11px Arial';ctx.fillStyle='#5A5F73';ctx.fillText('±'+zc.toFixed(2),tx(zc),top+10)
+  ctx.fillStyle='#E65100';ctx.fillText('±'+tc.toFixed(2),tx(tc)+(tc>zc?14:0),top+10)
+  ctx.textAlign='left';ctx.fillStyle='#5A5F73';ctx.fillText('N(0,1)',ox+6,top+10);ctx.fillStyle='#E65100';ctx.fillText('t('+v+')',ox+6,top+24)
+}
+
+// ---------- tab 7: sample size ----------
+let lvl6=.95
+function setLvl6(l){lvl6=l;['l60','l61','l62'].forEach((id,i)=>$(id).classList.toggle('on',[.9,.95,.99][i]===l));u6()}
+function u6(){
+  const sg=+$('s6sg').value,E=+$('s6e').value/2,z=+zq(1-(1-lvl6)/2).toFixed(3)
+  $('t6sg').textContent=sg.toFixed(1);$('t6e').textContent=E.toFixed(1)
+  const nf=E2=>Math.pow(z*sg/E2,2),n=Math.ceil(nf(E)-1e-9),nh=Math.ceil(nf(E/2)-1e-9)
+  $('r6z').textContent=z.toFixed(3);$('r6n').textContent=n.toLocaleString()+'명';$('r6h').textContent=nh.toLocaleString()+'명';$('r6r').textContent='≈'+(nh/n).toFixed(1)+'배'
+  $('f6').textContent='n = (z·σ/E)² = ('+z.toFixed(3)+'×'+sg.toFixed(1)+'/'+E.toFixed(1)+')² = '+nf(E).toFixed(2)+'  →  올림 '+n.toLocaleString()
+  $('m6').textContent='오차한계를 E='+E.toFixed(1)+'에서 E='+(E/2).toFixed(2)+'로 절반으로 줄이면 표본이 '+n.toLocaleString()+'명 → '+nh.toLocaleString()+'명 (약 4배) — 비용과 정확도의 균형'
+  const{ctx,w,h}=sc('c6',185);ctx.clearRect(0,0,w,h)
+  const ox=48,oy=h-26,top=16,pw=w-ox-14,ph=oy-top,E0=.5,E1=5
+  const raw=nf(E0)*1.04/4,mag=Math.pow(10,Math.floor(Math.log10(raw))),step=[1,2,2.5,5,10].map(m=>m*mag).find(v=>v>=raw),maxN=step*4
+  const tx=e=>ox+(e-E0)/(E1-E0)*pw,ty=v=>oy-v/maxN*ph
+  ctx.strokeStyle='#EEF2FF';ctx.lineWidth=1;ctx.font='10px Arial';ctx.fillStyle='#5C6BC0';ctx.textAlign='right'
+  for(let i=0;i<=4;i++){const v=step*i;ctx.beginPath();ctx.moveTo(ox,ty(v));ctx.lineTo(w-8,ty(v));ctx.stroke();ctx.fillText(Math.round(v).toLocaleString(),ox-4,ty(v)+3)}
+  axisBox(ctx,ox,oy,w,top)
+  ctx.beginPath();ctx.strokeStyle='#1565C0';ctx.lineWidth=2.5
+  for(let i=0;i<=100;i++){const e=E0+(E1-E0)*i/100;i?ctx.lineTo(tx(e),ty(nf(e))):ctx.moveTo(tx(e),ty(nf(e)))};ctx.stroke()
+  ctx.textAlign='center';ctx.fillStyle='#5C6BC0'
+  ;[.5,1,2,3,4,5].forEach(e=>ctx.fillText('E='+e,tx(e),oy+14))
+  const dot=(e,col,lab)=>{ctx.fillStyle=col;ctx.beginPath();ctx.arc(tx(e),ty(nf(e)),5,0,6.2832);ctx.fill();ctx.font='bold 11px Arial';ctx.textAlign=tx(e)>w-90?'right':'left';ctx.fillText(lab,tx(e)+(tx(e)>w-90?-8:8),ty(nf(e))-7)}
+  dot(E,'#B71C1C','n='+n.toLocaleString())
+  if(E/2>=E0)dot(E/2,'#BF6F00','n='+nh.toLocaleString())
+}
+
+setTimeout(()=>{u0();u1();u2();u3();u4();u5();u6()},60)
+window.addEventListener('resize',()=>{const ai=[...panels].findIndex(p=>p.classList.contains('active'));[u0,u1,u2,u3,u4,u5,u6][ai]?.()})
 </script>
 </body></html>
